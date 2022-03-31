@@ -1,6 +1,7 @@
-import { Route, Routes } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import SideNavigation from './components/SideNavigation';
+import SignUp from './pages/Account/SignUp';
 import Home from './pages/Home';
 
 const App: React.FC = () => {
@@ -10,6 +11,7 @@ const App: React.FC = () => {
       <SideNavigation />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </div>
   );

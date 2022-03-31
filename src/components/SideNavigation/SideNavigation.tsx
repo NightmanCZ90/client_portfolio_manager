@@ -1,8 +1,20 @@
+import { NavigationButton, StyledSideNavigation } from './SideNavigation.styles';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import DataSaverOffIcon from '@mui/icons-material/DataSaverOff';
+
 const SideNavigation: React.FC = () => {
   return (
-    <div>
-      SideNavigation
-    </div>
+    <StyledSideNavigation>
+
+      <NavigationButton>
+        <DataSaverOffIcon />
+      </NavigationButton>
+
+      <NavigationButton>
+        <PersonOutlineIcon />
+      </NavigationButton>
+
+    </StyledSideNavigation>
   )
 }
 
