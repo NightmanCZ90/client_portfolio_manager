@@ -1,17 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from '@mui/material/styles';
 
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import theme from './styles/mui-theme';
-import { BrowserRouter } from 'react-router-dom';
+import { darkTheme } from './styles/mui-theme';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <BrowserRouter>
         <App />
