@@ -3,9 +3,17 @@ import { createTheme } from "@mui/material";
 export const darkTheme = createTheme({
   palette: {
     mode: 'dark',
+    primary: {
+      main: '#f9ba48',
+      light: '#f7dcaa',
+      dark: '#f08f18',
+    },
     background: {
-      paper: '#232325',
-      default: '#151517',
+      paper: '#3A3A3E',
+      default: '#232325',
     }
+  },
+  shape: {
+    borderRadius: 12,
   }
 });
