@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { userRegistrationFormSchema } from '../../constants/validations';
+import { SubmitButton } from '../../constants/components';
 import { Dispatch, RootState } from '../../store/store';
-import { StyledSignUp, StyledSignUpForm, SubmitButton } from './SignUp.styles';
+import { StyledSignUp, StyledSignUpForm } from './SignUp.styles';
 
 export type SignUpFormData = {
   email: string;
