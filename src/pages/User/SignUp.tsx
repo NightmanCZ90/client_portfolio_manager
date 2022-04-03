@@ -1,9 +1,12 @@
-import { Button, TextField } from '@mui/material';
+import { Button, CircularProgress, TextField } from '@mui/material';
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+
 import { userRegistrationFormSchema } from '../../constants/validations';
+import { Dispatch, RootState } from '../../store/store';
 import { StyledSignUp, StyledSignUpForm, SubmitButton } from './SignUp.styles';
 
-type FormData = {
+export type SignUpFormData = {
   email: string;
   password: string;
   confirmPassword: string;
@@ -15,9 +18,15 @@ const initialFormData = {
   confirmPassword: '',
 }
 
-const SignUp: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [formDataErrors, setFormDataErrors] = useState<FormData>(initialFormData);
+interface SignUpProps extends SignUpConnect {
+
+}
+
+const SignUp: React.FC<SignUpProps> = (props) => {
+  const [formData, setFormData] = useState<SignUpFormData>(initialFormData);
+  const [formDataErrors, setFormDataErrors] = useState<SignUpFormData>(initialFormData);
+
+  const { error, loading, signUp } = props;
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     userRegistrationFormSchema(event.target.name).validate({[event.target.name]: event.target.value}).catch((err) => {
@@ -38,19 +47,25 @@ const SignUp: React.FC = () => {
     });
   }
 
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    await signUp(formData);
+  }
+
   return (
     <StyledSignUp>
       <StyledSignUpForm>
         <h1>port/fall.io</h1>
         <br/>
-        <form>
+        <form onSubmit={handleSubmit}>
           <TextField
             required
             fullWidth
             id="email-input"
             label="E-mail"
             name="email"
-            // type="email"
             error={Boolean(formDataErrors.email)}
             helperText={formDataErrors.email}
             onChange={handleChange}
@@ -77,14 +92,28 @@ const SignUp: React.FC = () => {
             helperText={formDataErrors.confirmPassword}
             onChange={handleChange}
           />
-          <div>
+          <div className="signup-form--buttons">
             <Button>Forgot Password?</Button>
-            <SubmitButton type="submit">Sign Up</SubmitButton>
+            <SubmitButton type="submit">
+              {loading ? (<CircularProgress size={24} />) : "Submit"}
+            </SubmitButton>
           </div>
+          {error && <span>{error}</span>}
         </form>
       </StyledSignUpForm>
     </StyledSignUp>
   )
 }
 
-export default SignUp;
+type SignUpConnect = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
+
+const mapState = (state: RootState) => ({
+  error: state.currentUser.error,
+  loading: state.currentUser.loading,
+});
+
+const mapDispatch = (dispatch: Dispatch) => ({
+  signUp: dispatch.currentUser.signUp,
+});
+
+export default connect(mapState, mapDispatch)(SignUp);

@@ -1,6 +1,5 @@
 import { Button, Card } from '@mui/material';
-import { green } from '@mui/material/colors';
-import { color, styled } from '@mui/system';
+import { styled } from '@mui/system';
 
 export const StyledSignUp = styled('div')`
   width: 100vw;
@@ -13,11 +12,12 @@ export const StyledSignUp = styled('div')`
     width: 20rem;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
 
-    div {
+    .signup-form--buttons {
       display: flex;
       justify-content: space-between;
+      margin-top: 2rem;
     }
   }
 `;
@@ -28,8 +28,11 @@ export const StyledSignUpForm = styled(Card)`
 
 export const SubmitButton = styled(Button)(({ theme }) => ({
   background: theme.palette.primary.main,
-  color: '#151517',
+  color: '#232325',
   padding: '0.5rem 2rem',
+  ".MuiCircularProgress-root": {
+    color: '#232325',
+  },
   ".MuiTouchRipple-child": {
     color: theme.palette.primary.dark,
   },

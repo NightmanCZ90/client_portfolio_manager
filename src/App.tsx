@@ -1,20 +1,44 @@
+import { connect } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import SideNavigation from './components/SideNavigation';
-import SignUp from './pages/Account/SignUp';
-import Home from './pages/Home';
 
-const App: React.FC = () => {
+import SideNavigation from './components/SideNavigation';
+import Home from './pages/Home';
+import SignUp from './pages/User/SignUp';
+import { Dispatch, RootState } from './store/store';
+
+interface AppProps extends AppConnect {
+
+}
+
+const App: React.FC<AppProps> = (props) => {
+  const { token } = props;
+
+  if (!token) {
+    return (
+      <div className='App'>
+        <SignUp />
+      </div>
+    )
+  }
 
   return (
     <div className="App">
       <SideNavigation />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </div>
   );
 }
 
-export default App;
+type AppConnect = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
+
+const mapState = (state: RootState) => ({
+  token: state.currentUser.token,
+});
+
+const mapDispatch = (dispatch: Dispatch) => ({
+});
+
+export default connect(mapState, mapDispatch)(App);
