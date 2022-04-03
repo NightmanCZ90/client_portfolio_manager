@@ -23,7 +23,7 @@ const App: React.FC<AppProps> = (props) => {
       const savedToken = localStorage.getItem('access_token');
       savedToken && setToken(savedToken);
     }
-  }, [token]);
+  }, [setToken, token]);
 
   if (!token) {
     return (
