@@ -1,9 +1,130 @@
-const SignUp: React.FC = () => {
+import { CircularProgress, TextField } from '@mui/material';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+
+import { userRegistrationFormSchema } from '../../constants/validations';
+import { SmallLinkButton, SubmitButton } from '../../constants/components';
+import { Dispatch, RootState } from '../../store/store';
+import { StyledSignUp, StyledSignUpForm } from './SignUp.styles';
+
+export type SignUpFormData = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+const initialFormData = {
+  email: '',
+  password: '',
+  confirmPassword: '',
+}
+
+interface SignUpProps extends SignUpConnect {
+  setShowLogin: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const SignUp: React.FC<SignUpProps> = (props) => {
+  const [formData, setFormData] = useState<SignUpFormData>(initialFormData);
+  const [formDataErrors, setFormDataErrors] = useState<SignUpFormData>(initialFormData);
+
+  const { error, loading, setShowLogin, signUp } = props;
+
+  const handleChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    userRegistrationFormSchema(event.target.name).validate({[event.target.name]: event.target.value}).catch((err) => {
+      setFormDataErrors({ ...formDataErrors, [event.target.name]: err.message});
+    });
+
+    await userRegistrationFormSchema(event.target.name).isValid({[event.target.name]: event.target.value}).then((valid) => {
+      if (valid) setFormDataErrors({ ...formDataErrors, [event.target.name]: ''});
+    });
+
+    if (event.target.name === 'confirmPassword' && formData.password === event.target.value) {
+      setFormDataErrors({ ...formDataErrors, [event.target.name]: ''});
+    }
+
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value,
+    });
+  }
+
+  const { email, password, confirmPassword } = formDataErrors;
+  const isFormDataInvalid = Boolean(email) || Boolean(password) || Boolean(confirmPassword);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (isFormDataInvalid) return;
+
+    await signUp(formData);
+  }
+
   return (
-    <div>
-      SignUp
-    </div>
+    <StyledSignUp>
+      <StyledSignUpForm>
+        <h1>port/fall.io</h1>
+        <br/>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            required
+            fullWidth
+            id="email-input"
+            label="E-mail"
+            name="email"
+            error={Boolean(formDataErrors.email)}
+            helperText={formDataErrors.email}
+            onChange={handleChange}
+          />
+          <TextField
+            required
+            fullWidth
+            id="password-input"
+            label="Password"
+            type="password"
+            name="password"
+            error={Boolean(formDataErrors.password)}
+            helperText={formDataErrors.password}
+            onChange={handleChange}
+          />
+          <TextField
+            required
+            fullWidth
+            id="confirm-password-input"
+            label="Confirm password"
+            type="password"
+            name="confirmPassword"
+            error={Boolean(formDataErrors.confirmPassword)}
+            helperText={formDataErrors.confirmPassword}
+            onChange={handleChange}
+          />
+          <div className="signup-form--buttons">
+            <SmallLinkButton onClick={() => setShowLogin(true)}>
+              Already have an account?
+            </SmallLinkButton>
+            <SubmitButton
+              type="submit"
+              disabled={isFormDataInvalid}
+            >
+              {loading ? (<CircularProgress size={24} />) : "Sign up"}
+            </SubmitButton>
+          </div>
+          {error && <span>{error}</span>}
+        </form>
+      </StyledSignUpForm>
+    </StyledSignUp>
   )
 }
 
-export default SignUp;
+type SignUpConnect = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
+
+const mapState = (state: RootState) => ({
+  error: state.currentUser.error,
+  loading: state.currentUser.loading,
+});
+
+const mapDispatch = (dispatch: Dispatch) => ({
+  signUp: dispatch.currentUser.signUp,
+});
+
+export default connect(mapState, mapDispatch)(SignUp);

@@ -1,3 +1,9 @@
+export interface Token {
+  message?: string;
+  token: string;
+  userId: number;
+}
+
 export enum Role {
   Investor = 'investor',
   PortfolioManager = 'portfolioManager',
