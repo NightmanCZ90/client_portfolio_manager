@@ -1,5 +1,6 @@
 import { Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
+import { userRegistrationFormSchema } from '../../constants/validations';
 import { StyledSignUp, StyledSignUpForm, SubmitButton } from './SignUp.styles';
 
 type FormData = {
@@ -16,8 +17,21 @@ const initialFormData = {
 
 const SignUp: React.FC = () => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [formDataErrors, setFormDataErrors] = useState<FormData>(initialFormData);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    userRegistrationFormSchema(event.target.name).validate({[event.target.name]: event.target.value}).catch((err) => {
+      setFormDataErrors({ ...formDataErrors, [event.target.name]: err.message});
+    });
+
+    await userRegistrationFormSchema(event.target.name).isValid({[event.target.name]: event.target.value}).then((valid) => {
+      if (valid) setFormDataErrors({ ...formDataErrors, [event.target.name]: ''});
+    });
+
+    if (event.target.name === 'confirmPassword' && formData.password === event.target.value) {
+      setFormDataErrors({ ...formDataErrors, [event.target.name]: ''});
+    }
+
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
@@ -27,7 +41,7 @@ const SignUp: React.FC = () => {
   return (
     <StyledSignUp>
       <StyledSignUpForm>
-        <h1>PORT/FALL.IO</h1>
+        <h1>port/fall.io</h1>
         <br/>
         <form>
           <TextField
@@ -36,7 +50,9 @@ const SignUp: React.FC = () => {
             id="email-input"
             label="E-mail"
             name="email"
-            type="email"
+            // type="email"
+            error={Boolean(formDataErrors.email)}
+            helperText={formDataErrors.email}
             onChange={handleChange}
           />
           <TextField
@@ -46,6 +62,8 @@ const SignUp: React.FC = () => {
             label="Password"
             type="password"
             name="password"
+            error={Boolean(formDataErrors.password)}
+            helperText={formDataErrors.password}
             onChange={handleChange}
           />
           <TextField
@@ -55,6 +73,8 @@ const SignUp: React.FC = () => {
             label="Confirm password"
             type="password"
             name="confirmPassword"
+            error={Boolean(formDataErrors.confirmPassword)}
+            helperText={formDataErrors.confirmPassword}
             onChange={handleChange}
           />
           <div>
