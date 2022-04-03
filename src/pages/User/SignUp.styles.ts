@@ -16,7 +16,7 @@ export const StyledSignUp = styled('div')`
 
     .signup-form--buttons {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       margin-top: 2rem;
     }
   }

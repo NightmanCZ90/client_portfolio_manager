@@ -1,4 +1,4 @@
-import { Button, CircularProgress, TextField } from '@mui/material';
+import { CircularProgress, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
@@ -48,9 +48,14 @@ const SignUp: React.FC<SignUpProps> = (props) => {
     });
   }
 
+  const { email, password, confirmPassword } = formDataErrors;
+  const isFormDataInvalid = Boolean(email) || Boolean(password) || Boolean(confirmPassword);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
+
+    if (isFormDataInvalid) return;
 
     await signUp(formData);
   }
@@ -94,9 +99,11 @@ const SignUp: React.FC<SignUpProps> = (props) => {
             onChange={handleChange}
           />
           <div className="signup-form--buttons">
-            <Button>Forgot Password?</Button>
-            <SubmitButton type="submit">
-              {loading ? (<CircularProgress size={24} />) : "Submit"}
+            <SubmitButton
+              type="submit"
+              disabled={isFormDataInvalid}
+            >
+              {loading ? (<CircularProgress size={24} />) : "Sign up"}
             </SubmitButton>
           </div>
           {error && <span>{error}</span>}
