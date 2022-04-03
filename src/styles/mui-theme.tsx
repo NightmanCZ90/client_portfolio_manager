@@ -15,5 +15,14 @@ export const darkTheme = createTheme({
   },
   shape: {
     borderRadius: 12,
+  },
+  components: {
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          borderRadius: 2,
+        }
+      }
+    }
   }
 });
