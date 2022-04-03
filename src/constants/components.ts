@@ -15,3 +15,7 @@ export const SubmitButton = styled(Button)(({ theme }) => ({
     background: theme.palette.primary.light,
   },
 }));
+
+export const SmallLinkButton = styled(Button)(({ theme }) => ({
+  fontSize: '11px',
+}));

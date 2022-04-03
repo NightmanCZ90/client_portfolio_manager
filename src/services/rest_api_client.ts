@@ -21,6 +21,17 @@ class RestApiClient extends ApiClient {
       body,
     })
   }
+
+  async signIn(body: {
+    email: string,
+    password: string,
+  }) {
+    return this.request<Token>({
+      url: '/login',
+      method: 'POST',
+      body,
+    })
+  }
 }
 
 export default new RestApiClient();

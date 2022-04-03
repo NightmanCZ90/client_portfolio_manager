@@ -1,9 +1,11 @@
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
 import SideNavigation from './components/SideNavigation';
 import Home from './pages/Home';
+import SignIn from './pages/User/SignIn';
 import SignUp from './pages/User/SignUp';
 import { Dispatch, RootState } from './store/store';
 
@@ -12,12 +14,25 @@ interface AppProps extends AppConnect {
 }
 
 const App: React.FC<AppProps> = (props) => {
-  const { token } = props;
+  const [showLogin, setShowLogin] = useState<boolean>(false);
+
+  const { token, setToken } = props;
+
+  useEffect(() => {
+    if (!token) {
+      const savedToken = localStorage.getItem('access_token');
+      savedToken && setToken(savedToken);
+    }
+  }, [token]);
 
   if (!token) {
     return (
       <div className='App'>
-        <SignUp />
+        {showLogin ? (
+          <SignIn setShowLogin={setShowLogin} />
+        ) : (
+          <SignUp setShowLogin={setShowLogin} />
+        )}
       </div>
     )
   }
@@ -39,6 +54,7 @@ const mapState = (state: RootState) => ({
 });
 
 const mapDispatch = (dispatch: Dispatch) => ({
+  setToken: dispatch.currentUser.setToken,
 });
 
 export default connect(mapState, mapDispatch)(App);

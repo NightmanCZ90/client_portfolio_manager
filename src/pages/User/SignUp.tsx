@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { userRegistrationFormSchema } from '../../constants/validations';
-import { SubmitButton } from '../../constants/components';
+import { SmallLinkButton, SubmitButton } from '../../constants/components';
 import { Dispatch, RootState } from '../../store/store';
 import { StyledSignUp, StyledSignUpForm } from './SignUp.styles';
 
@@ -20,14 +20,14 @@ const initialFormData = {
 }
 
 interface SignUpProps extends SignUpConnect {
-
+  setShowLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SignUp: React.FC<SignUpProps> = (props) => {
   const [formData, setFormData] = useState<SignUpFormData>(initialFormData);
   const [formDataErrors, setFormDataErrors] = useState<SignUpFormData>(initialFormData);
 
-  const { error, loading, signUp } = props;
+  const { error, loading, setShowLogin, signUp } = props;
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     userRegistrationFormSchema(event.target.name).validate({[event.target.name]: event.target.value}).catch((err) => {
@@ -99,6 +99,9 @@ const SignUp: React.FC<SignUpProps> = (props) => {
             onChange={handleChange}
           />
           <div className="signup-form--buttons">
+            <SmallLinkButton onClick={() => setShowLogin(true)}>
+              Already have an account?
+            </SmallLinkButton>
             <SubmitButton
               type="submit"
               disabled={isFormDataInvalid}

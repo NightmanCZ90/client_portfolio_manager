@@ -1,7 +1,7 @@
 import { Card } from '@mui/material';
 import { styled } from '@mui/system';
 
-export const StyledSignUp = styled('div')`
+export const StyledSignIn = styled('div')`
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -14,7 +14,12 @@ export const StyledSignUp = styled('div')`
     flex-direction: column;
     gap: 1rem;
 
-    .signup-form--buttons {
+    .signin-form--button {
+      display: flex;
+      margin-top: 2rem;
+    }
+
+    .signin-form--buttons {
       display: flex;
       justify-content: space-between;
       margin-top: 2rem;
@@ -22,6 +27,6 @@ export const StyledSignUp = styled('div')`
   }
 `;
 
-export const StyledSignUpForm = styled(Card)`
+export const StyledSignInForm = styled(Card)`
   padding: 3rem 5rem;
 `;

@@ -1,5 +1,5 @@
 export interface Token {
-  message: string;
+  message?: string;
   token: string;
   userId: number;
 }
