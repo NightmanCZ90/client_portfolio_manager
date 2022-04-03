@@ -14,7 +14,7 @@ interface AppProps extends AppConnect {
 }
 
 const App: React.FC<AppProps> = (props) => {
-  const [showLogin, setShowLogin] = useState<boolean>(false);
+  const [showLogin, setShowLogin] = useState<boolean>(true);
 
   const { token, setToken } = props;
 
