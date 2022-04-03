@@ -1,10 +1,18 @@
-import { NavigationButton, StyledSideNavigation } from './SideNavigation.styles';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import DataSaverOffIcon from '@mui/icons-material/DataSaverOff';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Tooltip } from '@mui/material';
+import { connect } from 'react-redux';
 
-const SideNavigation: React.FC = () => {
+import { Dispatch, RootState } from '../../store/store';
+import { NavigationButton, StyledSideNavigation } from './SideNavigation.styles';
+
+interface SideNavigationProps extends SideNavigationConnect {
+
+}
+
+const SideNavigation: React.FC<SideNavigationProps> = (props) => {
+  const { signOut } = props;
   return (
     <StyledSideNavigation>
 
@@ -19,12 +27,12 @@ const SideNavigation: React.FC = () => {
       <div className="navigation-user">
         <Tooltip title="My Account" placement="right" arrow>
           <NavigationButton>
-            <PersonOutlineIcon />
+            <PersonOutlineIcon fontSize="medium" />
           </NavigationButton>
         </Tooltip>
 
         <Tooltip title="Sign Out" placement="right" arrow>
-          <NavigationButton>
+          <NavigationButton onClick={signOut}>
             <LogoutIcon />
           </NavigationButton>
         </Tooltip>
@@ -34,4 +42,13 @@ const SideNavigation: React.FC = () => {
   )
 }
 
-export default SideNavigation;
+type SideNavigationConnect = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
+
+const mapState = (state: RootState) => ({
+});
+
+const mapDispatch = (dispatch: Dispatch) => ({
+  signOut: dispatch.currentUser.signOut,
+});
+
+export default connect(mapState, mapDispatch)(SideNavigation);

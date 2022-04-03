@@ -27,7 +27,7 @@ export const currentUser = createModel<RootModel>()({
     setUser: (state, user: CurrentUser | null) => ({ ...state, user }),
   },
   effects: (dispatch) => ({
-    async signIn(payload: SignInFormData, state) {
+    async signIn(payload: SignInFormData) {
       const { setError, setLoading, setToken, setUser } = dispatch.currentUser;
 
       /** Reset */
@@ -48,7 +48,7 @@ export const currentUser = createModel<RootModel>()({
       setLoading(false);
     },
 
-    async signUp(payload: SignUpFormData, state) {
+    async signUp(payload: SignUpFormData) {
       const { setError, setLoading, setToken, setUser } = dispatch.currentUser;
 
       /** Reset */
@@ -69,8 +69,11 @@ export const currentUser = createModel<RootModel>()({
       setLoading(false);
     },
 
-    signOut(payload: number, state) {
-      // TODO: sign out
+    signOut() {
+      localStorage.removeItem('access_token');
+      dispatch.currentUser.setToken('');
+      dispatch.currentUser.setUser(null);
+      window.location.reload();
     },
   }),
 });
