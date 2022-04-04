@@ -7,6 +7,7 @@ import SideNavigation from './components/SideNavigation';
 import Home from './pages/Home';
 import SignIn from './pages/User/SignIn';
 import SignUp from './pages/User/SignUp';
+import UserProfile from './pages/User/UserProfile';
 import { Dispatch, RootState } from './store/store';
 
 interface AppProps extends AppConnect {
@@ -42,6 +43,7 @@ const App: React.FC<AppProps> = (props) => {
       <SideNavigation />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/user" element={<UserProfile />} />
       </Routes>
     </div>
   );
