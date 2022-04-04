@@ -1,7 +1,9 @@
 export interface Token {
   message?: string;
-  token: string;
-  userId: number;
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+  userId?: number;
 }
 
 export enum Role {

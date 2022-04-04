@@ -40,6 +40,14 @@ class RestApiClient extends ApiClient {
       method: 'GET'
     })
   }
+
+  async getCurrentUser(accessToken: string) {
+    return this.authorizedRequest<CurrentUser>({
+      accessToken: accessToken,
+      url: '/users/current',
+      method: 'GET'
+    })
+  }
 }
 
 export default new RestApiClient();
