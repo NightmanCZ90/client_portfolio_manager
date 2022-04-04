@@ -1,7 +1,7 @@
 import { createModel } from "@rematch/core";
 
 import { RootModel } from "../../../store";
-import { CurrentUser } from '../../../types/user';
+import { CurrentUser, Token } from '../../../types/user';
 import { SignUpFormData } from '../SignUp';
 import RestApiClient from '../../../services/rest_api_client';
 import { SignInFormData } from '../SignIn';
@@ -9,43 +9,41 @@ import { SignInFormData } from '../SignIn';
 interface CurrentUserState {
   error: string;
   loading: boolean;
-  token: string;
+  token: Token | null;
   user: CurrentUser | null;
-  userId: number | null;
 }
 
 export const currentUser = createModel<RootModel>()({
   state: {
     error: '',
     loading: false,
-    token: '',
+    token: null,
     user: null,
-    userId: null,
   } as CurrentUserState,
   reducers: {
     setError: (state, error: string) => ({ ...state, error }),
     setLoading: (state, loading: boolean) => ({ ...state, loading }),
-    setToken: (state, token: string) => ({ ...state, token }),
+    setToken: (state, token: Token | null) => ({ ...state, token }),
     setUser: (state, user: CurrentUser | null) => ({ ...state, user }),
-    setUserId: (state, userId: number | null) => ({ ...state, userId }),
   },
   effects: (dispatch) => ({
     async signIn(payload: SignInFormData) {
-      const { setError, setLoading, setToken, setUser, setUserId } = dispatch.currentUser;
+      const { setError, setLoading, setToken, setUser } = dispatch.currentUser;
 
       /** Reset */
       setError('');
       setUser(null);
-      setUserId(null);
-      localStorage.removeItem('access_token');
+      setToken(null);
+      localStorage.removeItem('jwt_token');
 
       try {
         setLoading(true);
         const data = await RestApiClient.signIn(payload);
-        if (data?.token && data.userId) {
-          localStorage.setItem('access_token', data?.token);
-          setToken(data.token);
-          setUserId(data.userId);
+        if (data) {
+          const { accessToken, refreshToken, expiresIn } = data;
+          const tokenData = JSON.stringify({ accessToken, refreshToken, expiresIn });
+          localStorage.setItem('jwt_token', tokenData);
+          setToken(data);
         }
       } catch(err: any) {
         setError(err.data?.data?.[0]?.msg);
@@ -54,21 +52,22 @@ export const currentUser = createModel<RootModel>()({
     },
 
     async signUp(payload: SignUpFormData) {
-      const { setError, setLoading, setToken, setUser, setUserId } = dispatch.currentUser;
+      const { setError, setLoading, setToken, setUser } = dispatch.currentUser;
 
       /** Reset */
       setError('');
       setUser(null);
-      setUserId(null);
-      localStorage.removeItem('access_token');
+      setToken(null);
+      localStorage.removeItem('jwt_token');
 
       try {
         setLoading(true);
         const data = await RestApiClient.signUp(payload);
-        if (data?.token && data?.userId) {
-          localStorage.setItem('access_token', data?.token);
-          setToken(data.token);
-          setUserId(data.userId);
+        if (data) {
+          const { accessToken, refreshToken, expiresIn } = data;
+          const tokenData = JSON.stringify({ accessToken, refreshToken, expiresIn });
+          localStorage.setItem('jwt_token', tokenData);
+          setToken(data);
         }
       } catch(err: any) {
         setError(err.data?.data?.[0]?.msg);
@@ -77,25 +76,24 @@ export const currentUser = createModel<RootModel>()({
     },
 
     signOut() {
-      localStorage.removeItem('access_token');
-      dispatch.currentUser.setToken('');
+      localStorage.removeItem('jwt_token');
+      dispatch.currentUser.setToken(null);
       dispatch.currentUser.setUser(null);
       window.location.reload();
     },
 
-    async getCurrentUser(payload: any, state) {
-      const { token } = state.currentUser;
+    async getCurrentUser(accessToken: string, state) {
       try {
-        // setLoading(true);
-        const data = await RestApiClient.getUser(payload, token);
-        console.log(data)
-        // if (data?.token) {
-        //   localStorage.setItem('access_token', data?.token);
-        //   setToken(data.token);
-        // }
+        if (accessToken) {
+          const data = await RestApiClient.getCurrentUser(accessToken);
+
+          if (data) {
+            dispatch.currentUser.setUser(data);
+          }
+        }
       } catch(err: any) {
-        console.log(err.data)
-        // setError(err.data?.data?.[0]?.msg);
+        // TODO: Remove sign out once token refresh is implemented
+        dispatch.currentUser.signOut();
       }
     }
   }),

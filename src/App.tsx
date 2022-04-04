@@ -4,11 +4,13 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
 import SideNavigation from './components/SideNavigation';
+import { useBootstrap } from './hooks/useBootstrap';
 import Home from './pages/Home';
 import SignIn from './pages/User/SignIn';
 import SignUp from './pages/User/SignUp';
 import UserProfile from './pages/User/UserProfile';
 import { Dispatch, RootState } from './store/store';
+import { Token } from './types/user';
 
 interface AppProps extends AppConnect {
 
@@ -16,13 +18,14 @@ interface AppProps extends AppConnect {
 
 const App: React.FC<AppProps> = (props) => {
   const [showLogin, setShowLogin] = useState<boolean>(true);
+  useBootstrap();
 
   const { token, setToken } = props;
 
   useEffect(() => {
     if (!token) {
-      const savedToken = localStorage.getItem('access_token');
-      savedToken && setToken(savedToken);
+      const savedToken = localStorage.getItem('jwt_token');
+      savedToken && setToken(JSON.parse(savedToken) as Token);
     }
   }, [setToken, token]);
 
