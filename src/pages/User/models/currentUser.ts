@@ -95,6 +95,34 @@ export const currentUser = createModel<RootModel>()({
         // TODO: Remove sign out once token refresh is implemented
         dispatch.currentUser.signOut();
       }
+    },
+
+    async updateUser(payload: CurrentUser, state) {
+      const accessToken = state.currentUser.token?.accessToken;
+      const { setError, setLoading } = dispatch.currentUser;
+      const { id, firstName, lastName, role } = payload;
+      const body = {
+        firstName,
+        lastName,
+        role,
+      }
+
+      /** Reset */
+      setError('');
+      setLoading(true);
+
+      try {
+        if (accessToken) {
+          const data = await RestApiClient.updateUser(id, body, accessToken);
+
+          if (data) {
+            dispatch.currentUser.setUser(data);
+          }
+        }
+      } catch(err: any) {
+        setError(err.data?.data?.[0]?.msg);
+      }
+      setLoading(false);
     }
   }),
 });

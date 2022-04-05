@@ -1,21 +1,20 @@
 import { CircularProgress, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { SubmitButton } from '../../constants/components';
+import { userFormSchema } from '../../constants/validations';
 import { Dispatch, RootState } from '../../store/store';
 import { Role } from '../../types/user';
 import { capitalizeFirst } from '../../utils/helpers';
 import { StyledUserProfile, StyledUserProfileContent, StyledUserProfileHeader } from './UserProfile.styles';
 
 const initialUserFormData = {
-  email: '',
   firstName: '',
   lastName: '',
   role: Role.Investor,
 }
 
 const initialUserFormErrorsData = {
-  email: '',
   firstName: '',
   lastName: '',
 }
@@ -25,26 +24,37 @@ interface UserProfileProps extends UserProfileConnect {
 }
 
 const UserProfile: React.FC<UserProfileProps> = (props) => {
-  const [userData, setUserData] = useState<typeof initialUserFormData>(initialUserFormData);
+  const [userData, setUserData] = useState<typeof initialUserFormData>(props.user || initialUserFormData);
   const [userDataErrors, setUserDataErrors] = useState<typeof initialUserFormErrorsData>(initialUserFormErrorsData);
 
-  const { error, loading, user } = props;
+  const { error, loading, updateUser, user } = props;
 
-  useEffect(() => {
-    if (user) {
-      setUserData(user);
-    }
-  }, [user]);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 
-  const handleChange = () => {
+    userFormSchema(event.target.name).validate({[event.target.name]: event.target.value})
+      .then((value) => {
+        setUserDataErrors({ ...userDataErrors, [event.target.name]: ''});
+      })
+      .catch((err) => {
+        setUserDataErrors({ ...userDataErrors, [event.target.name]: err.message});
+      });
 
+    setUserData({
+      ...userData,
+      [event.target.name]: event.target.value,
+    });
   }
 
-  const { email, firstName, lastName } = userDataErrors;
-  const isFormDataInvalid = Boolean(email) || Boolean(firstName) || Boolean(lastName);
+  const { firstName, lastName } = userDataErrors;
+  const isFormDataInvalid = Boolean(firstName) || Boolean(lastName);
 
-  const handleSubmit = () => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
 
+    if (isFormDataInvalid) return;
+
+    if (user) await updateUser({ ...user, ...userData });
   }
 
   return (
@@ -62,7 +72,6 @@ const UserProfile: React.FC<UserProfileProps> = (props) => {
       <StyledUserProfileContent>
         <form onSubmit={handleSubmit}>
           <TextField
-            required
             fullWidth
             id="first-name-input"
             label="First name"
@@ -73,7 +82,6 @@ const UserProfile: React.FC<UserProfileProps> = (props) => {
             onChange={handleChange}
           />
           <TextField
-            required
             fullWidth
             id="last-name-input"
             label="Last name"
@@ -107,6 +115,7 @@ const mapState = (state: RootState) => ({
 });
 
 const mapDispatch = (dispatch: Dispatch) => ({
+  updateUser: dispatch.currentUser.updateUser,
 });
 
 export default connect(mapState, mapDispatch)(UserProfile);

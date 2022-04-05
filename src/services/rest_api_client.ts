@@ -1,4 +1,4 @@
-import { CurrentUser, Token } from '../types/user';
+import { CurrentUser, Role, Token } from '../types/user';
 import ApiClient from './api_client';
 
 const baseUrl = (process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DEV_BASE_URL : process.env.REACT_APP_BASE_URL) || 'http://localhost:8080';
@@ -46,6 +46,19 @@ class RestApiClient extends ApiClient {
       accessToken: accessToken,
       url: '/users/current',
       method: 'GET'
+    })
+  }
+
+  async updateUser(userId: number, body: {
+    firstName: string,
+    lastName: string,
+    role: Role,
+  }, accessToken: string) {
+    return this.authorizedRequest<CurrentUser>({
+      accessToken: accessToken,
+      url: `/users/${userId}`,
+      method: 'PUT',
+      body,
     })
   }
 }

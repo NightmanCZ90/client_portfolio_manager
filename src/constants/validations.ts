@@ -27,3 +27,21 @@ export const userRegistrationFormSchema = (inputType: string) => {
     });
   }
 }
+
+export const userFormSchema = (inputType: string) => {
+  if (inputType === 'firstName') {
+    return yup.object().shape({
+      firstName: yup
+        .string()
+        .max(40, 'Maximal length of first name is 40 characters.')
+        .optional(),
+    });
+  } else {
+    return yup.object().shape({
+      lastName: yup
+        .string()
+        .max(40, 'Maximal length of first name is 40 characters.')
+        .optional(),
+    });
+  }
+}
