@@ -30,13 +30,13 @@ const SignUp: React.FC<SignUpProps> = (props) => {
   const { error, loading, setShowLogin, signUp } = props;
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    userRegistrationFormSchema(event.target.name).validate({[event.target.name]: event.target.value}).catch((err) => {
-      setFormDataErrors({ ...formDataErrors, [event.target.name]: err.message});
-    });
-
-    await userRegistrationFormSchema(event.target.name).isValid({[event.target.name]: event.target.value}).then((valid) => {
-      if (valid) setFormDataErrors({ ...formDataErrors, [event.target.name]: ''});
-    });
+    userRegistrationFormSchema(event.target.name).validate({[event.target.name]: event.target.value})
+      .then((value) => {
+        setFormDataErrors({ ...formDataErrors, [event.target.name]: ''});
+      })
+      .catch((err) => {
+        setFormDataErrors({ ...formDataErrors, [event.target.name]: err.message});
+      });
 
     if (event.target.name === 'confirmPassword' && formData.password === event.target.value) {
       setFormDataErrors({ ...formDataErrors, [event.target.name]: ''});
