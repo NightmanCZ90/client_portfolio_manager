@@ -1,3 +1,5 @@
+import axios from './axios';
+
 type Query = Record<string, any>;
 
 type RestApiValidationError = {
@@ -17,10 +19,6 @@ interface RequestOptions {
   headers?: Record<string, string>,
 }
 
-interface AuthRequestOptions extends RequestOptions {
-  accessToken: string,
-}
-
 abstract class ApiClient {
   baseUrl!: string;
 
@@ -34,30 +32,19 @@ abstract class ApiClient {
 
   getUrl = (resourceUrl: string) => new URL(resourceUrl, this.baseUrl).href;
 
-  async request<T>(options: RequestOptions) {
-    const querySearch = new URLSearchParams(this.getQueryObject(options.query));
-    const url = this.getUrl(options.url) + (options.query ? `?${querySearch}` : '');
-
-    const response = await fetch(url, {
-      method: options.method,
-      body: options.body ? JSON.stringify(options.body) : options.body,
-      headers: { ...options.headers, 'Content-Type': 'application/json' },
-    });
-
-    const data = await response.json();
-
-    if (response.ok) return data as T;
-
-    const error: RestApiError = new Error();
-    error.data = data;
-    throw error;
-  }
-
-  async authorizedRequest<T>(options: AuthRequestOptions) {
-    return this.request<T>({
-      ...options,
-      headers: { ...options.headers, Authorization: `Bearer ${options.accessToken}` },
-    });
+  async axiosRequest<T>(options: RequestOptions) {
+    try {
+      const { data } = await axios.request<T>({
+        url: options.url,
+        method: options.method,
+        data: options.body,
+      })
+      return { data };
+    } catch(err: any) {
+      const error: RestApiError = new Error();
+      error.data = err;
+      return { error: error.data };
+    }
   }
 }
 

@@ -9,7 +9,7 @@ export function useBootstrap() {
 
   const { token } = currentUser;
   useEffect(() => {
-    token?.accessToken && dispatch.currentUser.getCurrentUser(token?.accessToken);
-  }, [token])
+    token?.accessToken && dispatch.currentUser.getCurrentUser();
+  }, [token?.refreshToken])
 }
 
