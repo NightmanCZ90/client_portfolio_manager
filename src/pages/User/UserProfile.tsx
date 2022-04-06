@@ -1,5 +1,5 @@
 import { CircularProgress, TextField } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { SubmitButton } from '../../constants/components';
 import { userFormSchema } from '../../constants/validations';
@@ -24,10 +24,14 @@ interface UserProfileProps extends UserProfileConnect {
 }
 
 const UserProfile: React.FC<UserProfileProps> = (props) => {
-  const [userData, setUserData] = useState<typeof initialUserFormData>(props.user || initialUserFormData);
+  const [userData, setUserData] = useState<typeof initialUserFormData>(initialUserFormData);
   const [userDataErrors, setUserDataErrors] = useState<typeof initialUserFormErrorsData>(initialUserFormErrorsData);
 
   const { error, loading, updateUser, user } = props;
+
+  useEffect(() => {
+    user && setUserData(user)
+  }, [user]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 
