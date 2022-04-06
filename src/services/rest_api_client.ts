@@ -15,7 +15,7 @@ class RestApiClient extends ApiClient {
     password: string,
     confirmPassword: string,
   }) {
-    return this.request<Token>({
+    return this.axiosRequest<Token>({
       url: '/signup',
       method: 'POST',
       body,
@@ -26,24 +26,22 @@ class RestApiClient extends ApiClient {
     email: string,
     password: string,
   }) {
-    return this.request<Token>({
+    return this.axiosRequest<Token>({
       url: '/login',
       method: 'POST',
       body,
     })
   }
 
-  async getUser(userId: number, accessToken: string) {
-    return this.authorizedRequest<CurrentUser>({
-      accessToken: accessToken,
+  async getUser(userId: number) {
+    return this.axiosRequest<CurrentUser>({
       url: `/users/${userId}`,
       method: 'GET'
     })
   }
 
-  async getCurrentUser(accessToken: string) {
-    return this.authorizedRequest<CurrentUser>({
-      accessToken: accessToken,
+  async getCurrentUser() {
+    return this.axiosRequest<CurrentUser>({
       url: '/users/current',
       method: 'GET'
     })
@@ -53,9 +51,8 @@ class RestApiClient extends ApiClient {
     firstName: string,
     lastName: string,
     role: Role,
-  }, accessToken: string) {
-    return this.authorizedRequest<CurrentUser>({
-      accessToken: accessToken,
+  }) {
+    return this.axiosRequest<CurrentUser>({
       url: `/users/${userId}`,
       method: 'PUT',
       body,

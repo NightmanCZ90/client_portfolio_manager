@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
 import SideNavigation from './components/SideNavigation';
+import useAxiosPrivate from './hooks/useAxiosPrivate';
 import { useBootstrap } from './hooks/useBootstrap';
 import Home from './pages/Home';
 import SignIn from './pages/User/SignIn';
@@ -19,6 +20,7 @@ interface AppProps extends AppConnect {
 const App: React.FC<AppProps> = (props) => {
   const [showLogin, setShowLogin] = useState<boolean>(true);
   useBootstrap();
+  useAxiosPrivate();
 
   const { token, setToken } = props;
 

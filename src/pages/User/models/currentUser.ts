@@ -5,6 +5,7 @@ import { CurrentUser, Token } from '../../../types/user';
 import { SignUpFormData } from '../SignUp';
 import RestApiClient from '../../../services/rest_api_client';
 import { SignInFormData } from '../SignIn';
+import axios from '../../../services/axios';
 
 interface CurrentUserState {
   error: string;
@@ -36,17 +37,17 @@ export const currentUser = createModel<RootModel>()({
       setToken(null);
       localStorage.removeItem('jwt_token');
 
-      try {
-        setLoading(true);
-        const data = await RestApiClient.signIn(payload);
-        if (data) {
-          const { accessToken, refreshToken, expiresIn } = data;
-          const tokenData = JSON.stringify({ accessToken, refreshToken, expiresIn });
-          localStorage.setItem('jwt_token', tokenData);
-          setToken(data);
-        }
-      } catch(err: any) {
-        setError(err.data?.data?.[0]?.msg);
+      setLoading(true);
+      const { data, error } = await RestApiClient.signIn(payload);
+      if (data) {
+        const { accessToken, refreshToken, expiresIn } = data;
+        const tokenData = JSON.stringify({ accessToken, refreshToken, expiresIn });
+        localStorage.setItem('jwt_token', tokenData);
+        axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        setToken(data);
+      }
+      if (error) {
+        setError(error[0]?.msg);
       }
       setLoading(false);
     },
@@ -60,17 +61,16 @@ export const currentUser = createModel<RootModel>()({
       setToken(null);
       localStorage.removeItem('jwt_token');
 
-      try {
-        setLoading(true);
-        const data = await RestApiClient.signUp(payload);
-        if (data) {
-          const { accessToken, refreshToken, expiresIn } = data;
-          const tokenData = JSON.stringify({ accessToken, refreshToken, expiresIn });
-          localStorage.setItem('jwt_token', tokenData);
-          setToken(data);
-        }
-      } catch(err: any) {
-        setError(err.data?.data?.[0]?.msg);
+      setLoading(true);
+      const { data, error } = await RestApiClient.signUp(payload);
+      if (data) {
+        const { accessToken, refreshToken, expiresIn } = data;
+        const tokenData = JSON.stringify({ accessToken, refreshToken, expiresIn });
+        localStorage.setItem('jwt_token', tokenData);
+        setToken(data);
+      }
+      if (error) {
+        setError(error[0]?.msg);
       }
       setLoading(false);
     },
@@ -82,23 +82,19 @@ export const currentUser = createModel<RootModel>()({
       window.location.reload();
     },
 
-    async getCurrentUser(accessToken: string, state) {
-      try {
-        if (accessToken) {
-          const data = await RestApiClient.getCurrentUser(accessToken);
+    async getCurrentUser() {
+      const { setError, setUser } = dispatch.currentUser;
+      const { data, error } = await RestApiClient.getCurrentUser();
 
-          if (data) {
-            dispatch.currentUser.setUser(data);
-          }
-        }
-      } catch(err: any) {
-        // TODO: Remove sign out once token refresh is implemented
-        dispatch.currentUser.signOut();
+      if (data) {
+        setUser(data);
+      }
+      if (error) {
+        setError(error[0]?.msg);
       }
     },
 
     async updateUser(payload: CurrentUser, state) {
-      const accessToken = state.currentUser.token?.accessToken;
       const { setError, setLoading } = dispatch.currentUser;
       const { id, firstName, lastName, role } = payload;
       const body = {
@@ -111,16 +107,13 @@ export const currentUser = createModel<RootModel>()({
       setError('');
       setLoading(true);
 
-      try {
-        if (accessToken) {
-          const data = await RestApiClient.updateUser(id, body, accessToken);
+      const { data, error } = await RestApiClient.updateUser(id, body);
 
-          if (data) {
-            dispatch.currentUser.setUser(data);
-          }
-        }
-      } catch(err: any) {
-        setError(err.data?.data?.[0]?.msg);
+      if (data) {
+        dispatch.currentUser.setUser(data);
+      }
+      if (error) {
+        setError(error[0]?.msg);
       }
       setLoading(false);
     }
