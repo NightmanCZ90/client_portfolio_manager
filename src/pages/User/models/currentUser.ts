@@ -43,7 +43,7 @@ export const currentUser = createModel<RootModel>()({
         const { accessToken, refreshToken, expiresIn } = data;
         const tokenData = JSON.stringify({ accessToken, refreshToken, expiresIn });
         localStorage.setItem('jwt_token', tokenData);
-        axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
         setToken(data);
       }
       if (error) {
@@ -62,6 +62,7 @@ export const currentUser = createModel<RootModel>()({
       localStorage.removeItem('jwt_token');
 
       setLoading(true);
+
       const { data, error } = await RestApiClient.signUp(payload);
       if (data) {
         const { accessToken, refreshToken, expiresIn } = data;
@@ -85,7 +86,6 @@ export const currentUser = createModel<RootModel>()({
     async getCurrentUser() {
       const { setError, setUser } = dispatch.currentUser;
       const { data, error } = await RestApiClient.getCurrentUser();
-
       if (data) {
         setUser(data);
       }
@@ -105,10 +105,9 @@ export const currentUser = createModel<RootModel>()({
 
       /** Reset */
       setError('');
+
       setLoading(true);
-
       const { data, error } = await RestApiClient.updateUser(id, body);
-
       if (data) {
         dispatch.currentUser.setUser(data);
       }

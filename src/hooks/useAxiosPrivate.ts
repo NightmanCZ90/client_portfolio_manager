@@ -1,4 +1,4 @@
-import axios from '../services/axios';
+import { axiosPrivate } from '../services/axios';
 import { useEffect } from 'react';
 import useRefreshToken from './useRefreshToken';
 import { useSelector } from 'react-redux';
@@ -9,9 +9,10 @@ const useAxiosPrivate = () => {
   const currentUser = useSelector((state: RootState) => state.currentUser);
 
   useEffect(() => {
-    const requestIntercept = axios.interceptors.request.use(
+    const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
         if (!config.headers?.Authorization) {
+
           // @ts-ignore
           config.headers.Authorization = `Bearer ${currentUser.token?.accessToken}`;
         }
@@ -22,7 +23,7 @@ const useAxiosPrivate = () => {
       }
     )
 
-    const responseIntercept = axios.interceptors.response.use(
+    const responseIntercept = axiosPrivate.interceptors.response.use(
       (response) => {
         return response
       },
@@ -31,20 +32,26 @@ const useAxiosPrivate = () => {
         if (error?.response?.status === 401 && !prevRequest?.sent) {
           prevRequest.sent = true;
           const newAccessToken = await refresh();
+
+          const savedToken = localStorage.getItem('jwt_token');
+          if (savedToken) {
+            const parsedToken = JSON.parse(savedToken);
+            localStorage.setItem('jwt_token', JSON.stringify({ ...parsedToken, accessToken: newAccessToken }));
+          }
           prevRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-          return axios(prevRequest);
+          return axiosPrivate(prevRequest);
         }
         return Promise.reject(error);
       }
     )
 
     return () => {
-      axios.interceptors.request.eject(requestIntercept);
-      axios.interceptors.response.eject(responseIntercept);
+      axiosPrivate.interceptors.request.eject(requestIntercept);
+      axiosPrivate.interceptors.response.eject(responseIntercept);
     }
-  }, [currentUser.token, refresh]);
+  }, [currentUser.token?.accessToken, refresh]);
 
-  return axios;
+  return axiosPrivate;
 }
 
 export default useAxiosPrivate;

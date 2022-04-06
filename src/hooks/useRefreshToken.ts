@@ -7,13 +7,18 @@ const useRefreshToken = () => {
   const currentUser = useSelector((state: RootState) => state.currentUser);
 
   const refresh = async () => {
-    const response = await axios.post('/refresh', { email: currentUser.user?.email, refreshToken: currentUser.token?.refreshToken });
-    if (response?.data) {
-      const { accessToken } = response.data;
+    try {
+      const response = await axios.post('/refresh', { email: currentUser.user?.email, refreshToken: currentUser.token?.refreshToken });
 
-      if (currentUser.token) dispatch.currentUser.setToken({ ...currentUser.token, accessToken });
+      if (response?.data) {
+        const { accessToken } = response.data;
+
+        if (currentUser.token) dispatch.currentUser.setToken({ ...currentUser.token, accessToken });
+      }
+      return response?.data?.accessToken;
+    } catch (err) {
+      dispatch.currentUser.signOut();
     }
-    return response?.data?.accessToken;
   }
   return refresh;
 }

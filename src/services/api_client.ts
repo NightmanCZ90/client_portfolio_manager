@@ -1,4 +1,4 @@
-import axios from './axios';
+import { axiosPrivate } from './axios';
 
 type Query = Record<string, any>;
 
@@ -34,7 +34,7 @@ abstract class ApiClient {
 
   async axiosRequest<T>(options: RequestOptions) {
     try {
-      const { data } = await axios.request<T>({
+      const { data } = await axiosPrivate.request<T>({
         url: options.url,
         method: options.method,
         data: options.body,

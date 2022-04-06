@@ -4,5 +4,9 @@ const BASE_URL = (process.env.NODE_ENV === 'development' ? process.env.REACT_APP
 
 export default axios.create({
   baseURL: BASE_URL,
+});
+
+export const axiosPrivate = axios.create({
+  baseURL: BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 });
