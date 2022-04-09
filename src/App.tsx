@@ -7,6 +7,7 @@ import SideNavigation from './components/SideNavigation';
 import useAxiosPrivate from './hooks/useAxiosPrivate';
 import { useBootstrap } from './hooks/useBootstrap';
 import Home from './pages/Home';
+import Portfolios from './pages/Portfolios';
 import SignIn from './pages/User/SignIn';
 import SignUp from './pages/User/SignUp';
 import UserProfile from './pages/User/UserProfile';
@@ -48,6 +49,7 @@ const App: React.FC<AppProps> = (props) => {
       <SideNavigation />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/portfolios" element={<Portfolios />} />
         <Route path="/user" element={<UserProfile />} />
       </Routes>
     </div>
