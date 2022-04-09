@@ -1,7 +1,7 @@
 import { createModel } from "@rematch/core";
 
 import { RootModel } from "../../../store";
-import { CurrentUser, Token } from '../../../types/user';
+import { User, Token } from '../../../types/user';
 import { SignUpFormData } from '../SignUp';
 import RestApiClient from '../../../services/rest_api_client';
 import { SignInFormData } from '../SignIn';
@@ -11,7 +11,7 @@ interface CurrentUserState {
   error: string;
   loading: boolean;
   token: Token | null;
-  user: CurrentUser | null;
+  user: User | null;
 }
 
 export const currentUser = createModel<RootModel>()({
@@ -25,7 +25,7 @@ export const currentUser = createModel<RootModel>()({
     setError: (state, error: string) => ({ ...state, error }),
     setLoading: (state, loading: boolean) => ({ ...state, loading }),
     setToken: (state, token: Token | null) => ({ ...state, token }),
-    setUser: (state, user: CurrentUser | null) => ({ ...state, user }),
+    setUser: (state, user: User | null) => ({ ...state, user }),
   },
   effects: (dispatch) => ({
     async signIn(payload: SignInFormData) {
@@ -97,7 +97,7 @@ export const currentUser = createModel<RootModel>()({
       }
     },
 
-    async updateUser(payload: CurrentUser, state) {
+    async updateUser(payload: User, state) {
       const { setError, setLoading } = dispatch.currentUser;
       const { id, firstName, lastName, role } = payload;
       const body = {

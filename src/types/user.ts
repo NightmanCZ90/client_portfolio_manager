@@ -12,7 +12,7 @@ export enum Role {
   Administrator = 'administrator',
 }
 
-export interface CurrentUser {
+export interface User {
   id: number;
   createdAt: Date;
   updatedAt: Date;
@@ -20,6 +20,7 @@ export interface CurrentUser {
   password: string;
   firstName: string;
   lastName: string;
+  currency: string;
   role: Role;
   isActive: boolean;
 }

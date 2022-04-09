@@ -1,3 +1,5 @@
+import { User } from './user';
+
 export interface Portfolio {
   id: number;
   createdAt: Date;
@@ -8,4 +10,5 @@ export interface Portfolio {
   url: string | null;
   userId: number;
   pmId: number | null;
+  user?: User;
 }
