@@ -2,6 +2,8 @@ import { IconButton } from '@mui/material';
 import { styled } from '@mui/system';
 
 export const StyledSideNavigation = styled('div')`
+  position: sticky;
+  top: 0;
   background-color: #423c3c;
   width: 3.5rem;
   padding: 0.5rem;
