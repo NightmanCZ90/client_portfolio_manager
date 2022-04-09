@@ -47,7 +47,8 @@ export const currentUser = createModel<RootModel>()({
         setToken(data);
       }
       if (error) {
-        setError(error[0]?.msg);
+        error.message && setError(error.message);
+        error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
       }
       setLoading(false);
     },
@@ -71,7 +72,8 @@ export const currentUser = createModel<RootModel>()({
         setToken(data);
       }
       if (error) {
-        setError(error[0]?.msg);
+        error.message && setError(error.message);
+        error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
       }
       setLoading(false);
     },
@@ -90,7 +92,8 @@ export const currentUser = createModel<RootModel>()({
         setUser(data);
       }
       if (error) {
-        setError(error[0]?.msg);
+        error.message && setError(error.message);
+        error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
       }
     },
 
@@ -112,7 +115,8 @@ export const currentUser = createModel<RootModel>()({
         dispatch.currentUser.setUser(data);
       }
       if (error) {
-        setError(error[0]?.msg);
+        error.message && setError(error.message);
+        error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
       }
       setLoading(false);
     }

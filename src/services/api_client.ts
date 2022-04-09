@@ -42,8 +42,9 @@ abstract class ApiClient {
       return { data };
     } catch(err: any) {
       const error: RestApiError = new Error();
-      error.data = err;
-      return { error: error.data };
+      error.message = err.response.data.message;
+      error.data = err.response.data.data;
+      return { error };
     }
   }
 }
