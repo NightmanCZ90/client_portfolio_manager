@@ -17,14 +17,14 @@ export const SubmitButton = styled(Button)(({ theme }) => ({
 }));
 
 export const PrimaryButton = styled(Button)(({ theme }) => ({
-  background: theme.palette.grey['800'],
+  background: theme.palette.grey['700'],
   color: theme.palette.common.white,
   padding: '0.5rem 2rem',
   ".MuiTouchRipple-child": {
     color: theme.palette.grey['800'],
   },
   ":hover": {
-    background: theme.palette.grey['700'],
+    background: theme.palette.grey['600'],
   },
 }));
 
