@@ -14,6 +14,12 @@ import UserProfile from './pages/User/UserProfile';
 import { Dispatch, RootState } from './store/store';
 import { Token } from './types/user';
 
+// TODO: Add Internationalization and Localization
+export const formatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD'
+})
+
 interface AppProps extends AppConnect {
 
 }
