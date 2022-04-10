@@ -62,12 +62,32 @@ export const portfolioCreationFormSchema = (inputType: string, isManaged: boolea
         .string()
         .optional(),
     });
+  } else if (inputType === 'name') {
+    return yup.object().shape({
+      name: yup
+        .string()
+        .max(20, 'Maximal length of portfolio name is 20 characters.')
+        .required('Please enter name for this portfolio.'),
+    });
+  } else if (inputType === 'description') {
+    return yup.object().shape({
+      description: yup
+        .string()
+        .max(240, 'Maximal length of portfolio description is 240 characters.')
+        .optional(),
+    });
+  } else if (inputType === 'color') {
+    return yup.object().shape({
+      color: yup
+        .string()
+        .max(6, 'Maximal length of portfolio color is 6 characters.')
+        .optional(),
+    });
   } else {
     return yup.object().shape({
-      confirmPassword: yup
+      url: yup
         .string()
-        .required('Please confirm your password.')
-        .oneOf([yup.ref("password"), null], "Passwords must match.")
+        .optional(),
     });
   }
 }
