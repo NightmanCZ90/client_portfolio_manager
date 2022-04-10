@@ -31,7 +31,7 @@ const Portfolios: React.FC<PortfoliosProps> = (props) => {
 
     // TODO: split into two groups by investor and pm
     return portfolios.map(portfolio => (
-      <PortfolioCard
+      <PortfolioCard key={portfolio.id}
         portfolio={portfolio}
         currency={currentUser.currency}
       />

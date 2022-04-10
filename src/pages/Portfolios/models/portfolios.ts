@@ -1,9 +1,7 @@
 import { createModel } from "@rematch/core";
 
 import { RootModel } from "../../../store";
-import { User, Token } from '../../../types/user';
 import RestApiClient from '../../../services/rest_api_client';
-import axios from '../../../services/axios';
 import { Portfolio } from '../../../types/portfolio';
 
 interface PortfoliosState {
@@ -39,7 +37,6 @@ export const portfolios = createModel<RootModel>()({
 
       const { data, error } = await RestApiClient.getUsersPortfolios();
       if (data) {
-        console.log(data)
         setPortfolios(data);
       }
       if (error) {
