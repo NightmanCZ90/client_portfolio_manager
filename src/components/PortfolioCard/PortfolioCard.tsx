@@ -16,6 +16,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = (props) => {
   const {
     // currency,
     portfolio: {
+      id,
       name,
     }
   } = props;
@@ -37,7 +38,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = (props) => {
   return (
     <StyledPortfolioCard onMouseMove={onMouseMove} ref={cardRef}>
 
-      <Link to={'/'}>
+      <Link to={`/portfolios/${id}`}>
         <StyledPortfolioCardHeader>
           <h2>{name}</h2>
           <h3>Portfolio</h3>
