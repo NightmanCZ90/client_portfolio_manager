@@ -14,6 +14,9 @@ export const SubmitButton = styled(Button)(({ theme }) => ({
   ":hover": {
     background: theme.palette.primary.light,
   },
+  ":disabled": {
+    background: theme.palette.grey['600'],
+  },
 }));
 
 export const PrimaryButton = styled(Button)(({ theme, size }) => ({

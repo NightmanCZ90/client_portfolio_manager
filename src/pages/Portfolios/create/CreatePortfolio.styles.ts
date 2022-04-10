@@ -39,7 +39,7 @@ export const StyledCreatePortfolioContent = styled('div')`
         margin-right: 1rem;
       }
 
-      span {
+      & > span {
         margin-left: 2rem;
         align-self: center;
 

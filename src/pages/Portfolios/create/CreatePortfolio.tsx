@@ -136,6 +136,7 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
                 color={portfolioData.investorId ? 'success' : undefined}
                 focused={portfolioData.investorId ? true : undefined}
                 fullWidth
+                required
                 id="investor-email-input"
                 label="Managed investor email"
                 name="investorEmail"
@@ -162,6 +163,7 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
         <form>
           <TextField
             fullWidth
+            required
             id="portfolio-name-input"
             label="Portfolio name"
             name="name"
@@ -193,7 +195,7 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
           <div className="portfolio-form--buttons">
             <SubmitButton
               type="submit"
-              disabled={isFormDataInvalid}
+              disabled={isFormDataInvalid || (portfolioVariant === PortfolioVariant.Managed && !portfolioData.investorId)}
             >
               {loading ? (<CircularProgress size={24} />) : "Create portfolio"}
             </SubmitButton>
