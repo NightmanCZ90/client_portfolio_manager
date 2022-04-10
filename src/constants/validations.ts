@@ -6,6 +6,7 @@ export const userRegistrationFormSchema = (inputType: string) => {
       email: yup
         .string()
         .email('Email must be a valid email.')
+        .max(40, 'Maximal length of email is 40 characters.')
         .required('Please enter your e-mail.'),
     });
   } else if (inputType === 'password') {
