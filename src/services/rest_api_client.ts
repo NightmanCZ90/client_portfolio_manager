@@ -60,6 +60,16 @@ class RestApiClient extends ApiClient {
     })
   }
 
+  async confirmInvestor(investorEmail: string) {
+    return this.axiosRequest<{ id: number }>({
+      url: '/users/confirm',
+      method: 'POST',
+      body: {
+        email: investorEmail,
+      },
+    })
+  }
+
   async getUsersPortfolios() {
     return this.axiosRequest<{ personal: Portfolio[], managed: Portfolio[] }>({
       url: '/portfolios',
