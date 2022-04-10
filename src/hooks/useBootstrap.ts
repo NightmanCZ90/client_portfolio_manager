@@ -10,6 +10,7 @@ export function useBootstrap() {
   const { token } = currentUser;
   useEffect(() => {
     token?.accessToken && dispatch.currentUser.getCurrentUser();
+    token?.accessToken && dispatch.portfolios.getPortfolios();
   }, [token?.refreshToken])
 }
 

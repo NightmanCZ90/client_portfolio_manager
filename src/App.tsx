@@ -7,11 +7,20 @@ import SideNavigation from './components/SideNavigation';
 import useAxiosPrivate from './hooks/useAxiosPrivate';
 import { useBootstrap } from './hooks/useBootstrap';
 import Home from './pages/Home';
+import Portfolios from './pages/Portfolios';
+import CreatePortfolio from './pages/Portfolios/create';
+import PortfolioDetail from './pages/Portfolios/detail';
 import SignIn from './pages/User/SignIn';
 import SignUp from './pages/User/SignUp';
 import UserProfile from './pages/User/UserProfile';
 import { Dispatch, RootState } from './store/store';
 import { Token } from './types/user';
+
+// TODO: Add Internationalization and Localization
+export const formatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD'
+})
 
 interface AppProps extends AppConnect {
 
@@ -48,6 +57,11 @@ const App: React.FC<AppProps> = (props) => {
       <SideNavigation />
       <Routes>
         <Route path="/" element={<Home />} />
+
+        <Route path="/portfolios" element={<Portfolios />} />
+        <Route path="/portfolios/create" element={<CreatePortfolio />} />
+        <Route path="/portfolios/:id" element={<PortfolioDetail />} />
+
         <Route path="/user" element={<UserProfile />} />
       </Routes>
     </div>

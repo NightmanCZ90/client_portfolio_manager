@@ -27,7 +27,17 @@ code {
 :root {
 
   /* Colors */
+  --secondary-text: #232325;
+
   --color-header: #151517;
   --color-header-subtitle: #79797A;
   --color-header-subinfo: #F9BA48;
+
+  --card-hover: #f08f18;
+
+  --card-investor: #f08f18;
+  --card-investor-hover: #fff;
+
+  --color-profit: #26FF26;
+  --color-loss: #FF2626;
 }

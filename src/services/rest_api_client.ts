@@ -1,4 +1,5 @@
-import { CurrentUser, Role, Token } from '../types/user';
+import { Portfolio } from '../types/portfolio';
+import { User, Role, Token } from '../types/user';
 import ApiClient from './api_client';
 
 const baseUrl = (process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DEV_BASE_URL : process.env.REACT_APP_BASE_URL) || 'http://localhost:8080';
@@ -34,14 +35,14 @@ class RestApiClient extends ApiClient {
   }
 
   async getUser(userId: number) {
-    return this.axiosRequest<CurrentUser>({
+    return this.axiosRequest<User>({
       url: `/users/${userId}`,
       method: 'GET'
     })
   }
 
   async getCurrentUser() {
-    return this.axiosRequest<CurrentUser>({
+    return this.axiosRequest<User>({
       url: '/users/current',
       method: 'GET'
     })
@@ -52,10 +53,17 @@ class RestApiClient extends ApiClient {
     lastName: string,
     role: Role,
   }) {
-    return this.axiosRequest<CurrentUser>({
+    return this.axiosRequest<User>({
       url: `/users/${userId}`,
       method: 'PUT',
       body,
+    })
+  }
+
+  async getUsersPortfolios() {
+    return this.axiosRequest<{ personal: Portfolio[], managed: Portfolio[] }>({
+      url: '/portfolios',
+      method: 'GET',
     })
   }
 }

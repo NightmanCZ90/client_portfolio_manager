@@ -30,7 +30,7 @@ const SignUp: React.FC<SignUpProps> = (props) => {
   const { error, loading, setShowLogin, signUp } = props;
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    userRegistrationFormSchema(event.target.name).validate({[event.target.name]: event.target.value})
+    await userRegistrationFormSchema(event.target.name).validate({[event.target.name]: event.target.value})
       .then((value) => {
         setFormDataErrors({ ...formDataErrors, [event.target.name]: ''});
       })
