@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Dispatch, RootState } from '../../../store/store';
-import { CustomToggleButtonGroup, PrimaryButton } from '../../../constants/components';
+import { CustomToggleButtonGroup, PrimaryButton, SubmitButton } from '../../../constants/components';
 import { StyledCreatePortfolio, StyledCreatePortfolioContent, StyledCreatePortfolioHeader } from './CreatePortfolio.styles';
 import { portfolioCreationFormSchema } from '../../../constants/validations';
 
@@ -47,7 +47,7 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
   const [portfolioData, setPortfolioData] = useState<initialPorfolioFormDataType>(initialPorfolioFormData);
   const [portfolioDataErrors, setPortfolioDataErrors] = useState<typeof initialPorfolioFormErrorsData>(initialPorfolioFormErrorsData);
 
-  const { checkInvestor, investorCheckError, investorCheckLoading, investorId, setInvestorCheckError } = props;
+  const { checkInvestor, error, investorCheckError, investorCheckLoading, investorId, loading, setInvestorCheckError } = props;
 
   // Remove this useEffect if removing checked investor is not wanted
   useEffect(() => {
@@ -108,6 +108,9 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
     if (investorEmail) await checkInvestor({ investorEmail });
   }
 
+  const { name, description, url } = portfolioDataErrors;
+  const isFormDataInvalid = Boolean(name) || Boolean(description) || Boolean(url);
+
   return (
     <StyledCreatePortfolio>
       <StyledCreatePortfolioHeader>
@@ -155,6 +158,48 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
 
           </div>
         </div>
+
+        <form>
+          <TextField
+            fullWidth
+            id="portfolio-name-input"
+            label="Portfolio name"
+            name="name"
+            value={portfolioData.name}
+            error={Boolean(portfolioDataErrors.name)}
+            helperText={portfolioDataErrors.name}
+            onChange={handleChange}
+          />
+          <TextField
+            fullWidth
+            id="portfolio-description-input"
+            label="Portfolio description"
+            name="description"
+            value={portfolioData.description}
+            error={Boolean(portfolioDataErrors.description)}
+            helperText={portfolioDataErrors.description}
+            onChange={handleChange}
+          />
+          <TextField
+            fullWidth
+            id="portfolio-url-input"
+            label="Portfolio url"
+            name="url"
+            value={portfolioData.url}
+            error={Boolean(portfolioDataErrors.url)}
+            helperText={portfolioDataErrors.url}
+            onChange={handleChange}
+          />
+          <div className="portfolio-form--buttons">
+            <SubmitButton
+              type="submit"
+              disabled={isFormDataInvalid}
+            >
+              {loading ? (<CircularProgress size={24} />) : "Create portfolio"}
+            </SubmitButton>
+          </div>
+          {error && <span>{error}</span>}
+        </form>
       </StyledCreatePortfolioContent>
     </StyledCreatePortfolio>
   )
@@ -163,6 +208,8 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
 type CreatePortfolioConnect = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
 const mapState = (state: RootState) => ({
+  error: state.portfolios.error,
+  loading: state.portfolios.loading,
   investorCheckError: state.portfolios.investorCheckError,
   investorCheckLoading: state.portfolios.investorCheckLoading,
   investorId: state.portfolios.investorId,

@@ -35,7 +35,7 @@ export const StyledCreatePortfolioContent = styled('div')`
       padding-top: 1rem;
 
       .textfield-wrapper {
-        width: 18rem;
+        width: 20rem;
         margin-right: 1rem;
       }
 
@@ -62,6 +62,23 @@ export const StyledCreatePortfolioContent = styled('div')`
         opacity: 1;
         transition: opacity 0.3s;
       }
+    }
+  }
+
+  form {
+    margin-top: 2rem;
+    width: 22rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: var(--color-paper);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .portfolio-form--buttons {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 2rem;
     }
   }
 `;
