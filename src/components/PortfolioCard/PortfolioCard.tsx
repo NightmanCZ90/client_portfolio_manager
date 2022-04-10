@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatter } from '../../App';
 import { Portfolio } from '../../types/portfolio';
-import { generateGreenRedClass } from '../../utils/helpers';
+import { generateGreenRedClass, generateInvestorName } from '../../utils/helpers';
 import { StyledPortfolioCard, StyledPortfolioCardContent, StyledPortfolioCardHeader } from './PortfolioCard.styles';
 
 interface PortfolioCardProps {
@@ -18,6 +18,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = (props) => {
     portfolio: {
       id,
       name,
+      user
     }
   } = props;
 
@@ -39,6 +40,11 @@ const PortfolioCard: React.FC<PortfolioCardProps> = (props) => {
     <StyledPortfolioCard onMouseMove={onMouseMove} ref={cardRef}>
 
       <Link to={`/portfolios/${id}`}>
+        {user ? (
+          <div className="investor">
+            {generateInvestorName(user)}
+          </div>
+        ) : null}
         <StyledPortfolioCardHeader>
           <h2>{name}</h2>
           <h3>Portfolio</h3>

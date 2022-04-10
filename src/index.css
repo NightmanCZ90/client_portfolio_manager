@@ -35,6 +35,9 @@ code {
 
   --card-hover: #f08f18;
 
+  --card-investor: #f08f18;
+  --card-investor-hover: #fff;
+
   --color-profit: #26FF26;
   --color-loss: #FF2626;
 }

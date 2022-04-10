@@ -14,6 +14,16 @@ export const StyledPortfolioCard = styled(Card)`
     z-index: 1;
     text-decoration: none;
     color: inherit;
+
+    .investor {
+      position: absolute;
+      top: 0rem;
+      right: 0rem;
+      padding: 0.1rem 0.5rem 0.1rem 5rem;
+      background: linear-gradient(to right, transparent, var(--card-investor) 30%);
+      font-weight: 300;
+      font-size: 14px;
+    }
   }
 
   .cursor-bubble {
@@ -32,6 +42,11 @@ export const StyledPortfolioCard = styled(Card)`
   &:hover {
     background-color: var(--card-hover);
     cursor: pointer;
+
+    .investor {
+      background: linear-gradient(to right, transparent, var(--card-investor-hover) 30%);
+      color: var(--card-investor);
+    }
 
     h3 {
       color: var(--secondary-text);
