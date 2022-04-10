@@ -46,3 +46,28 @@ export const userFormSchema = (inputType: string) => {
     });
   }
 }
+
+export const portfolioCreationFormSchema = (inputType: string, isManaged: boolean) => {
+  if (inputType === 'investorEmail' && isManaged) {
+    return yup.object().shape({
+      investorEmail: yup
+        .string()
+        .email('Email must be a valid email.')
+        .max(40, 'Maximal length of investor email is 40 characters.')
+        .required('Please enter your e-mail.'),
+    });
+  } else if (inputType === 'investorEmail' && !isManaged) {
+    return yup.object().shape({
+      investorEmail: yup
+        .string()
+        .optional(),
+    });
+  } else {
+    return yup.object().shape({
+      confirmPassword: yup
+        .string()
+        .required('Please confirm your password.')
+        .oneOf([yup.ref("password"), null], "Passwords must match.")
+    });
+  }
+}
