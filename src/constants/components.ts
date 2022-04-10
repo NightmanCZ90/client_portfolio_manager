@@ -36,11 +36,11 @@ export const CustomToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => 
   ".Mui-selected": {
     backgroundColor: theme.palette.primary.main,
     color: '#232325',
-    ".MuiTouchRipple-child": {
-      color: theme.palette.primary.dark,
-    },
     ":hover": {
       background: theme.palette.primary.light,
+      ".MuiTouchRipple-child": {
+        color: theme.palette.primary.dark,
+      },
     },
   }
 }));
