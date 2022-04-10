@@ -1,6 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import PortfolioCard from '../../components/PortfolioCard';
 
 import { PrimaryButton } from '../../constants/components';
@@ -13,6 +14,7 @@ interface PortfoliosProps extends PortfoliosConnect {
 }
 
 const Portfolios: React.FC<PortfoliosProps> = (props) => {
+  const navigate = useNavigate();
 
   const { currentUser, getPortfolios, loading, personalPortfolios, managedPortfolios } = props;
 
@@ -52,7 +54,7 @@ const Portfolios: React.FC<PortfoliosProps> = (props) => {
       </StyledPortfoliosHeader>
       <StyledPortfoliosContent>
         <div className="buttons-wrapper">
-          <PrimaryButton startIcon={<AddIcon />}>Add Portfolio</PrimaryButton>
+          <PrimaryButton onClick={() => navigate('/portfolios/create')} startIcon={<AddIcon />}>Add Portfolio</PrimaryButton>
         </div>
         <div className="portfolio-personal">
           <h2>Personal portfolios</h2>
