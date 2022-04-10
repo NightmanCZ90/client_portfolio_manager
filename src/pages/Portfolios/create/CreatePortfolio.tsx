@@ -131,7 +131,7 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
             <div className="textfield-wrapper">
               <TextField
                 color={portfolioData.investorId ? 'success' : undefined}
-                focused={portfolioData.investorId ? true : false}
+                focused={portfolioData.investorId ? true : undefined}
                 fullWidth
                 id="investor-email-input"
                 label="Managed investor email"
@@ -142,7 +142,13 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
                 onChange={handleChange}
               />
             </div>
-            <PrimaryButton size="large" onClick={handleInvestorCheck}>{investorCheckLoading ? (<CircularProgress size={24} />) : "Check user"}</PrimaryButton>
+            <PrimaryButton
+              disabled={!Boolean(portfolioData.investorEmail) || Boolean(portfolioDataErrors.investorEmail)}
+              size="large"
+              onClick={handleInvestorCheck}
+            >
+              {investorCheckLoading ? (<CircularProgress size={24} />) : "Check user"}
+            </PrimaryButton>
 
             {investorCheckError && <span className="error">{investorCheckError}</span>}
             {portfolioData.investorId && <span className="success">User is checked.</span>}
