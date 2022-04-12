@@ -79,10 +79,6 @@ export const StyledCreatePortfolioContent = styled('div')`
     flex-direction: column;
     gap: 1rem;
 
-    h3 {
-      margin-bottom: 1rem;
-    }
-
     .portfolio-form--buttons {
       display: flex;
       justify-content: flex-end;

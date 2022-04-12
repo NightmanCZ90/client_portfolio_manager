@@ -111,6 +111,8 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
   const { name, description, url } = portfolioDataErrors;
   const isFormDataInvalid = Boolean(name) || Boolean(description) || Boolean(url);
 
+  const isSubmitButtonDisabled = !portfolioData.name || isFormDataInvalid || (portfolioVariant === PortfolioVariant.Managed && !portfolioData.investorId);
+
   return (
     <StyledCreatePortfolio>
       <StyledCreatePortfolioHeader>
@@ -176,6 +178,7 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
           />
           <TextField
             fullWidth
+            multiline
             id="portfolio-description-input"
             label="Portfolio description"
             name="description"
@@ -191,13 +194,13 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
             name="url"
             value={portfolioData.url}
             error={Boolean(portfolioDataErrors.url)}
-            helperText={portfolioDataErrors.url}
+            helperText={portfolioDataErrors.url || "Link to website managing this portfolio."}
             onChange={handleChange}
           />
           <div className="portfolio-form--buttons">
             <SubmitButton
               type="submit"
-              disabled={isFormDataInvalid || (portfolioVariant === PortfolioVariant.Managed && !portfolioData.investorId)}
+              disabled={isSubmitButtonDisabled}
             >
               {loading ? (<CircularProgress size={24} />) : "Create portfolio"}
             </SubmitButton>
