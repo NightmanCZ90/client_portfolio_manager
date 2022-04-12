@@ -28,6 +28,10 @@ export const StyledCreatePortfolioContent = styled('div')`
     background-color: var(--color-paper);
     transition: min-height 0.1s ease-out;
 
+    h3 {
+      margin-bottom: 1rem;
+    }
+
     .investor-selection {
       opacity: 0;
       display: none;
@@ -74,6 +78,10 @@ export const StyledCreatePortfolioContent = styled('div')`
     display: flex;
     flex-direction: column;
     gap: 1rem;
+
+    h3 {
+      margin-bottom: 1rem;
+    }
 
     .portfolio-form--buttons {
       display: flex;

@@ -121,6 +121,7 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
       </StyledCreatePortfolioHeader>
       <StyledCreatePortfolioContent>
         <div className={`owner-selection ${portfolioVariant === PortfolioVariant.Managed ? 'managed' : ''}`}>
+          <h3>Select portfolio option</h3>
           <ToggleButtonGroup
             color="primary"
             value={portfolioVariant}
@@ -161,6 +162,7 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
         </div>
 
         <form>
+        <h3>Portfolio information</h3>
           <TextField
             fullWidth
             required
