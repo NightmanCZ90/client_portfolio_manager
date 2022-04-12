@@ -1,9 +1,9 @@
-import { ToggleButton, TextField, CircularProgress } from '@mui/material';
+import { ToggleButtonGroup, TextField, CircularProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Dispatch, RootState } from '../../../store/store';
-import { CustomToggleButtonGroup, PrimaryButton, SubmitButton } from '../../../constants/components';
+import { CustomToggleButton, PrimaryButton, SubmitButton } from '../../../constants/components';
 import { StyledCreatePortfolio, StyledCreatePortfolioContent, StyledCreatePortfolioHeader } from './CreatePortfolio.styles';
 import { portfolioCreationFormSchema } from '../../../constants/validations';
 
@@ -121,15 +121,15 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
       </StyledCreatePortfolioHeader>
       <StyledCreatePortfolioContent>
         <div className={`owner-selection ${portfolioVariant === PortfolioVariant.Managed ? 'managed' : ''}`}>
-          <CustomToggleButtonGroup
+          <ToggleButtonGroup
             color="primary"
             value={portfolioVariant}
             exclusive
             onChange={handlePortfolioVariantSelection}
           >
-            <ToggleButton value={PortfolioVariant.Personal}>Personal</ToggleButton>
-            <ToggleButton value={PortfolioVariant.Managed}>Managed</ToggleButton>
-          </CustomToggleButtonGroup>
+            <CustomToggleButton value={PortfolioVariant.Personal}>Personal</CustomToggleButton>
+            <CustomToggleButton value={PortfolioVariant.Managed}>Managed</CustomToggleButton>
+          </ToggleButtonGroup>
           <div className="investor-selection">
             <div className="textfield-wrapper">
               <TextField

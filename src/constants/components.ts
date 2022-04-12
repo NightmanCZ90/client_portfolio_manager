@@ -1,4 +1,4 @@
-import { Button, ToggleButtonGroup } from '@mui/material';
+import { Button, ToggleButton } from '@mui/material';
 import { styled } from '@mui/system';
 
 export const SubmitButton = styled(Button)(({ theme }) => ({
@@ -35,15 +35,15 @@ export const SmallLinkButton = styled(Button)(({ theme }) => ({
   fontSize: '11px',
 }));
 
-export const CustomToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-  ".Mui-selected": {
+export const CustomToggleButton = styled(ToggleButton)(({ theme }) => ({
+  "&.Mui-selected": {
     backgroundColor: theme.palette.primary.main,
     color: '#232325',
     ":hover": {
       background: theme.palette.primary.light,
-      ".MuiTouchRipple-child": {
-        color: theme.palette.primary.dark,
-      },
     },
-  }
+    ".MuiTouchRipple-child": {
+      color: theme.palette.primary.dark,
+    },
+  },
 }));
