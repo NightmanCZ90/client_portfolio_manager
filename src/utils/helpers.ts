@@ -11,8 +11,8 @@ export const generateGreenRedClass = (value: number) => {
   return '';
 }
 
-export const generateInvestorName = (user: User) => {
+export const generateInvestorName = (user?: User) => {
   const { firstName, lastName, email } = user || {};
   if (firstName && lastName) return `${firstName} ${lastName}`;
-  return email;
+  return email || '';
 }
