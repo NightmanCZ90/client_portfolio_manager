@@ -71,7 +71,7 @@ class RestApiClient extends ApiClient {
   }
 
   async getUsersPortfolios() {
-    return this.axiosRequest<{ personal: Portfolio[], managed: Portfolio[] }>({
+    return this.axiosRequest<{ managed: Portfolio[], managing: Portfolio[], personal: Portfolio[] }>({
       url: '/portfolios',
       method: 'GET',
     })
@@ -83,10 +83,17 @@ class RestApiClient extends ApiClient {
     color: string,
     url: string,
   }) {
-    return this.axiosRequest<User>({
-      url: '/portfoli',
+    return this.axiosRequest<Portfolio>({
+      url: '/portfolios',
       method: 'POST',
       body,
+    })
+  }
+
+  async confirmPortfolio(portfolioId: number) {
+    return this.axiosRequest<Portfolio>({
+      url: `/portfolios/${portfolioId}/confirm`,
+      method: 'PUT',
     })
   }
 }
