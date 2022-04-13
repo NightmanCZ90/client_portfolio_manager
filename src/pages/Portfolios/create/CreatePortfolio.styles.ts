@@ -84,5 +84,9 @@ export const StyledCreatePortfolioContent = styled('div')`
       justify-content: flex-end;
       margin-top: 2rem;
     }
+
+    & > span {
+      color: var(--text-error);
+    }
   }
 `;

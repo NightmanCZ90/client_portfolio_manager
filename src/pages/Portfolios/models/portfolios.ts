@@ -73,6 +73,27 @@ export const portfolios = createModel<RootModel>()({
         error.data && error.data?.length > 0 && setInvestorCheckError(error.data[0]?.msg);
       }
       setInvestorCheckLoading(false);
+    },
+
+    async createPortfolio(payload: { name: string, description: string, color: string, url: string }, state) {
+      const { setError, setLoading } = dispatch.portfolios;
+
+      /** Reset */
+      setError('');
+      setLoading(true);
+
+      const { data, error } = await RestApiClient.createPortfolio(payload);
+      if (data) {
+        setLoading(false);
+        return data;
+      }
+      if (error) {
+        error.statusText && setError(error.statusText);
+        error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
+        error.message && setError(error.message);
+        setLoading(false);
+        return null;
+      }
     }
   }),
 });

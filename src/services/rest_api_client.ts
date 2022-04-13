@@ -76,6 +76,19 @@ class RestApiClient extends ApiClient {
       method: 'GET',
     })
   }
+
+  async createPortfolio(body: {
+    name: string,
+    description: string,
+    color: string,
+    url: string,
+  }) {
+    return this.axiosRequest<User>({
+      url: '/portfoli',
+      method: 'POST',
+      body,
+    })
+  }
 }
 
 export default new RestApiClient();

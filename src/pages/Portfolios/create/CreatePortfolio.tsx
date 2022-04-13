@@ -6,6 +6,7 @@ import { Dispatch, RootState } from '../../../store/store';
 import { CustomToggleButton, PrimaryButton, SubmitButton } from '../../../constants/components';
 import { StyledCreatePortfolio, StyledCreatePortfolioContent, StyledCreatePortfolioHeader } from './CreatePortfolio.styles';
 import { portfolioCreationFormSchema } from '../../../constants/validations';
+import { useNavigate } from 'react-router-dom';
 
 enum PortfolioVariant {
   Personal,
@@ -43,11 +44,12 @@ interface CreatePortfolioProps extends CreatePortfolioConnect {
 }
 
 const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
+  const navigate = useNavigate();
   const [portfolioVariant, setPortfolioVariant] = useState<PortfolioVariant>(PortfolioVariant.Personal);
   const [portfolioData, setPortfolioData] = useState<initialPorfolioFormDataType>(initialPorfolioFormData);
   const [portfolioDataErrors, setPortfolioDataErrors] = useState<typeof initialPorfolioFormErrorsData>(initialPorfolioFormErrorsData);
 
-  const { checkInvestor, error, investorCheckError, investorCheckLoading, investorId, loading, setInvestorCheckError } = props;
+  const { checkInvestor, createPortfolio, error, investorCheckError, investorCheckLoading, investorId, loading, setInvestorCheckError } = props;
 
   // Remove this useEffect if removing checked investor is not wanted
   useEffect(() => {
@@ -111,7 +113,22 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
   const { name, description, url } = portfolioDataErrors;
   const isFormDataInvalid = Boolean(name) || Boolean(description) || Boolean(url);
 
-  const isSubmitButtonDisabled = !portfolioData.name || isFormDataInvalid || (portfolioVariant === PortfolioVariant.Managed && !portfolioData.investorId);
+  const isDisabled = !portfolioData.name || isFormDataInvalid || (portfolioVariant === PortfolioVariant.Managed && !portfolioData.investorId);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (isDisabled) {
+      return;
+    }
+
+    // TODO: Implement color picker
+    const data = await createPortfolio({ ...portfolioData, color: 'F9BA48' });
+    if (data) {
+      navigate('/portfolios');
+    }
+  }
 
   return (
     <StyledCreatePortfolio>
@@ -163,7 +180,7 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
           </div>
         </div>
 
-        <form>
+        <form onSubmit={handleSubmit}>
         <h3>Portfolio information</h3>
           <TextField
             fullWidth
@@ -200,7 +217,7 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
           <div className="portfolio-form--buttons">
             <SubmitButton
               type="submit"
-              disabled={isSubmitButtonDisabled}
+              disabled={isDisabled}
             >
               {loading ? (<CircularProgress size={24} />) : "Create portfolio"}
             </SubmitButton>
@@ -224,7 +241,9 @@ const mapState = (state: RootState) => ({
 
 const mapDispatch = (dispatch: Dispatch) => ({
   checkInvestor: dispatch.portfolios.checkInvestor,
+  createPortfolio: dispatch.portfolios.createPortfolio,
   setInvestorCheckError: dispatch.portfolios.setInvestorCheckError,
 });
 
 export default connect(mapState, mapDispatch)(CreatePortfolio);
+
