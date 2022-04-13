@@ -9,6 +9,7 @@ type RestApiValidationError = {
 
 export interface RestApiError extends Error {
   data?: RestApiValidationError[];
+  statusText?: string;
 }
 
 interface RequestOptions {
@@ -42,8 +43,9 @@ abstract class ApiClient {
       return { data };
     } catch(err: any) {
       const error: RestApiError = new Error();
-      error.message = err.response.data.message;
-      error.data = err.response.data.data;
+      error.message = err?.response?.data?.message || err?.message;
+      error.data = err?.response?.data?.data;
+      error.statusText = err?.statusText;
       return { error };
     }
   }

@@ -9,6 +9,9 @@ interface PortfoliosState {
   loading: boolean;
   personal: Portfolio[];
   managed: Portfolio[];
+  investorCheckError: string;
+  investorCheckLoading: boolean;
+  investorId: number | null;
 }
 
 export const portfolios = createModel<RootModel>()({
@@ -17,6 +20,9 @@ export const portfolios = createModel<RootModel>()({
     loading: false,
     personal: [],
     managed: [],
+    investorCheckError: '',
+    investorCheckLoading: false,
+    investorId: null,
   } as PortfoliosState,
   reducers: {
     setError: (state, error: string) => ({ ...state, error }),
@@ -26,6 +32,9 @@ export const portfolios = createModel<RootModel>()({
       personal: portfolios.personal,
       managed: portfolios.managed,
     }),
+    setInvestorCheckError: (state, investorCheckError: string) => ({ ...state, investorCheckError }),
+    setInvestorCheckLoading: (state, investorCheckLoading: boolean) => ({ ...state, investorCheckLoading }),
+    setInvestorId: (state, investorId: number | null) => ({ ...state, investorId }),
   },
   effects: (dispatch) => ({
     async getPortfolios() {
@@ -45,5 +54,46 @@ export const portfolios = createModel<RootModel>()({
       }
       setLoading(false);
     },
+
+    async checkInvestor(payload: { investorEmail: string }, state) {
+      const { investorEmail } = payload;
+      const { setInvestorCheckError, setInvestorCheckLoading, setInvestorId } = dispatch.portfolios;
+
+      /** Reset */
+      setInvestorCheckError('');
+      setInvestorCheckLoading(true);
+      setInvestorId(null);
+
+      const { data, error } = await RestApiClient.confirmInvestor(investorEmail);
+      if (data) {
+        setInvestorId(data.id);
+      }
+      if (error) {
+        error.message && setInvestorCheckError(error.message);
+        error.data && error.data?.length > 0 && setInvestorCheckError(error.data[0]?.msg);
+      }
+      setInvestorCheckLoading(false);
+    },
+
+    async createPortfolio(payload: { name: string, description: string, color: string, url: string }, state) {
+      const { setError, setLoading } = dispatch.portfolios;
+
+      /** Reset */
+      setError('');
+      setLoading(true);
+
+      const { data, error } = await RestApiClient.createPortfolio(payload);
+      if (data) {
+        setLoading(false);
+        return data;
+      }
+      if (error) {
+        error.statusText && setError(error.statusText);
+        error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
+        error.message && setError(error.message);
+        setLoading(false);
+        return null;
+      }
+    }
   }),
 });

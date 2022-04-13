@@ -10,5 +10,6 @@ export interface Portfolio {
   url: string | null;
   userId: number;
   pmId: number | null;
+  confirmed: boolean;
   user?: User;
 }

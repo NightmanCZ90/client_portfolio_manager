@@ -29,6 +29,8 @@ code {
   /* Colors */
   --secondary-text: #232325;
 
+  --primary-background: #F9BA48;
+
   --color-header: #151517;
   --color-header-subtitle: #79797A;
   --color-header-subinfo: #F9BA48;
@@ -40,4 +42,9 @@ code {
 
   --color-profit: #26FF26;
   --color-loss: #FF2626;
+
+  --color-paper: #3A3A3E;
+
+  --text-error: #F44336;
+  --text-success: #66BB6A;
 }

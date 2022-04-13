@@ -6,6 +6,7 @@ export const userRegistrationFormSchema = (inputType: string) => {
       email: yup
         .string()
         .email('Email must be a valid email.')
+        .max(40, 'Maximal length of email is 40 characters.')
         .required('Please enter your e-mail.'),
     });
   } else if (inputType === 'password') {
@@ -41,6 +42,51 @@ export const userFormSchema = (inputType: string) => {
       lastName: yup
         .string()
         .max(40, 'Maximal length of first name is 40 characters.')
+        .optional(),
+    });
+  }
+}
+
+export const portfolioCreationFormSchema = (inputType: string, isManaged: boolean) => {
+  if (inputType === 'investorEmail' && isManaged) {
+    return yup.object().shape({
+      investorEmail: yup
+        .string()
+        .email('Email must be a valid email.')
+        .max(40, 'Maximal length of investor email is 40 characters.')
+        .required('Please enter your e-mail.'),
+    });
+  } else if (inputType === 'investorEmail' && !isManaged) {
+    return yup.object().shape({
+      investorEmail: yup
+        .string()
+        .optional(),
+    });
+  } else if (inputType === 'name') {
+    return yup.object().shape({
+      name: yup
+        .string()
+        .max(20, 'Maximal length of portfolio name is 20 characters.')
+        .required('Please enter name for this portfolio.'),
+    });
+  } else if (inputType === 'description') {
+    return yup.object().shape({
+      description: yup
+        .string()
+        .max(240, 'Maximal length of portfolio description is 240 characters.')
+        .optional(),
+    });
+  } else if (inputType === 'color') {
+    return yup.object().shape({
+      color: yup
+        .string()
+        .max(6, 'Maximal length of portfolio color is 6 characters.')
+        .optional(),
+    });
+  } else {
+    return yup.object().shape({
+      url: yup
+        .string()
         .optional(),
     });
   }
