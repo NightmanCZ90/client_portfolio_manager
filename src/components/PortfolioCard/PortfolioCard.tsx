@@ -1,3 +1,4 @@
+import { Tooltip } from '@mui/material';
 import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatter } from '../../App';
@@ -17,8 +18,9 @@ const PortfolioCard: React.FC<PortfolioCardProps> = (props) => {
     // currency,
     portfolio: {
       id,
+      confirmed,
       name,
-      user
+      user,
     }
   } = props;
 
@@ -42,6 +44,11 @@ const PortfolioCard: React.FC<PortfolioCardProps> = (props) => {
       <Link to={`/portfolios/${id}`}>
         {user ? (
           <div className="investor">
+            {!confirmed && (
+              <Tooltip title="Portfolio is not yet confirmed by the investor.">
+                <span className="not-confirmed" />
+              </Tooltip>
+            )}
             {generateInvestorName(user)}
           </div>
         ) : null}

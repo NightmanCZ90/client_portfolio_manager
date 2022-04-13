@@ -19,10 +19,21 @@ export const StyledPortfolioCard = styled(Card)`
       position: absolute;
       top: 0rem;
       right: 0rem;
+      display: flex;
+      align-items: center;
       padding: 0.1rem 0.5rem 0.1rem 5rem;
       background: linear-gradient(to right, transparent, var(--card-investor) 30%);
       font-weight: 300;
       font-size: 14px;
+
+      span.not-confirmed {
+        display: inline-block;
+        margin-right: 0.5rem;
+        width: 0.8rem;
+        height: 0.8rem;
+        border-radius: 50%;
+        background-color: var(--text-error);
+      }
     }
   }
 
