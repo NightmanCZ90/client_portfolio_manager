@@ -1,4 +1,4 @@
-import { Portfolio } from '../types/portfolio';
+import { Portfolio, PortfolioTypes } from '../types/portfolio';
 import { User, Role, Token } from '../types/user';
 import ApiClient from './apiClient';
 
@@ -71,7 +71,7 @@ class RestApiClient extends ApiClient {
   }
 
   async getUsersPortfolios() {
-    return this.axiosRequest<{ managed: Portfolio[], managing: Portfolio[], personal: Portfolio[] }>({
+    return this.axiosRequest<PortfolioTypes>({
       url: '/portfolios',
       method: 'GET',
     })
