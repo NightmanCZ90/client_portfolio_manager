@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { Provider } from 'react-redux';
+import { QueryClientProvider, QueryClient } from 'react-query';
 
 import './index.css';
 import App from './App';
@@ -11,16 +12,20 @@ import reportWebVitals from './reportWebVitals';
 import { darkTheme } from './styles/mui-theme';
 import { store } from './store/store';
 
+const queryClient = new QueryClient();
+
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ThemeProvider>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <ThemeProvider theme={darkTheme}>
+          <CssBaseline />
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>
+    </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
