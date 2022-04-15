@@ -73,6 +73,7 @@ export const currentUser = createModel<RootModel>()({
           const { accessToken, refreshToken, expiresIn } = data;
           const tokenData = JSON.stringify({ accessToken, refreshToken, expiresIn });
           localStorage.setItem('jwt_token', tokenData);
+          axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
           setToken(data);
         }
       } catch (error: any) {
