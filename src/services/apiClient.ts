@@ -40,13 +40,13 @@ abstract class ApiClient {
         method: options.method,
         data: options.body,
       })
-      return { data };
+      return data;
     } catch(err: any) {
       const error: RestApiError = new Error();
       error.message = err?.response?.data?.message || err?.message;
       error.data = err?.response?.data?.data;
-      error.statusText = err?.statusText;
-      return { error };
+      error.statusText = err?.response.statusText;
+      throw error;
     }
   }
 }
