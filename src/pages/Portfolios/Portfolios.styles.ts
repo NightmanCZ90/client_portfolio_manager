@@ -33,8 +33,23 @@ export const StyledPortfoliosContent = styled('div')`
     margin-bottom: 2rem;
   }
 
+  .portfolio-unconfirmed {
+    margin-bottom: 2rem;
+
+    .card {
+      background-color: var(--color-paper);
+      padding: 0.5rem 2rem;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
   .portfolio-personal,
-  .portfolio-managed {
+  .portfolio-managed,
+  .portfolio-managing {
     display: flex;
     flex-direction: column;
     margin-bottom: 2rem;

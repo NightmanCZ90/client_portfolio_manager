@@ -12,4 +12,5 @@ export interface Portfolio {
   pmId: number | null;
   confirmed: boolean;
   user?: User;
+  portfolioManager?: User;
 }

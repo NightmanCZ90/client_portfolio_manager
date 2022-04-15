@@ -7,8 +7,10 @@ import { Portfolio } from '../../../types/portfolio';
 interface PortfoliosState {
   error: string;
   loading: boolean;
-  personal: Portfolio[];
   managed: Portfolio[];
+  managing: Portfolio[];
+  personal: Portfolio[];
+  unconfirmed: Portfolio[];
   investorCheckError: string;
   investorCheckLoading: boolean;
   investorId: number | null;
@@ -18,8 +20,10 @@ export const portfolios = createModel<RootModel>()({
   state: {
     error: '',
     loading: false,
-    personal: [],
     managed: [],
+    managing: [],
+    personal: [],
+    unconfirmed: [],
     investorCheckError: '',
     investorCheckLoading: false,
     investorId: null,
@@ -27,10 +31,12 @@ export const portfolios = createModel<RootModel>()({
   reducers: {
     setError: (state, error: string) => ({ ...state, error }),
     setLoading: (state, loading: boolean) => ({ ...state, loading }),
-    setPortfolios: (state, portfolios: { personal: Portfolio[], managed: Portfolio[] }) => ({
+    setPortfolios: (state, portfolios: { managed: Portfolio[], managing: Portfolio[], personal: Portfolio[],  unconfirmed: Portfolio[] }) => ({
       ...state,
-      personal: portfolios.personal,
       managed: portfolios.managed,
+      managing: portfolios.managing,
+      personal: portfolios.personal,
+      unconfirmed: portfolios.unconfirmed,
     }),
     setInvestorCheckError: (state, investorCheckError: string) => ({ ...state, investorCheckError }),
     setInvestorCheckLoading: (state, investorCheckLoading: boolean) => ({ ...state, investorCheckLoading }),
@@ -46,7 +52,12 @@ export const portfolios = createModel<RootModel>()({
 
       const { data, error } = await RestApiClient.getUsersPortfolios();
       if (data) {
-        setPortfolios(data);
+        setPortfolios({
+          managed: data.managed.filter(portfolio => portfolio.confirmed),
+          managing: data.managing,
+          personal: data.personal,
+          unconfirmed: data.managed.filter(portfolio => !portfolio.confirmed),
+        });
       }
       if (error) {
         error.message && setError(error.message);
@@ -94,6 +105,30 @@ export const portfolios = createModel<RootModel>()({
         setLoading(false);
         return null;
       }
+    },
+
+    async confirmPortfolio(payload: { portfolioId: number }, state) {
+      const { setError, setLoading, setPortfolios } = dispatch.portfolios;
+      const { managed, managing, personal, unconfirmed } = state.portfolios;
+
+      /** Reset */
+      setError('');
+      setLoading(true);
+
+      const { data, error } = await RestApiClient.confirmPortfolio(payload.portfolioId);
+      if (data) {
+        setPortfolios({
+          managed: [...managed, data],
+          managing,
+          personal,
+          unconfirmed: unconfirmed.filter(portfolio => portfolio.id !== payload.portfolioId),
+        });
+      }
+      if (error) {
+        error.message && setError(error.message);
+        error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
+      }
+      setLoading(false);
     }
   }),
 });
