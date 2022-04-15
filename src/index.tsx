@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { Provider } from 'react-redux';
 import { QueryClientProvider, QueryClient } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 import './index.css';
 import App from './App';
@@ -25,6 +26,7 @@ ReactDOM.render(
           </BrowserRouter>
         </ThemeProvider>
       </Provider>
+      <ReactQueryDevtools initialIsOpen={false} position="bottom-right"/>
     </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById('root')
