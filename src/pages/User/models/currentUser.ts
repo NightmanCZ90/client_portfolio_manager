@@ -3,7 +3,7 @@ import { createModel } from "@rematch/core";
 import { RootModel } from "../../../store";
 import { User, Token } from '../../../types/user';
 import { SignUpFormData } from '../SignUp';
-import RestApiClient from '../../../services/rest_api_client';
+import RestApiClient from '../../../services/restApiClient';
 import { SignInFormData } from '../SignIn';
 import axios from '../../../services/axios';
 

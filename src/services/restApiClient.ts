@@ -1,6 +1,6 @@
 import { Portfolio } from '../types/portfolio';
 import { User, Role, Token } from '../types/user';
-import ApiClient from './api_client';
+import ApiClient from './apiClient';
 
 const baseUrl = (process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DEV_BASE_URL : process.env.REACT_APP_BASE_URL) || 'http://localhost:8080';
 
