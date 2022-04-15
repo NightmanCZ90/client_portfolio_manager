@@ -11,6 +11,11 @@ export interface IdentifierQuery {
 class RestApiClient extends ApiClient {
   baseUrl = baseUrl;
 
+  /**
+   * Authentication
+   *
+   */
+
   async signUp(body: {
     email: string,
     password: string,
@@ -33,6 +38,11 @@ class RestApiClient extends ApiClient {
       body,
     })
   }
+
+  /**
+   * Current User
+   *
+   */
 
   async getUser(userId: number) {
     return this.axiosRequest<User>({
@@ -59,6 +69,11 @@ class RestApiClient extends ApiClient {
       body,
     })
   }
+
+  /**
+   * Portfolios
+   *
+   */
 
   async confirmInvestor(investorEmail: string) {
     return this.axiosRequest<{ id: number }>({
