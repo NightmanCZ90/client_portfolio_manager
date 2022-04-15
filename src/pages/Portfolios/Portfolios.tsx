@@ -112,18 +112,10 @@ const Portfolios: React.FC<PortfoliosProps> = (props) => {
 type PortfoliosConnect = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
 const mapState = (state: RootState) => ({
-  // error: state.portfolios.error,
-  // loading: state.portfolios.loading,
-  // managedPortfolios: state.portfolios.managed,
-  // managingPortfolios: state.portfolios.managing,
-  // personalPortfolios: state.portfolios.personal,
-  // unconfirmedPortfolios: state.portfolios.unconfirmed,
   currentUser: state.currentUser.user,
 });
 
 const mapDispatch = (dispatch: Dispatch) => ({
-  // getPortfolios: dispatch.portfolios.getPortfolios,
-  // setPortfolios: dispatch.portfolios.setPortfolios,
   confirmPortfolio: dispatch.portfolios.confirmPortfolio,
 });
 
