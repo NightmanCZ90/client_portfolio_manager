@@ -38,17 +38,20 @@ export const currentUser = createModel<RootModel>()({
       localStorage.removeItem('jwt_token');
 
       setLoading(true);
-      const { data, error } = await RestApiClient.signIn(payload);
-      if (data) {
-        const { accessToken, refreshToken, expiresIn } = data;
-        const tokenData = JSON.stringify({ accessToken, refreshToken, expiresIn });
-        localStorage.setItem('jwt_token', tokenData);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        setToken(data);
-      }
-      if (error) {
-        error.message && setError(error.message);
-        error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
+      try {
+        const data = await RestApiClient.signIn(payload);
+        if (data) {
+          const { accessToken, refreshToken, expiresIn } = data;
+          const tokenData = JSON.stringify({ accessToken, refreshToken, expiresIn });
+          localStorage.setItem('jwt_token', tokenData);
+          axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+          setToken(data);
+        }
+      } catch (error: any) {
+        if (error) {
+          error.message && setError(error.message);
+          error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
+        }
       }
       setLoading(false);
     },
@@ -64,16 +67,19 @@ export const currentUser = createModel<RootModel>()({
 
       setLoading(true);
 
-      const { data, error } = await RestApiClient.signUp(payload);
-      if (data) {
-        const { accessToken, refreshToken, expiresIn } = data;
-        const tokenData = JSON.stringify({ accessToken, refreshToken, expiresIn });
-        localStorage.setItem('jwt_token', tokenData);
-        setToken(data);
-      }
-      if (error) {
-        error.message && setError(error.message);
-        error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
+      try {
+        const data = await RestApiClient.signUp(payload);
+        if (data) {
+          const { accessToken, refreshToken, expiresIn } = data;
+          const tokenData = JSON.stringify({ accessToken, refreshToken, expiresIn });
+          localStorage.setItem('jwt_token', tokenData);
+          setToken(data);
+        }
+      } catch (error: any) {
+        if (error) {
+          error.message && setError(error.message);
+          error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
+        }
       }
       setLoading(false);
     },
@@ -87,13 +93,17 @@ export const currentUser = createModel<RootModel>()({
 
     async getCurrentUser() {
       const { setError, setUser } = dispatch.currentUser;
-      const { data, error } = await RestApiClient.getCurrentUser();
-      if (data) {
-        setUser(data);
-      }
-      if (error) {
-        error.message && setError(error.message);
-        error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
+
+      try {
+        const data = await RestApiClient.getCurrentUser();
+        if (data) {
+          setUser(data);
+        }
+      } catch (error: any) {
+        if (error) {
+          error.message && setError(error.message);
+          error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
+        }
       }
     },
 
@@ -110,13 +120,17 @@ export const currentUser = createModel<RootModel>()({
       setError('');
 
       setLoading(true);
-      const { data, error } = await RestApiClient.updateUser(id, body);
-      if (data) {
-        dispatch.currentUser.setUser(data);
-      }
-      if (error) {
-        error.message && setError(error.message);
-        error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
+
+      try {
+        const data = await RestApiClient.updateUser(id, body);
+        if (data) {
+          dispatch.currentUser.setUser(data);
+        }
+      } catch (error: any) {
+        if (error) {
+          error.message && setError(error.message);
+          error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
+        }
       }
       setLoading(false);
     }
