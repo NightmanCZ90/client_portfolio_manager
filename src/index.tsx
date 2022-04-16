@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { Provider } from 'react-redux';
-import { QueryClientProvider, QueryClient } from 'react-query';
+import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
 import './index.css';
@@ -12,22 +12,21 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { darkTheme } from './styles/mui-theme';
 import { store } from './store/store';
-
-const queryClient = new QueryClient();
+import { queryClient } from './services/queryClient';
 
 ReactDOM.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <ThemeProvider theme={darkTheme}>
+    <Provider store={store}>
+      <ThemeProvider theme={darkTheme}>
+        <QueryClientProvider client={queryClient}>
           <CssBaseline />
           <BrowserRouter>
             <App />
           </BrowserRouter>
-        </ThemeProvider>
-      </Provider>
-      <ReactQueryDevtools initialIsOpen={false} position="bottom-right"/>
-    </QueryClientProvider>
+          <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+        </QueryClientProvider>
+      </ThemeProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
