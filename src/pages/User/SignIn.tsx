@@ -68,7 +68,11 @@ const SignIn: React.FC<SignInProps> = (props) => {
             onChange={handleChange}
           />
           <div className="signin-form--button">
-            <SubmitButton type="submit" fullWidth>
+            <SubmitButton
+              type="submit"
+              fullWidth
+              disabled={isLoading}
+            >
               {isLoading ? (<CircularProgress size={24} />) : "Sign in"}
             </SubmitButton>
           </div>

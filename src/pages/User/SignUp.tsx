@@ -106,7 +106,7 @@ const SignUp: React.FC<SignUpProps> = (props) => {
             </SmallLinkButton>
             <SubmitButton
               type="submit"
-              disabled={isFormDataInvalid}
+              disabled={isFormDataInvalid || isLoading}
             >
               {isLoading ? (<CircularProgress size={24} />) : "Sign up"}
             </SubmitButton>
