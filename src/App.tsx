@@ -29,6 +29,8 @@ interface AppProps extends AppConnect {
 const App: React.FC<AppProps> = (props) => {
   const [showLogin, setShowLogin] = useState<boolean>(true);
   useAxiosPrivate();
+
+  // TODO: Get rid off useBootstrap after authentication React Query is implemented
   useBootstrap();
 
   const { token, setToken } = props;
