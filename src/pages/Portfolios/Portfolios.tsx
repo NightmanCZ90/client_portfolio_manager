@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
-import RestApiClient from '../../services/restApiClient';
+import RestApiClient from '../../services/RestApiClient';
 import PortfolioCard from '../../components/PortfolioCard';
 import { PrimaryButton } from '../../constants/components';
 import { Dispatch, RootState } from '../../store/store';
 import { Portfolio, PortfolioPageTypes, PortfolioTypes } from '../../types/portfolio';
 import { generateInvestorName } from '../../utils/helpers';
 import { StyledPortfolios, StyledPortfoliosContent, StyledPortfoliosHeader } from './Portfolios.styles';
-import { RestApiError } from '../../services/apiClient';
+import { RestApiError } from '../../services/ApiClient';
 import { splitPortfolios } from './models/portfolios';
 
 interface PortfoliosProps extends PortfoliosConnect {

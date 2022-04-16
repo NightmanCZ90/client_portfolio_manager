@@ -1,7 +1,7 @@
 import { createModel } from "@rematch/core";
 
 import { RootModel } from "../../../store";
-import RestApiClient from '../../../services/restApiClient';
+import RestApiClient from '../../../services/RestApiClient';
 import { Portfolio, PortfolioTypes } from '../../../types/portfolio';
 
 interface PortfoliosState {

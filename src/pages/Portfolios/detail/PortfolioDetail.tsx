@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
-import { RestApiError } from '../../../services/apiClient';
-import RestApiClient from '../../../services/restApiClient';
+import { RestApiError } from '../../../services/ApiClient';
+import RestApiClient from '../../../services/RestApiClient';
 import { Portfolio } from '../../../types/portfolio';
 
 const PortfolioDetail: React.FC = () => {
