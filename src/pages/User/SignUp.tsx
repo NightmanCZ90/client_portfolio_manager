@@ -27,7 +27,7 @@ interface SignUpProps extends SignUpConnect {
 const SignUp: React.FC<SignUpProps> = (props) => {
   const [formData, setFormData] = useState<SignUpFormData>(initialFormData);
   const [formDataErrors, setFormDataErrors] = useState<SignUpFormData>(initialFormData);
-  const { error, isError, isLoading, mutate: signUp } = useSignUp();
+  const { mutate: signUp, isLoading, isError, error } = useSignUp();
 
   const { setShowLogin } = props;
 

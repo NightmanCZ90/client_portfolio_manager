@@ -23,7 +23,7 @@ interface SignInProps extends SignInConnect {
 
 const SignIn: React.FC<SignInProps> = (props) => {
   const [formData, setFormData] = useState<SignInFormData>(initialFormData);
-  const { error, isError, isLoading, mutate: signIn } = useSignIn();
+  const { mutate: signIn, isLoading, isError, error } = useSignIn();
 
   const { setShowLogin } = props;
 
