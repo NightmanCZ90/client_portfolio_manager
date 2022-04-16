@@ -2,17 +2,14 @@ import AddIcon from '@mui/icons-material/Add';
 import { Button } from '@mui/material';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
 
-import RestApiClient from '../../services/RestApiClient';
 import PortfolioCard from '../../components/PortfolioCard';
 import { PrimaryButton } from '../../constants/components';
 import { Dispatch, RootState } from '../../store/store';
-import { Portfolio, PortfolioPageTypes, PortfolioTypes } from '../../types/portfolio';
+import { Portfolio } from '../../types/portfolio';
 import { generateInvestorName } from '../../utils/helpers';
 import { StyledPortfolios, StyledPortfoliosContent, StyledPortfoliosHeader } from './Portfolios.styles';
-import { RestApiError } from '../../services/ApiClient';
-import { splitPortfolios } from './models/portfolios';
+import { usePortfolios } from '../../hooks/portfolios';
 
 interface PortfoliosProps extends PortfoliosConnect {
 
@@ -20,10 +17,7 @@ interface PortfoliosProps extends PortfoliosConnect {
 
 const Portfolios: React.FC<PortfoliosProps> = (props) => {
   const navigate = useNavigate();
-  const { isLoading, data } = useQuery<PortfolioTypes, RestApiError, PortfolioPageTypes>('portfolios', () => RestApiClient.getUsersPortfolios(), {
-    onError: (err) => { console.dir(err) },
-    select: (data) => splitPortfolios(data),
-  })
+  const { isLoading, data } = usePortfolios();
 
   const { confirmPortfolio, currentUser } = props;
 
