@@ -2,10 +2,7 @@ import { createModel } from "@rematch/core";
 
 import { RootModel } from "../../../store";
 import { User, Token } from '../../../types/user';
-import { SignUpFormData } from '../SignUp';
-import RestApiClient from '../../../services/restApiClient';
-import { SignInFormData } from '../SignIn';
-import axios from '../../../services/axios';
+import RestApiClient from '../../../services/RestApiClient';
 
 interface CurrentUserState {
   error: string;
@@ -28,63 +25,6 @@ export const currentUser = createModel<RootModel>()({
     setUser: (state, user: User | null) => ({ ...state, user }),
   },
   effects: (dispatch) => ({
-    async signIn(payload: SignInFormData) {
-      const { setError, setLoading, setToken, setUser } = dispatch.currentUser;
-
-      /** Reset */
-      setError('');
-      setUser(null);
-      setToken(null);
-      localStorage.removeItem('jwt_token');
-
-      setLoading(true);
-      try {
-        const data = await RestApiClient.signIn(payload);
-        if (data) {
-          const { accessToken, refreshToken, expiresIn } = data;
-          const tokenData = JSON.stringify({ accessToken, refreshToken, expiresIn });
-          localStorage.setItem('jwt_token', tokenData);
-          axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-          setToken(data);
-        }
-      } catch (error: any) {
-        if (error) {
-          error.message && setError(error.message);
-          error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
-        }
-      }
-      setLoading(false);
-    },
-
-    async signUp(payload: SignUpFormData) {
-      const { setError, setLoading, setToken, setUser } = dispatch.currentUser;
-
-      /** Reset */
-      setError('');
-      setUser(null);
-      setToken(null);
-      localStorage.removeItem('jwt_token');
-
-      setLoading(true);
-
-      try {
-        const data = await RestApiClient.signUp(payload);
-        if (data) {
-          const { accessToken, refreshToken, expiresIn } = data;
-          const tokenData = JSON.stringify({ accessToken, refreshToken, expiresIn });
-          localStorage.setItem('jwt_token', tokenData);
-          axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-          setToken(data);
-        }
-      } catch (error: any) {
-        if (error) {
-          error.message && setError(error.message);
-          error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
-        }
-      }
-      setLoading(false);
-    },
-
     signOut() {
       localStorage.removeItem('jwt_token');
       dispatch.currentUser.setToken(null);

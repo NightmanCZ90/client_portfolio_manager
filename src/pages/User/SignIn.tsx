@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { SmallLinkButton, SubmitButton } from '../../constants/components';
+import { useSignIn } from '../../hooks/auth';
 import { Dispatch, RootState } from '../../store/store';
 import { StyledSignIn, StyledSignInForm } from './SignIn.styles';
 
@@ -22,8 +23,9 @@ interface SignInProps extends SignInConnect {
 
 const SignIn: React.FC<SignInProps> = (props) => {
   const [formData, setFormData] = useState<SignInFormData>(initialFormData);
+  const { error, isError, isLoading, mutate: signIn } = useSignIn();
 
-  const { error, loading, setShowLogin, signIn } = props;
+  const { setShowLogin } = props;
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 
@@ -37,7 +39,7 @@ const SignIn: React.FC<SignInProps> = (props) => {
     event.preventDefault();
     event.stopPropagation();
 
-    await signIn(formData);
+    signIn(formData);
   }
 
   return (
@@ -67,10 +69,10 @@ const SignIn: React.FC<SignInProps> = (props) => {
           />
           <div className="signin-form--button">
             <SubmitButton type="submit" fullWidth>
-              {loading ? (<CircularProgress size={24} />) : "Sign in"}
+              {isLoading ? (<CircularProgress size={24} />) : "Sign in"}
             </SubmitButton>
           </div>
-          {error && <span>{error}</span>}
+          {isError && <span>{error}</span>}
           <div className="signin-form--buttons">
             <SmallLinkButton onClick={() => setShowLogin(false)}>
               Create new account
@@ -86,12 +88,11 @@ const SignIn: React.FC<SignInProps> = (props) => {
 type SignInConnect = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
 const mapState = (state: RootState) => ({
-  error: state.currentUser.error,
-  loading: state.currentUser.loading,
+
 });
 
 const mapDispatch = (dispatch: Dispatch) => ({
-  signIn: dispatch.currentUser.signIn,
+
 });
 
 export default connect(mapState, mapDispatch)(SignIn);
