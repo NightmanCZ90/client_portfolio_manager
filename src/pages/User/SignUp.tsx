@@ -111,7 +111,7 @@ const SignUp: React.FC<SignUpProps> = (props) => {
               {isLoading ? (<CircularProgress size={24} />) : "Sign up"}
             </SubmitButton>
           </div>
-          {isError && <span>{error}</span>}
+          {isError && <span>{error.message}</span>}
         </form>
       </StyledSignUpForm>
     </StyledSignUp>

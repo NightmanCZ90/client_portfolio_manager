@@ -76,7 +76,7 @@ const SignIn: React.FC<SignInProps> = (props) => {
               {isLoading ? (<CircularProgress size={24} />) : "Sign in"}
             </SubmitButton>
           </div>
-          {isError && <span>{error}</span>}
+          {isError && <span>{error.message}</span>}
           <div className="signin-form--buttons">
             <SmallLinkButton onClick={() => setShowLogin(false)}>
               Create new account
