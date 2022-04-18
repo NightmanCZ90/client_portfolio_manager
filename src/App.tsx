@@ -4,8 +4,9 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
 import SideNavigation from './components/SideNavigation';
+import { useCurrentUser } from './hooks/currentUser';
+import { usePortfolios } from './hooks/portfolios';
 import useAxiosPrivate from './hooks/useAxiosPrivate';
-import { useBootstrap } from './hooks/useBootstrap';
 import Home from './pages/Home';
 import Portfolios from './pages/Portfolios';
 import CreatePortfolio from './pages/Portfolios/create';
@@ -29,9 +30,8 @@ interface AppProps extends AppConnect {
 const App: React.FC<AppProps> = (props) => {
   const [showLogin, setShowLogin] = useState<boolean>(true);
   useAxiosPrivate();
-
-  // TODO: Get rid off useBootstrap after authentication React Query is implemented
-  useBootstrap();
+  useCurrentUser();
+  usePortfolios();
 
   const { token, setToken } = props;
 
