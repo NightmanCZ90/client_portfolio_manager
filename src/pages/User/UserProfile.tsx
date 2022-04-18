@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { SubmitButton } from '../../constants/components';
 import { userFormSchema } from '../../constants/validations';
-import { useCurrentUser } from '../../hooks/currentUser';
+import { useCurrentUser, useUpdateCurrentUser } from '../../hooks/currentUser';
 import { Dispatch, RootState } from '../../store/store';
 import { Role } from '../../types/user';
 import { capitalizeFirst } from '../../utils/helpers';
@@ -24,12 +24,11 @@ interface UserProfileProps extends UserProfileConnect {
 
 }
 
-const UserProfile: React.FC<UserProfileProps> = (props) => {
+const UserProfile: React.FC<UserProfileProps> = () => {
   const [userData, setUserData] = useState<typeof initialUserFormData>(initialUserFormData);
   const [userDataErrors, setUserDataErrors] = useState<typeof initialUserFormErrorsData>(initialUserFormErrorsData);
   const { data: user, isLoading, isError, error } = useCurrentUser();
-
-  const { loading, updateUser } = props;
+  const { mutate: updateUser, isLoading: loading } = useUpdateCurrentUser();
 
   useEffect(() => {
     user && setUserData(user)
@@ -115,11 +114,11 @@ const UserProfile: React.FC<UserProfileProps> = (props) => {
 type UserProfileConnect = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
 const mapState = (state: RootState) => ({
-  loading: state.currentUser.loading,
+
 });
 
 const mapDispatch = (dispatch: Dispatch) => ({
-  updateUser: dispatch.currentUser.updateUser,
+
 });
 
 export default connect(mapState, mapDispatch)(UserProfile);
