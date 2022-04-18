@@ -1,15 +1,15 @@
 import AddIcon from '@mui/icons-material/Add';
 import { Button } from '@mui/material';
-import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import PortfolioCard from '../../components/PortfolioCard';
 
+import PortfolioCard from '../../components/PortfolioCard';
 import { PrimaryButton } from '../../constants/components';
 import { Dispatch, RootState } from '../../store/store';
 import { Portfolio } from '../../types/portfolio';
 import { generateInvestorName } from '../../utils/helpers';
 import { StyledPortfolios, StyledPortfoliosContent, StyledPortfoliosHeader } from './Portfolios.styles';
+import { useConfirmPortfolio, usePortfolios } from '../../hooks/portfolios';
 
 interface PortfoliosProps extends PortfoliosConnect {
 
@@ -17,25 +17,21 @@ interface PortfoliosProps extends PortfoliosConnect {
 
 const Portfolios: React.FC<PortfoliosProps> = (props) => {
   const navigate = useNavigate();
+  const { isLoading, data } = usePortfolios();
+  const { mutate: confirmPortfolio, isLoading: loading } = useConfirmPortfolio();
 
-  const { confirmPortfolio, currentUser, getPortfolios, loading, managedPortfolios, managingPortfolios, personalPortfolios, unconfirmedPortfolios } = props;
-
-  useEffect(() => {
-    (async () => {
-      await getPortfolios();
-    })();
-  }, []);
+  const { currentUser } = props;
 
   if (!currentUser) return null;
 
-  const renderPortfoliosToConfirm = (portfolios: Portfolio[]) => {
-    if (portfolios.length === 0) return null;
+  const renderPortfoliosToConfirm = (portfolios?: Portfolio[]) => {
+    if (!portfolios || portfolios.length === 0) return null;
 
-    const handleConfirm = async (event: React.MouseEvent<HTMLButtonElement>, portfolioId: number) => {
+    const handleConfirm = (event: React.MouseEvent<HTMLButtonElement>, portfolioId: number) => {
       event.preventDefault();
       event.stopPropagation();
 
-      await confirmPortfolio({ portfolioId });
+      confirmPortfolio(portfolioId);
     }
 
     return portfolios.map(portfolio => (
@@ -45,13 +41,13 @@ const Portfolios: React.FC<PortfoliosProps> = (props) => {
           &nbsp;
           <span>would like to share your managed portfolio with you.</span>
         </div>
-        <Button onClick={(event) => handleConfirm(event, portfolio.id)}>Confirm</Button>
+        <Button disabled={loading} onClick={(event) => handleConfirm(event, portfolio.id)}>Confirm</Button>
       </div>
     ))
   }
 
-  const renderPortfolioCards = (portfolios: Portfolio[]) => {
-    if (portfolios.length === 0) {
+  const renderPortfolioCards = (portfolios?: Portfolio[]) => {
+    if (!portfolios || portfolios.length === 0) {
       return <div>No Portfolios</div>
     }
 
@@ -80,27 +76,27 @@ const Portfolios: React.FC<PortfoliosProps> = (props) => {
         <div className="buttons-wrapper">
           <PrimaryButton onClick={() => navigate('/portfolios/create')} startIcon={<AddIcon />}>Add Portfolio</PrimaryButton>
         </div>
-        {unconfirmedPortfolios.length > 0 ? (
+        {data?.unconfirmed && data?.unconfirmed?.length > 0 ? (
           <div className="portfolio-unconfirmed">
-            {renderPortfoliosToConfirm(unconfirmedPortfolios)}
+            {renderPortfoliosToConfirm(data?.unconfirmed)}
           </div>
         ) : null}
         <div className="portfolio-personal">
           <h2>Personal portfolios</h2>
           <div className="portfolio-cards">
-            {loading ? 'loading' : renderPortfolioCards(personalPortfolios)}
+            {isLoading ? 'loading' : renderPortfolioCards(data?.personal)}
           </div>
         </div>
         <div className="portfolio-managing">
           <h2>Managing portfolios</h2>
           <div className="portfolio-cards">
-            {loading ? 'loading' : renderPortfolioCards(managingPortfolios)}
+            {isLoading ? 'loading' : renderPortfolioCards(data?.managing)}
           </div>
         </div>
         <div className="portfolio-managed">
           <h2>Managed portfolios</h2>
           <div className="portfolio-cards">
-            {loading ? 'loading' : renderPortfolioCards(managedPortfolios)}
+            {isLoading ? 'loading' : renderPortfolioCards(data?.managed)}
           </div>
         </div>
       </StyledPortfoliosContent>
@@ -111,18 +107,10 @@ const Portfolios: React.FC<PortfoliosProps> = (props) => {
 type PortfoliosConnect = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
 const mapState = (state: RootState) => ({
-  error: state.portfolios.error,
-  loading: state.portfolios.loading,
-  managedPortfolios: state.portfolios.managed,
-  managingPortfolios: state.portfolios.managing,
-  personalPortfolios: state.portfolios.personal,
-  unconfirmedPortfolios: state.portfolios.unconfirmed,
   currentUser: state.currentUser.user,
 });
 
 const mapDispatch = (dispatch: Dispatch) => ({
-  getPortfolios: dispatch.portfolios.getPortfolios,
-  confirmPortfolio: dispatch.portfolios.confirmPortfolio,
 });
 
 export default connect(mapState, mapDispatch)(Portfolios);

@@ -1,6 +1,6 @@
-import { Portfolio } from '../types/portfolio';
+import { Portfolio, PortfolioTypes } from '../types/portfolio';
 import { User, Role, Token } from '../types/user';
-import ApiClient from './api_client';
+import ApiClient from './ApiClient';
 
 const baseUrl = (process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DEV_BASE_URL : process.env.REACT_APP_BASE_URL) || 'http://localhost:8080';
 
@@ -10,6 +10,11 @@ export interface IdentifierQuery {
 
 class RestApiClient extends ApiClient {
   baseUrl = baseUrl;
+
+  /**
+   * Authentication
+   *
+   */
 
   async signUp(body: {
     email: string,
@@ -33,6 +38,11 @@ class RestApiClient extends ApiClient {
       body,
     })
   }
+
+  /**
+   * Current User
+   *
+   */
 
   async getUser(userId: number) {
     return this.axiosRequest<User>({
@@ -60,6 +70,11 @@ class RestApiClient extends ApiClient {
     })
   }
 
+  /**
+   * Portfolios
+   *
+   */
+
   async confirmInvestor(investorEmail: string) {
     return this.axiosRequest<{ id: number }>({
       url: '/users/confirm',
@@ -71,8 +86,15 @@ class RestApiClient extends ApiClient {
   }
 
   async getUsersPortfolios() {
-    return this.axiosRequest<{ managed: Portfolio[], managing: Portfolio[], personal: Portfolio[] }>({
+    return this.axiosRequest<PortfolioTypes>({
       url: '/portfolios',
+      method: 'GET',
+    })
+  }
+
+  async getPortfolio(portfolioId: number) {
+    return this.axiosRequest<Portfolio>({
+      url: `/portfolios/${portfolioId}`,
       method: 'GET',
     })
   }
@@ -82,9 +104,10 @@ class RestApiClient extends ApiClient {
     description: string,
     color: string,
     url: string,
+    investorId: number | null,
   }) {
     return this.axiosRequest<Portfolio>({
-      url: '/portfolios',
+      url: '/portfolios/create',
       method: 'POST',
       body,
     })

@@ -6,6 +6,7 @@ import { userRegistrationFormSchema } from '../../constants/validations';
 import { SmallLinkButton, SubmitButton } from '../../constants/components';
 import { Dispatch, RootState } from '../../store/store';
 import { StyledSignUp, StyledSignUpForm } from './SignUp.styles';
+import { useSignUp } from '../../hooks/auth';
 
 export type SignUpFormData = {
   email: string;
@@ -26,8 +27,9 @@ interface SignUpProps extends SignUpConnect {
 const SignUp: React.FC<SignUpProps> = (props) => {
   const [formData, setFormData] = useState<SignUpFormData>(initialFormData);
   const [formDataErrors, setFormDataErrors] = useState<SignUpFormData>(initialFormData);
+  const { mutate: signUp, isLoading, isError, error } = useSignUp();
 
-  const { error, loading, setShowLogin, signUp } = props;
+  const { setShowLogin } = props;
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     await userRegistrationFormSchema(event.target.name).validate({[event.target.name]: event.target.value})
@@ -57,7 +59,7 @@ const SignUp: React.FC<SignUpProps> = (props) => {
 
     if (isFormDataInvalid) return;
 
-    await signUp(formData);
+    signUp(formData);
   }
 
   return (
@@ -104,12 +106,12 @@ const SignUp: React.FC<SignUpProps> = (props) => {
             </SmallLinkButton>
             <SubmitButton
               type="submit"
-              disabled={isFormDataInvalid}
+              disabled={isFormDataInvalid || isLoading}
             >
-              {loading ? (<CircularProgress size={24} />) : "Sign up"}
+              {isLoading ? (<CircularProgress size={24} />) : "Sign up"}
             </SubmitButton>
           </div>
-          {error && <span>{error}</span>}
+          {isError && <span>{error.message}</span>}
         </form>
       </StyledSignUpForm>
     </StyledSignUp>
@@ -119,12 +121,11 @@ const SignUp: React.FC<SignUpProps> = (props) => {
 type SignUpConnect = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
 const mapState = (state: RootState) => ({
-  error: state.currentUser.error,
-  loading: state.currentUser.loading,
+
 });
 
 const mapDispatch = (dispatch: Dispatch) => ({
-  signUp: dispatch.currentUser.signUp,
+
 });
 
 export default connect(mapState, mapDispatch)(SignUp);

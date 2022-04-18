@@ -4,8 +4,9 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
 import SideNavigation from './components/SideNavigation';
+import { useCurrentUser } from './hooks/currentUser';
+import { usePortfolios } from './hooks/portfolios';
 import useAxiosPrivate from './hooks/useAxiosPrivate';
-import { useBootstrap } from './hooks/useBootstrap';
 import Home from './pages/Home';
 import Portfolios from './pages/Portfolios';
 import CreatePortfolio from './pages/Portfolios/create';
@@ -29,9 +30,10 @@ interface AppProps extends AppConnect {
 const App: React.FC<AppProps> = (props) => {
   const [showLogin, setShowLogin] = useState<boolean>(true);
   useAxiosPrivate();
-  useBootstrap();
+  useCurrentUser();
+  usePortfolios();
 
-  const { token, setToken } = props;
+  const { currentUser, token, setToken } = props;
 
   useEffect(() => {
     if (!token) {
@@ -48,6 +50,16 @@ const App: React.FC<AppProps> = (props) => {
         ) : (
           <SignUp setShowLogin={setShowLogin} />
         )}
+      </div>
+    )
+  }
+
+  if (token && !currentUser) {
+
+    // TODO: Implement loading screen
+    return (
+      <div>
+        Loading
       </div>
     )
   }
@@ -72,6 +84,7 @@ type AppConnect = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
 const mapState = (state: RootState) => ({
   token: state.currentUser.token,
+  currentUser: state.currentUser.user,
 });
 
 const mapDispatch = (dispatch: Dispatch) => ({

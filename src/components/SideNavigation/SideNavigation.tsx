@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { Dispatch, RootState } from '../../store/store';
 import { NavigationButton, StyledSideNavigation } from './SideNavigation.styles';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+import { useSignOut } from '../../hooks/auth';
 
 type NavigationButtonProps = {
   icon: any;
@@ -43,11 +44,10 @@ interface SideNavigationProps extends SideNavigationConnect {
 
 }
 
-const SideNavigation: React.FC<SideNavigationProps> = (props) => {
+const SideNavigation: React.FC<SideNavigationProps> = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-
-  const { signOut } = props;
+  const { signout } = useSignOut();
 
   return (
     <StyledSideNavigation>
@@ -61,7 +61,7 @@ const SideNavigation: React.FC<SideNavigationProps> = (props) => {
         {renderNavigationButton({ icon: <PersonOutlineIcon fontSize="medium" />, name: 'userAccount', navigate, pathname, route: '/user', tooltipTitle: 'My Account' })}
 
         <Tooltip title="Sign Out" placement="right" arrow>
-          <NavigationButton onClick={signOut}>
+          <NavigationButton onClick={signout}>
             <LogoutIcon />
           </NavigationButton>
         </Tooltip>
@@ -77,7 +77,7 @@ const mapState = (state: RootState) => ({
 });
 
 const mapDispatch = (dispatch: Dispatch) => ({
-  signOut: dispatch.currentUser.signOut,
+
 });
 
 export default connect(mapState, mapDispatch)(SideNavigation);

@@ -1,5 +1,15 @@
 import { User } from './user';
 
+export interface PortfolioTypes {
+  managed: Portfolio[];
+  managing: Portfolio[];
+  personal: Portfolio[];
+}
+
+export interface PortfolioPageTypes extends PortfolioTypes {
+  unconfirmed: Portfolio[];
+}
+
 export interface Portfolio {
   id: number;
   createdAt: Date;
