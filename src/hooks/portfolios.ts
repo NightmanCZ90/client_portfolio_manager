@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from 'react-query'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 import { QueryKeys } from '../constants/queryKeys'
 import { RestApiError } from '../services/ApiClient'
@@ -43,6 +44,18 @@ export const useCheckInvestor = () => {
     onError: (error) => {
       dispatch.portfolios.setInvestorCheckError(error.message);
     }
+  })
+}
+
+export const useCreatePortfolio = () => {
+  const navigate = useNavigate();
+
+  return useMutation<Portfolio, RestApiError, { name: string, description: string, color: string, url: string, investorId: number | null }>((portfolioData) => {
+    return RestApiClient.createPortfolio(portfolioData);
+  }, {
+    onSuccess: () => {
+      navigate('/portfolios');
+    },
   })
 }
 
