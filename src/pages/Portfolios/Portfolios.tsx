@@ -9,7 +9,7 @@ import { Dispatch, RootState } from '../../store/store';
 import { Portfolio } from '../../types/portfolio';
 import { generateInvestorName } from '../../utils/helpers';
 import { StyledPortfolios, StyledPortfoliosContent, StyledPortfoliosHeader } from './Portfolios.styles';
-import { usePortfolios } from '../../hooks/portfolios';
+import { useConfirmPortfolio, usePortfolios } from '../../hooks/portfolios';
 
 interface PortfoliosProps extends PortfoliosConnect {
 
@@ -18,19 +18,20 @@ interface PortfoliosProps extends PortfoliosConnect {
 const Portfolios: React.FC<PortfoliosProps> = (props) => {
   const navigate = useNavigate();
   const { isLoading, data } = usePortfolios();
+  const { mutate: confirmPortfolio, isLoading: loading } = useConfirmPortfolio();
 
-  const { confirmPortfolio, currentUser } = props;
+  const { currentUser } = props;
 
   if (!currentUser) return null;
 
   const renderPortfoliosToConfirm = (portfolios?: Portfolio[]) => {
     if (!portfolios || portfolios.length === 0) return null;
 
-    const handleConfirm = async (event: React.MouseEvent<HTMLButtonElement>, portfolioId: number) => {
+    const handleConfirm = (event: React.MouseEvent<HTMLButtonElement>, portfolioId: number) => {
       event.preventDefault();
       event.stopPropagation();
 
-      await confirmPortfolio({ portfolioId });
+      confirmPortfolio(portfolioId);
     }
 
     return portfolios.map(portfolio => (
@@ -40,7 +41,7 @@ const Portfolios: React.FC<PortfoliosProps> = (props) => {
           &nbsp;
           <span>would like to share your managed portfolio with you.</span>
         </div>
-        <Button onClick={(event) => handleConfirm(event, portfolio.id)}>Confirm</Button>
+        <Button disabled={loading} onClick={(event) => handleConfirm(event, portfolio.id)}>Confirm</Button>
       </div>
     ))
   }
@@ -110,7 +111,6 @@ const mapState = (state: RootState) => ({
 });
 
 const mapDispatch = (dispatch: Dispatch) => ({
-  confirmPortfolio: dispatch.portfolios.confirmPortfolio,
 });
 
 export default connect(mapState, mapDispatch)(Portfolios);

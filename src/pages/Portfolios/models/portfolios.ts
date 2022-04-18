@@ -43,31 +43,6 @@ export const portfolios = createModel<RootModel>()({
     setInvestorId: (state, investorId: number | null) => ({ ...state, investorId }),
   },
   effects: (dispatch) => ({
-    async getPortfolios() {
-      const { setError, setLoading, setPortfolios } = dispatch.portfolios;
-
-      /** Reset */
-      setError('');
-      setLoading(true);
-
-      try {
-        const data = await RestApiClient.getUsersPortfolios();
-        if (data) {
-          setPortfolios({
-            managed: data.managed.filter(portfolio => portfolio.confirmed),
-            managing: data.managing,
-            personal: data.personal,
-            unconfirmed: data.managed.filter(portfolio => !portfolio.confirmed),
-          });
-        }
-      } catch (error: any) {
-        if (error) {
-          error.message && setError(error.message);
-          error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
-        }
-      }
-      setLoading(false);
-    },
 
     async checkInvestor(payload: { investorEmail: string }, state) {
       const { investorEmail } = payload;
@@ -115,40 +90,5 @@ export const portfolios = createModel<RootModel>()({
         }
       }
     },
-
-    async confirmPortfolio(payload: { portfolioId: number }, state) {
-      const { setError, setLoading, setPortfolios } = dispatch.portfolios;
-      const { managed, managing, personal, unconfirmed } = state.portfolios;
-
-      /** Reset */
-      setError('');
-      setLoading(true);
-
-      try {
-        const data = await RestApiClient.confirmPortfolio(payload.portfolioId);
-        if (data) {
-          setPortfolios({
-            managed: [...managed, data],
-            managing,
-            personal,
-            unconfirmed: unconfirmed.filter(portfolio => portfolio.id !== payload.portfolioId),
-          });
-        }
-      } catch (error: any) {
-        if (error) {
-          error.message && setError(error.message);
-          error.data && error.data?.length > 0 && setError(error.data[0]?.msg);
-        }
-      }
-      setLoading(false);
-    }
   }),
 });
-
-export const splitPortfolios = (data: PortfolioTypes) => ({
-    managed: data.managed.filter(portfolio => portfolio.confirmed),
-    managing: data.managing,
-    personal: data.personal,
-    unconfirmed: data.managed.filter(portfolio => !portfolio.confirmed),
-  }
-);
