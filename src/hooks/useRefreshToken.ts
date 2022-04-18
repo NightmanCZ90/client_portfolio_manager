@@ -1,8 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import axios from '../services/axios';
 import { Dispatch, RootState } from '../store/store';
+import { useSignOut } from './auth';
 
 const useRefreshToken = () => {
+  const { signout } = useSignOut();
+
   const dispatch = useDispatch<Dispatch>();
   const currentUser = useSelector((state: RootState) => state.currentUser);
 
@@ -17,7 +20,7 @@ const useRefreshToken = () => {
       }
       return response?.data?.accessToken;
     } catch (err) {
-      dispatch.currentUser.signOut();
+      signout();
     }
   }
   return refresh;
