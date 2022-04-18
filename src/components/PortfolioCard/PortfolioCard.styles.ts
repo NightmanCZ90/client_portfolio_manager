@@ -3,7 +3,7 @@ import { styled } from '@mui/system';
 
 export const StyledPortfolioCard = styled(Card)`
   position: relative;
-  width: 20rem;
+  min-width: 20rem;
   height: 30rem;
 
   a {

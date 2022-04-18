@@ -55,9 +55,11 @@ export const StyledPortfoliosContent = styled('div')`
     margin-bottom: 2rem;
 
     .portfolio-cards {
+      width: 100%;
       gap: 1.5rem;
       margin: 1.5rem 0;
       display: flex;
+      flex-wrap: wrap;
       flex-direction: row;
     }
   }
