@@ -33,7 +33,7 @@ const App: React.FC<AppProps> = (props) => {
   useCurrentUser();
   usePortfolios();
 
-  const { token, setToken } = props;
+  const { currentUser, token, setToken } = props;
 
   useEffect(() => {
     if (!token) {
@@ -50,6 +50,16 @@ const App: React.FC<AppProps> = (props) => {
         ) : (
           <SignUp setShowLogin={setShowLogin} />
         )}
+      </div>
+    )
+  }
+
+  if (token && !currentUser) {
+
+    // TODO: Implement loading screen
+    return (
+      <div>
+        Loading
       </div>
     )
   }
@@ -74,6 +84,7 @@ type AppConnect = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
 const mapState = (state: RootState) => ({
   token: state.currentUser.token,
+  currentUser: state.currentUser.user,
 });
 
 const mapDispatch = (dispatch: Dispatch) => ({
