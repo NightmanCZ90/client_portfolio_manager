@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from 'react-query'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { QueryKeys } from '../constants/queryKeys'
 import { RestApiError } from '../services/ApiClient'
 import RestApiClient from '../services/RestApiClient'
-import { RootState } from '../store/store'
+import { Dispatch, RootState } from '../store/store'
 import { Portfolio, PortfolioPageTypes, PortfolioTypes } from '../types/portfolio'
 
 export const usePortfolios = () => {
@@ -25,6 +25,23 @@ export const useConfirmPortfolio = () => {
   }, {
     onSuccess: () => {
       refetch();
+    }
+  })
+}
+
+export const useCheckInvestor = () => {
+  const dispatch = useDispatch<Dispatch>();
+
+  return useMutation<{ id: number }, RestApiError, string>((investorEmail) => {
+    dispatch.portfolios.setInvestorId(null);
+    dispatch.portfolios.setInvestorCheckError('');
+    return RestApiClient.confirmInvestor(investorEmail);
+  }, {
+    onSuccess: ({ id }) => {
+      dispatch.portfolios.setInvestorId(id);
+    },
+    onError: (error) => {
+      dispatch.portfolios.setInvestorCheckError(error.message);
     }
   })
 }

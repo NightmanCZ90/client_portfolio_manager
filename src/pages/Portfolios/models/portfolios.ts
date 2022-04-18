@@ -2,17 +2,12 @@ import { createModel } from "@rematch/core";
 
 import { RootModel } from "../../../store";
 import RestApiClient from '../../../services/RestApiClient';
-import { Portfolio, PortfolioTypes } from '../../../types/portfolio';
+import { Portfolio } from '../../../types/portfolio';
 
 interface PortfoliosState {
   error: string;
   loading: boolean;
-  managed: Portfolio[];
-  managing: Portfolio[];
-  personal: Portfolio[];
-  unconfirmed: Portfolio[];
   investorCheckError: string;
-  investorCheckLoading: boolean;
   investorId: number | null;
 }
 
@@ -20,12 +15,7 @@ export const portfolios = createModel<RootModel>()({
   state: {
     error: '',
     loading: false,
-    managed: [],
-    managing: [],
-    personal: [],
-    unconfirmed: [],
     investorCheckError: '',
-    investorCheckLoading: false,
     investorId: null,
   } as PortfoliosState,
   reducers: {
@@ -43,29 +33,6 @@ export const portfolios = createModel<RootModel>()({
     setInvestorId: (state, investorId: number | null) => ({ ...state, investorId }),
   },
   effects: (dispatch) => ({
-
-    async checkInvestor(payload: { investorEmail: string }, state) {
-      const { investorEmail } = payload;
-      const { setInvestorCheckError, setInvestorCheckLoading, setInvestorId } = dispatch.portfolios;
-
-      /** Reset */
-      setInvestorCheckError('');
-      setInvestorCheckLoading(true);
-      setInvestorId(null);
-
-      try {
-        const data = await RestApiClient.confirmInvestor(investorEmail);
-        if (data) {
-          setInvestorId(data.id);
-        }
-      } catch (error: any) {
-        if (error) {
-          error.message && setInvestorCheckError(error.message);
-          error.data && error.data?.length > 0 && setInvestorCheckError(error.data[0]?.msg);
-        }
-      }
-      setInvestorCheckLoading(false);
-    },
 
     async createPortfolio(payload: { name: string, description: string, color: string, url: string, investorId: number | null }, state) {
       const { setError, setLoading } = dispatch.portfolios;

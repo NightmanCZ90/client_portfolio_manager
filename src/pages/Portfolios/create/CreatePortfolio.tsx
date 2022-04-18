@@ -7,6 +7,7 @@ import { CustomToggleButton, PrimaryButton, SubmitButton } from '../../../consta
 import { StyledCreatePortfolio, StyledCreatePortfolioContent, StyledCreatePortfolioHeader } from './CreatePortfolio.styles';
 import { portfolioCreationFormSchema } from '../../../constants/validations';
 import { useNavigate } from 'react-router-dom';
+import { useCheckInvestor } from '../../../hooks/portfolios';
 
 enum PortfolioVariant {
   Personal,
@@ -45,11 +46,13 @@ interface CreatePortfolioProps extends CreatePortfolioConnect {
 
 const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
   const navigate = useNavigate();
+  const { mutate: checkInvestor, isLoading: investorCheckLoading } = useCheckInvestor();
   const [portfolioVariant, setPortfolioVariant] = useState<PortfolioVariant>(PortfolioVariant.Personal);
   const [portfolioData, setPortfolioData] = useState<initialPorfolioFormDataType>(initialPorfolioFormData);
   const [portfolioDataErrors, setPortfolioDataErrors] = useState<typeof initialPorfolioFormErrorsData>(initialPorfolioFormErrorsData);
 
-  const { checkInvestor, createPortfolio, error, investorCheckError, investorCheckLoading, investorId, loading, setInvestorCheckError } = props;
+
+  const { createPortfolio, error, investorId, loading, investorCheckError, setInvestorCheckError } = props;
 
   // Remove this useEffect if removing checked investor is not wanted
   useEffect(() => {
@@ -107,7 +110,7 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
     });
 
     if (Boolean(portfolioDataErrors.investorEmail)) return;
-    if (investorEmail) await checkInvestor({ investorEmail });
+    if (investorEmail) checkInvestor(investorEmail);
   }
 
   const { name, description, url } = portfolioDataErrors;
@@ -235,12 +238,10 @@ const mapState = (state: RootState) => ({
   error: state.portfolios.error,
   loading: state.portfolios.loading,
   investorCheckError: state.portfolios.investorCheckError,
-  investorCheckLoading: state.portfolios.investorCheckLoading,
   investorId: state.portfolios.investorId,
 });
 
 const mapDispatch = (dispatch: Dispatch) => ({
-  checkInvestor: dispatch.portfolios.checkInvestor,
   createPortfolio: dispatch.portfolios.createPortfolio,
   setInvestorCheckError: dispatch.portfolios.setInvestorCheckError,
 });
