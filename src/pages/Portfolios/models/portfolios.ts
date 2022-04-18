@@ -92,7 +92,7 @@ export const portfolios = createModel<RootModel>()({
       setInvestorCheckLoading(false);
     },
 
-    async createPortfolio(payload: { name: string, description: string, color: string, url: string }, state) {
+    async createPortfolio(payload: { name: string, description: string, color: string, url: string, investorId: number | null }, state) {
       const { setError, setLoading } = dispatch.portfolios;
 
       /** Reset */

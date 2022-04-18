@@ -104,9 +104,10 @@ class RestApiClient extends ApiClient {
     description: string,
     color: string,
     url: string,
+    investorId: number | null,
   }) {
     return this.axiosRequest<Portfolio>({
-      url: '/portfolios',
+      url: '/portfolios/create',
       method: 'POST',
       body,
     })
