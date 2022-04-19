@@ -54,7 +54,7 @@ export const portfolioCreationFormSchema = (inputType: string, isManaged: boolea
         .string()
         .email('Email must be a valid email.')
         .max(40, 'Maximal length of investor email is 40 characters.')
-        .required('Please enter your e-mail.'),
+        .required('Please enter investor\'s e-mail.'),
     });
   } else if (inputType === 'investorEmail' && !isManaged) {
     return yup.object().shape({
