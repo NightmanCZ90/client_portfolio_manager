@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatter } from '../../App';
 import { Portfolio } from '../../types/portfolio';
-import { generateGreenRedClass, generateInvestorName } from '../../utils/helpers';
+import { generateGreenRedClass, generateUserName } from '../../utils/helpers';
 import { StyledPortfolioCard, StyledPortfolioCardContent, StyledPortfolioCardHeader } from './PortfolioCard.styles';
 
 interface PortfolioCardProps {
@@ -49,7 +49,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = (props) => {
                 <span className="not-confirmed" />
               </Tooltip>
             )}
-            {generateInvestorName(user)}
+            {generateUserName(user)}
           </div>
         ) : null}
         <StyledPortfolioCardHeader>

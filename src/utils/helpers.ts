@@ -1,3 +1,4 @@
+import { Portfolio, PortfolioOwnership } from '../types/portfolio';
 import { User } from '../types/user';
 
 export const capitalizeFirst = (str: string) => {
@@ -11,8 +12,17 @@ export const generateGreenRedClass = (value: number) => {
   return '';
 }
 
-export const generateInvestorName = (user?: User) => {
+export const generateUserName = (user?: User) => {
   const { firstName, lastName, email } = user || {};
   if (firstName && lastName) return `${firstName} ${lastName}`;
   return email || '';
+}
+
+export const generatePortfolioOwnership = (data: {userId?: number | null, portfolio?: Portfolio | null}): PortfolioOwnership => {
+  const { portfolio, userId } = data;
+  if (!userId || !portfolio) return PortfolioOwnership.Personal;
+
+  if (portfolio.pmId && portfolio.pmId === userId) return PortfolioOwnership.Managing;
+  if (portfolio.pmId && portfolio.pmId !== userId) return PortfolioOwnership.Managed;
+  return PortfolioOwnership.Personal;
 }
