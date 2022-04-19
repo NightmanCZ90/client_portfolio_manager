@@ -166,7 +166,7 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
               />
             </div>
             <PrimaryButton
-              disabled={!Boolean(portfolioData.investorEmail) || Boolean(portfolioDataErrors.investorEmail)}
+              disabled={!Boolean(portfolioData.investorEmail) || Boolean(portfolioDataErrors.investorEmail) || investorCheckLoading}
               size="large"
               onClick={handleInvestorCheck}
             >
