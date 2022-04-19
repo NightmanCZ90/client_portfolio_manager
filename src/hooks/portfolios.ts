@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -15,6 +15,30 @@ export const usePortfolios = () => {
     onError: (err) => { console.dir(err) },
     select: (data) => splitPortfolios(data),
     enabled: !!currentUser.token,
+  })
+}
+
+export const usePortfolio = (portfolioId: number) => {
+  const queryClient = useQueryClient();
+  return useQuery<Portfolio, RestApiError>(['portfolioDetail', portfolioId], () => RestApiClient.getPortfolio(portfolioId), {
+    initialData: () => {
+      const portfolios = queryClient.getQueryData<PortfolioPageTypes>(QueryKeys.Portfolios);
+      if (!portfolios) return undefined;
+
+      return findPortfolio(portfolioId, portfolios);
+    }
+  });
+}
+
+export const useLinkPortfolio = (portfolioId: number) => {
+  const { refetch } = usePortfolio(portfolioId);
+
+  return useMutation<Portfolio, RestApiError, { portfolioId: number, email: string }>(({ portfolioId, email }) => {
+    return RestApiClient.linkPortfolio(portfolioId, { email });
+  }, {
+    onSuccess: () => {
+      refetch();
+    }
   })
 }
 
@@ -70,3 +94,7 @@ const splitPortfolios = (data: PortfolioTypes) => ({
   personal: data.personal,
   unconfirmed: data.managed.filter(portfolio => !portfolio.confirmed),
 });
+
+const findPortfolio = (portfolioId: number, portfolios: PortfolioPageTypes) => {
+  return Object.values(portfolios).flat().find((portfolio: Portfolio) => portfolio.id === portfolioId);
+}
