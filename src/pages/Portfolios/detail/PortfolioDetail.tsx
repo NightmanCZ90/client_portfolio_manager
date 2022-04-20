@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { PrimaryButton } from '../../../constants/components';
 import { portfolioDetailFormSchema } from '../../../constants/validations';
 
-import { useLinkPortfolio, usePortfolio } from '../../../hooks/portfolios';
+import { useLinkPortfolio, usePortfolio, useUnlinkPortfolio } from '../../../hooks/portfolios';
 import { Dispatch, RootState } from '../../../store/store';
 import { PortfolioOwnership } from '../../../types/portfolio';
 import { generatePortfolioOwnership, generateUserName } from '../../../utils/helpers';
@@ -43,6 +43,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
   const { id } = useParams();
   const { data, isLoading, isFetching } = usePortfolio(Number(id));
   const { mutate: linkPortfolio, isLoading: isLinkingLoading, error: linkingError } = useLinkPortfolio(Number(id));
+  const { mutate: unlinkPortfolio, isLoading: isUnlinkingLoading, error: unlinkingError } = useUnlinkPortfolio(Number(id));
   const [portfolioData, setPortfolioData] = useState<initialPorfolioFormDataType>(initialPorfolioFormData);
   const [portfolioDataErrors, setPortfolioDataErrors] = useState<typeof initialPorfolioFormErrorsData>(initialPorfolioFormErrorsData);
 
@@ -51,7 +52,8 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
   useEffect(() => {
     if (data) {
       setPortfolioData({
-        email: data.pmId ? (data.user?.email || '') : '',
+        /** Do not overwrite already written text when data finishes fetching */
+        email: portfolioData.email || (data.pmId ? (data.user?.email || '') : ''),
         name: data.name,
         description: data.description || '',
         color: data.color || '#fff',
@@ -64,7 +66,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
   const ownership = useMemo(() => generatePortfolioOwnership({ userId: currentUser?.id, portfolio: data }), [data?.userId, data?.pmId, currentUser]);
 
   const renderOwnershipTitle = useMemo(() => {
-    if (ownership === PortfolioOwnership.Managed) return `Managed by ${generateUserName(data?.portfolioManager)}`;
+    if (ownership === PortfolioOwnership.Managed || ownership === PortfolioOwnership.Unconfirmed) return `Managed by ${generateUserName(data?.portfolioManager)}`;
     if (ownership === PortfolioOwnership.Managing) return `Managing for ${generateUserName(data?.user)}`;
     return 'Personal';
   }, [ownership, data?.portfolioManager, data?.user]);
@@ -110,6 +112,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
 
         <div className="owner-selection">
           <h3>Portfolio ownership: <span>{renderOwnershipTitle}</span></h3>
+
           {ownership === PortfolioOwnership.Personal && (
             <>
               <h4>Link to investor</h4>
@@ -118,7 +121,6 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
                   <TextField
                     fullWidth
                     required
-                    disabled={isLinkingLoading || isFetching}
                     id="investor-email-input"
                     label="Investor email"
                     name="email"
@@ -133,10 +135,28 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
                   size="large"
                   onClick={handleLink}
                 >
-                  {isLinkingLoading || isFetching ? (<CircularProgress size={24} />) : "Link investor"}
+                  {isLinkingLoading ? (<CircularProgress size={24} />) : "Link investor"}
                 </PrimaryButton>
 
                 {linkingError && <span className="error">{linkingError.message}</span>}
+              </div>
+            </>
+          )}
+
+          {ownership === PortfolioOwnership.Managed && (
+            <>
+              <h4>Unlink from portfolio</h4>
+              <div className="inputs-wrapper">
+                <PrimaryButton
+                  disabled={isUnlinkingLoading || isFetching}
+
+                  size="large"
+                  onClick={() => unlinkPortfolio()}
+                >
+                  {isUnlinkingLoading ? (<CircularProgress size={24} />) : "Unlink from portfolio"}
+                </PrimaryButton>
+
+                {unlinkingError && <span className="error">{unlinkingError.message}</span>}
               </div>
             </>
           )}

@@ -4,6 +4,7 @@ export enum PortfolioOwnership {
   Managed = 'managed',
   Managing = 'managing',
   Personal = 'personal',
+  Unconfirmed = 'unconfirmed',
 }
 
 export interface PortfolioTypes {
