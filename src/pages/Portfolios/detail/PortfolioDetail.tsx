@@ -100,6 +100,84 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
 
   if (!portfolioData) return <div>Nothing to display</div>;
 
+  const renderOwnershipManagement = () => {
+    const ownershipManagement = {
+      personal: {
+        title: 'Link to investor',
+        showTextfield: true,
+        textFieldDisabled: false,
+        submitDisabled: !Boolean(portfolioData.email) || Boolean(portfolioDataErrors.email) || isLinkingLoading || isFetching,
+        onClick: handleLink,
+        submitText: 'Link investor',
+        loading: isLinkingLoading,
+        error: linkingError,
+      },
+      managed: {
+        title: 'Unlink from portfolio',
+        showTextfield: false,
+        textFieldDisabled: true,
+        submitDisabled: isUnlinkingLoading || isFetching,
+        onClick: () => unlinkPortfolio(),
+        submitText: 'Unlink from portfolio',
+        loading: isUnlinkingLoading,
+        error: unlinkingError,
+      },
+      managing: {
+        title: 'Unlink investor from portfolio',
+        showTextfield: true,
+        textFieldDisabled: true,
+        submitDisabled: isUnlinkingLoading || isFetching,
+        onClick: () => unlinkPortfolio(),
+        submitText: 'Unlink investor',
+        loading: isUnlinkingLoading,
+        error: unlinkingError,
+      },
+      unconfirmed: {
+        title: 'Unlink from portfolio',
+        showTextfield: false,
+        textFieldDisabled: true,
+        submitDisabled: isUnlinkingLoading || isFetching,
+        onClick: () => unlinkPortfolio(),
+        submitText: 'Unlink from portfolio',
+        loading: isUnlinkingLoading,
+        error: unlinkingError,
+      }
+    }
+
+    return (
+      <>
+        <h4>{ownershipManagement[ownership].title}</h4>
+        <div className="inputs-wrapper">
+          {ownershipManagement[ownership].showTextfield && (
+            <div className="textfield-wrapper">
+              <TextField
+                fullWidth
+                required
+                disabled={ownershipManagement[ownership].textFieldDisabled}
+                id="investor-email-input"
+                label="Investor email"
+                name="email"
+                value={portfolioData.email}
+                error={Boolean(portfolioDataErrors.email)}
+                helperText={portfolioDataErrors.email}
+                onChange={handleChange}
+              />
+            </div>
+          )}
+          <PrimaryButton
+            disabled={ownershipManagement[ownership].submitDisabled}
+            size="large"
+            onClick={ownershipManagement[ownership].onClick}
+          >
+            {ownershipManagement[ownership].loading ? (<CircularProgress size={24} />) : ownershipManagement[ownership].submitText}
+          </PrimaryButton>
+
+          {ownershipManagement[ownership].error?.message && <span className="error">{ownershipManagement[ownership].error?.message}</span>}
+        </div>
+      </>
+    )
+  }
+
   return (
     <StyledPortfolioDetail>
       <StyledPortfolioDetailHeader>
@@ -111,55 +189,9 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
       <StyledPortfolioDetailContent>
 
         <div className="owner-selection">
-          <h3>Portfolio ownership: <span>{renderOwnershipTitle}</span></h3>
+          <h3>Portfolio ownership: <span>{renderOwnershipTitle}</span>{isFetching ? <CircularProgress size={16} /> : null}</h3>
 
-          {ownership === PortfolioOwnership.Personal && (
-            <>
-              <h4>Link to investor</h4>
-              <div className="inputs-wrapper">
-                <div className="textfield-wrapper">
-                  <TextField
-                    fullWidth
-                    required
-                    id="investor-email-input"
-                    label="Investor email"
-                    name="email"
-                    value={portfolioData.email}
-                    error={Boolean(portfolioDataErrors.email)}
-                    helperText={portfolioDataErrors.email}
-                    onChange={handleChange}
-                  />
-                </div>
-                <PrimaryButton
-                  disabled={!Boolean(portfolioData.email) || Boolean(portfolioDataErrors.email) || isLinkingLoading || isFetching}
-                  size="large"
-                  onClick={handleLink}
-                >
-                  {isLinkingLoading ? (<CircularProgress size={24} />) : "Link investor"}
-                </PrimaryButton>
-
-                {linkingError && <span className="error">{linkingError.message}</span>}
-              </div>
-            </>
-          )}
-
-          {ownership === PortfolioOwnership.Managed && (
-            <>
-              <h4>Unlink from portfolio</h4>
-              <div className="inputs-wrapper">
-                <PrimaryButton
-                  disabled={isUnlinkingLoading || isFetching}
-
-                  size="large"
-                  onClick={() => unlinkPortfolio()}
-                >
-                  {isUnlinkingLoading ? (<CircularProgress size={24} />) : "Unlink from portfolio"}
-                </PrimaryButton>
-
-                {unlinkingError && <span className="error">{unlinkingError.message}</span>}
-              </div>
-            </>
-          )}
+          {renderOwnershipManagement()}
         </div>
       </StyledPortfolioDetailContent>
     </StyledPortfolioDetail>
