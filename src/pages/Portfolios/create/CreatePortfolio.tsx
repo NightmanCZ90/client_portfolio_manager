@@ -53,6 +53,13 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
 
   const { investorId, investorCheckError, setInvestorCheckError } = props;
 
+  useEffect(() => {
+    return () => {
+      setPortfolioData(initialPorfolioFormData);
+      setPortfolioDataErrors(initialPorfolioFormErrorsData);
+    }
+  }, []);
+
   // Remove this useEffect if removing checked investor is not wanted
   useEffect(() => {
     if (portfolioVariant === PortfolioVariant.Personal) {
@@ -115,7 +122,7 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
   const { name, description, url } = portfolioDataErrors;
   const isFormDataInvalid = Boolean(name) || Boolean(description) || Boolean(url);
 
-  const isDisabled = !portfolioData.name || isFormDataInvalid || (portfolioVariant === PortfolioVariant.Managed && !portfolioData.investorId);
+  const isDisabled = !portfolioData.name || isFormDataInvalid || (portfolioVariant === PortfolioVariant.Managed && !portfolioData.investorId) || loading;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -166,7 +173,7 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
               />
             </div>
             <PrimaryButton
-              disabled={!Boolean(portfolioData.investorEmail) || Boolean(portfolioDataErrors.investorEmail)}
+              disabled={!Boolean(portfolioData.investorEmail) || Boolean(portfolioDataErrors.investorEmail) || investorCheckLoading}
               size="large"
               onClick={handleInvestorCheck}
             >

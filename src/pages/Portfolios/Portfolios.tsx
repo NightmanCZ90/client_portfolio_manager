@@ -7,7 +7,7 @@ import PortfolioCard from '../../components/PortfolioCard';
 import { PrimaryButton } from '../../constants/components';
 import { Dispatch, RootState } from '../../store/store';
 import { Portfolio } from '../../types/portfolio';
-import { generateInvestorName } from '../../utils/helpers';
+import { generateUserName } from '../../utils/helpers';
 import { StyledPortfolios, StyledPortfoliosContent, StyledPortfoliosHeader } from './Portfolios.styles';
 import { useConfirmPortfolio, usePortfolios } from '../../hooks/portfolios';
 
@@ -37,7 +37,7 @@ const Portfolios: React.FC<PortfoliosProps> = (props) => {
     return portfolios.map(portfolio => (
       <div key={portfolio.id} className="card">
         <div className="text">
-          <span>{generateInvestorName(portfolio.portfolioManager)}</span>
+          <span>{generateUserName(portfolio.portfolioManager)}</span>
           &nbsp;
           <span>would like to share your managed portfolio with you.</span>
         </div>

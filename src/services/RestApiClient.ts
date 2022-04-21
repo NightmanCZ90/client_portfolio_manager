@@ -113,6 +113,19 @@ class RestApiClient extends ApiClient {
     })
   }
 
+  async updatePortfolio(portfolioId: number, body: {
+    name: string,
+    description: string,
+    color: string,
+    url: string,
+  }) {
+    return this.axiosRequest<Portfolio>({
+      url: `/portfolios/${portfolioId}`,
+      method: 'PUT',
+      body,
+    })
+  }
+
   async linkPortfolio(portfolioId: number, body: {
     email: string,
   }) {

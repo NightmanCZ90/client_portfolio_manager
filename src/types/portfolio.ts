@@ -1,5 +1,12 @@
 import { User } from './user';
 
+export enum PortfolioOwnership {
+  Managed = 'managed',
+  Managing = 'managing',
+  Personal = 'personal',
+  Unconfirmed = 'unconfirmed',
+}
+
 export interface PortfolioTypes {
   managed: Portfolio[];
   managing: Portfolio[];
