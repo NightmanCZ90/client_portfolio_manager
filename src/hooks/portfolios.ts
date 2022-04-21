@@ -20,7 +20,8 @@ export const usePortfolios = () => {
 
 export const usePortfolio = (portfolioId: number) => {
   const queryClient = useQueryClient();
-  return useQuery<Portfolio, RestApiError>(['portfolioDetail', portfolioId], () => RestApiClient.getPortfolio(portfolioId), {
+
+  return useQuery<Portfolio, RestApiError>([QueryKeys.PortfolioDetail, portfolioId], () => RestApiClient.getPortfolio(portfolioId), {
     initialData: () => {
       const portfolios = queryClient.getQueryData<PortfolioPageTypes>(QueryKeys.Portfolios);
       if (!portfolios) return undefined;
@@ -106,6 +107,18 @@ export const useCreatePortfolio = () => {
   }, {
     onSuccess: () => {
       navigate('/portfolios');
+    },
+  })
+}
+
+export const useUpdatePortfolio = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<Portfolio, RestApiError, { portfolioId: number, name: string, description: string, color: string, url: string }>((portfolioData) => {
+    return RestApiClient.updatePortfolio(portfolioData.portfolioId, { ...portfolioData });
+  }, {
+    onSuccess: (data) => {
+      queryClient.setQueryData([QueryKeys.PortfolioDetail, data.id], data);
     },
   })
 }
