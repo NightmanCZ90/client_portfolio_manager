@@ -64,7 +64,7 @@ export const StyledPortfolioDetailContent = styled('div')`
     }
   }
 
-  /* form {
+  form {
     margin-top: 2rem;
     width: 22rem;
     padding: 1rem;
@@ -83,5 +83,5 @@ export const StyledPortfolioDetailContent = styled('div')`
     & > span {
       color: var(--text-error);
     }
-  } */
+  }
 `;

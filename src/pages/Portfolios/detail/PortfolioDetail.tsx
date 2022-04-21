@@ -2,10 +2,10 @@ import { CircularProgress, TextField } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { PrimaryButton } from '../../../constants/components';
+import { PrimaryButton, SubmitButton } from '../../../constants/components';
 import { portfolioDetailFormSchema } from '../../../constants/validations';
 
-import { useLinkPortfolio, usePortfolio, useUnlinkPortfolio } from '../../../hooks/portfolios';
+import { useLinkPortfolio, usePortfolio, useUnlinkPortfolio, useUpdatePortfolio } from '../../../hooks/portfolios';
 import { Dispatch, RootState } from '../../../store/store';
 import { PortfolioOwnership } from '../../../types/portfolio';
 import { generatePortfolioOwnership, generateUserName } from '../../../utils/helpers';
@@ -44,20 +44,29 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
   const { data, isLoading, isFetching } = usePortfolio(Number(id));
   const { mutate: linkPortfolio, isLoading: isLinkingLoading, error: linkingError } = useLinkPortfolio(Number(id));
   const { mutate: unlinkPortfolio, isLoading: isUnlinkingLoading, error: unlinkingError } = useUnlinkPortfolio(Number(id));
+  const { mutate: updatePortfolio, isLoading: isUpdateLoading, error: updateError } = useUpdatePortfolio();
   const [portfolioData, setPortfolioData] = useState<initialPorfolioFormDataType>(initialPorfolioFormData);
   const [portfolioDataErrors, setPortfolioDataErrors] = useState<typeof initialPorfolioFormErrorsData>(initialPorfolioFormErrorsData);
 
   const { currentUser } = props;
 
   useEffect(() => {
+    return () => {
+      setPortfolioData(initialPorfolioFormData);
+      setPortfolioDataErrors(initialPorfolioFormErrorsData);
+    }
+  }, []);
+
+  useEffect(() => {
     if (data) {
+      console.log(data)
       setPortfolioData({
         /** Do not overwrite already written text when data finishes fetching */
         email: portfolioData.email || (data.pmId ? (data.user?.email || '') : ''),
-        name: data.name,
-        description: data.description || '',
-        color: data.color || '#fff',
-        url: data.url || '',
+        name: portfolioData.name || data.name,
+        description: portfolioData.description || data.description || '',
+        color: portfolioData.color || data.color || '#fff',
+        url: portfolioData.url || data.url || '',
       });
     }
   }, [data]);
@@ -99,6 +108,23 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
   if (isLoading) return <div>Loading</div>;
 
   if (!portfolioData) return <div>Nothing to display</div>;
+
+  const { name, description, url } = portfolioDataErrors;
+  const isFormDataInvalid = Boolean(name) || Boolean(description) || Boolean(url);
+
+  const isDisabled = !portfolioData.name || isFormDataInvalid || isUpdateLoading;
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (isDisabled || !id) {
+      return;
+    }
+
+    // TODO: Implement color picker
+    updatePortfolio({ ...portfolioData, portfolioId: Number(id), color: 'F9BA48' });
+  }
 
   const renderOwnershipManagement = () => {
     const ownershipManagement = {
@@ -193,6 +219,51 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
 
           {renderOwnershipManagement()}
         </div>
+
+        <form onSubmit={handleSubmit}>
+          <h3>Portfolio information</h3>
+          <TextField
+            fullWidth
+            required
+            id="portfolio-name-input"
+            label="Portfolio name"
+            name="name"
+            value={portfolioData.name}
+            error={Boolean(portfolioDataErrors.name)}
+            helperText={portfolioDataErrors.name}
+            onChange={handleChange}
+          />
+          <TextField
+            fullWidth
+            multiline
+            id="portfolio-description-input"
+            label="Portfolio description"
+            name="description"
+            value={portfolioData.description}
+            error={Boolean(portfolioDataErrors.description)}
+            helperText={portfolioDataErrors.description}
+            onChange={handleChange}
+          />
+          <TextField
+            fullWidth
+            id="portfolio-url-input"
+            label="Portfolio url"
+            name="url"
+            value={portfolioData.url}
+            error={Boolean(portfolioDataErrors.url)}
+            helperText={portfolioDataErrors.url || "Link to website managing this portfolio."}
+            onChange={handleChange}
+          />
+          <div className="portfolio-form--buttons">
+            <SubmitButton
+              type="submit"
+              disabled={isDisabled}
+            >
+              {isUpdateLoading ? (<CircularProgress size={24} />) : "Update portfolio"}
+            </SubmitButton>
+          </div>
+          {updateError && <span>{updateError.message}</span>}
+        </form>
       </StyledPortfolioDetailContent>
     </StyledPortfolioDetail>
   )
