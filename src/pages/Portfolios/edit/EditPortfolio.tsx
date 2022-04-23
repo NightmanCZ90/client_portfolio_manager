@@ -208,7 +208,7 @@ const EditPortfolio: React.FC<EditPortfolioProps> = (props) => {
       <StyledEditPortfolioHeader>
         <div className="header-info">
           <h2>{portfolioData.name}</h2>
-          <p>Update your portfolio, assign it to investor or add transactions</p>
+          <p>Update your portfolio or assign it to investor</p>
         </div>
       </StyledEditPortfolioHeader>
       <StyledEditPortfolioContent>
