@@ -2,6 +2,13 @@ import { styled } from '@mui/system';
 
 export const StyledEditPortfolio = styled('div')`
   width: 100%;
+  position: relative;
+
+  a.link-back {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+  }
 `;
 
 export const StyledEditPortfolioHeader = styled('div')`

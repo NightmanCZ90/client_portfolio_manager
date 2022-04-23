@@ -1,10 +1,11 @@
-import { CircularProgress, TextField } from '@mui/material';
+import { CircularProgress, IconButton, TextField } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+
 import { PrimaryButton, SubmitButton } from '../../../constants/components';
 import { portfolioDetailFormSchema } from '../../../constants/validations';
-
 import { useLinkPortfolio, usePortfolio, useUnlinkPortfolio, useUpdatePortfolio } from '../../../hooks/portfolios';
 import { Dispatch, RootState } from '../../../store/store';
 import { PortfolioOwnership } from '../../../types/portfolio';
@@ -205,6 +206,13 @@ const EditPortfolio: React.FC<EditPortfolioProps> = (props) => {
 
   return (
     <StyledEditPortfolio>
+
+      <Link to={`/portfolios/${id}`} className="link-back">
+        <IconButton>
+          <ChevronLeftIcon />
+        </IconButton>
+      </Link>
+
       <StyledEditPortfolioHeader>
         <div className="header-info">
           <h2>{portfolioData.name}</h2>
