@@ -2,6 +2,13 @@ import { styled } from '@mui/system';
 
 export const StyledPortfolioDetail = styled('div')`
   width: 100%;
+  position: relative;
+
+  a.link-back {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+  }
 `;
 
 export const StyledPortfolioDetailHeader = styled('div')`
@@ -21,50 +28,36 @@ export const StyledPortfolioDetailHeader = styled('div')`
 export const StyledPortfolioDetailContent = styled('div')`
   padding: 3rem 6rem;
 
-  .owner-selection {
-    min-height: 80.5px;
-    padding: 1rem;
-    border-radius: 1rem;
-    background-color: var(--color-paper);
-    transition: min-height 0.1s ease-out;
+  section.ownership-edit-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 
-    h3 {
-      margin-bottom: 1rem;
+    .owner {
+      padding: 1rem;
+      border-radius: 1rem;
+      background-color: var(--color-paper);
 
-      span {
-        margin-left: 0.5rem;
-        color: var(--color-header-subinfo);
+      h3 {
+
+        span {
+          margin-left: 0.5rem;
+          color: var(--color-header-subinfo);
+        }
       }
     }
 
-    h4 {
-      margin-bottom: 1rem;
-    }
+    a {
+      text-decoration: none;
 
-    .inputs-wrapper {
-      display: flex;
-      align-items: flex-start;
-
-      .textfield-wrapper {
-        width: 20rem;
-        margin-right: 1rem;
-      }
-
-      & > span {
-        margin-left: 2rem;
-        align-self: center;
-
-        &.error {
-          color: var(--text-error);
-        }
-        &.success {
-          color: var(--text-success);
-        }
+      button {
+        height: 100%;
       }
     }
   }
 
-  form {
+
+  section.portfolio-info {
     margin-top: 2rem;
     width: 22rem;
     padding: 1rem;
@@ -74,7 +67,11 @@ export const StyledPortfolioDetailContent = styled('div')`
     flex-direction: column;
     gap: 1rem;
 
-    .portfolio-form--buttons {
+    /* .portfolio-name {
+      font-size: 32px;
+    } */
+
+    /* .portfolio-form--buttons {
       display: flex;
       justify-content: flex-end;
       margin-top: 2rem;
@@ -82,6 +79,6 @@ export const StyledPortfolioDetailContent = styled('div')`
 
     & > span {
       color: var(--text-error);
-    }
+    } */
   }
 `;
