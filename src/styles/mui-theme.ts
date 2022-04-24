@@ -23,6 +23,14 @@ export const darkTheme = createTheme({
           borderRadius: 2,
         }
       }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          color: '#fff',
+          colorScheme: 'dark',
+        }
+      }
     }
   }
 });
