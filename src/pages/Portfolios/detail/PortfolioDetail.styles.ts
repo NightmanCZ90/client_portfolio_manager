@@ -27,6 +27,26 @@ export const StyledPortfolioDetailHeader = styled('div')`
 
 export const StyledPortfolioDetailContent = styled('div')`
   padding: 3rem 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  section.portfolio {
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: var(--color-paper);
+
+    .portfolio-layout {
+      padding: 1rem;
+      // TODO: Remove after portfolio layout graph implementation
+      .circle {
+        height: 20rem;
+        width: 20rem;
+        border: 2rem solid violet;
+        border-radius: 50%;
+      }
+    }
+  }
 
   section.ownership-edit-button {
     display: flex;
@@ -58,27 +78,11 @@ export const StyledPortfolioDetailContent = styled('div')`
 
 
   section.portfolio-info {
-    margin-top: 2rem;
     width: 22rem;
     padding: 1rem;
     border-radius: 1rem;
     background-color: var(--color-paper);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-
-    /* .portfolio-name {
-      font-size: 32px;
-    } */
-
-    /* .portfolio-form--buttons {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 2rem;
-    }
-
-    & > span {
-      color: var(--text-error);
-    } */
   }
 `;

@@ -51,6 +51,13 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
       </StyledPortfolioDetailHeader>
       <StyledPortfolioDetailContent>
 
+        <section className="portfolio">
+          <div className="portfolio-layout">
+            {/* TODO: Remove to implement portfolio graph */}
+            <div className="circle" />
+          </div>
+        </section>
+
         <section className="ownership-edit-button">
           <div className="owner">
             <h3>Portfolio ownership: <span>{renderOwnershipTitle}</span></h3>
