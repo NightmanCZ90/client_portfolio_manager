@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Dispatch, RootState } from '../../../store/store';
-import { CustomToggleButton, PrimaryButton, SubmitButton } from '../../../constants/components';
+import { CustomToggleButton, SecondaryButton, PrimaryButton } from '../../../constants/components';
 import { StyledCreatePortfolio, StyledCreatePortfolioContent, StyledCreatePortfolioHeader } from './CreatePortfolio.styles';
 import { portfolioCreationFormSchema } from '../../../constants/validations';
 import { useCheckInvestor, useCreatePortfolio } from '../../../hooks/portfolios';
@@ -172,13 +172,13 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
                 onChange={handleChange}
               />
             </div>
-            <PrimaryButton
+            <SecondaryButton
               disabled={!Boolean(portfolioData.investorEmail) || Boolean(portfolioDataErrors.investorEmail) || investorCheckLoading}
               size="large"
               onClick={handleInvestorCheck}
             >
               {investorCheckLoading ? (<CircularProgress size={24} />) : "Check user"}
-            </PrimaryButton>
+            </SecondaryButton>
 
             {investorCheckError && <span className="error">{investorCheckError}</span>}
             {portfolioData.investorId && <span className="success">User is checked.</span>}
@@ -221,12 +221,12 @@ const CreatePortfolio: React.FC<CreatePortfolioProps> = (props) => {
             onChange={handleChange}
           />
           <div className="portfolio-form--buttons">
-            <SubmitButton
+            <PrimaryButton
               type="submit"
               disabled={isDisabled}
             >
               {loading ? (<CircularProgress size={24} />) : "Create portfolio"}
-            </SubmitButton>
+            </PrimaryButton>
           </div>
           {error && <span>{error}</span>}
         </form>

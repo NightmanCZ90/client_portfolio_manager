@@ -2,7 +2,7 @@ import { CircularProgress, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
-import { SmallLinkButton, SubmitButton } from '../../constants/components';
+import { SmallLinkButton, PrimaryButton } from '../../constants/components';
 import { useSignIn } from '../../hooks/auth';
 import { Dispatch, RootState } from '../../store/store';
 import { StyledSignIn, StyledSignInForm } from './SignIn.styles';
@@ -68,13 +68,13 @@ const SignIn: React.FC<SignInProps> = (props) => {
             onChange={handleChange}
           />
           <div className="signin-form--button">
-            <SubmitButton
+            <PrimaryButton
               type="submit"
               fullWidth
               disabled={isLoading}
             >
               {isLoading ? (<CircularProgress size={24} />) : "Sign in"}
-            </SubmitButton>
+            </PrimaryButton>
           </div>
           {isError && <span>{error.message}</span>}
           <div className="signin-form--buttons">

@@ -1,7 +1,7 @@
 import { Button, ToggleButton } from '@mui/material';
 import { styled } from '@mui/system';
 
-export const SubmitButton = styled(Button)(({ theme }) => ({
+export const PrimaryButton = styled(Button)(({ theme }) => ({
   background: theme.palette.primary.main,
   color: '#232325',
   padding: '0.5rem 2rem',
@@ -19,7 +19,7 @@ export const SubmitButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const PrimaryButton = styled(Button)(({ theme, size }) => ({
+export const SecondaryButton = styled(Button)(({ theme, size }) => ({
   background: theme.palette.grey['700'],
   color: theme.palette.common.white,
   padding: size === 'large' ? '0.9rem 2rem' : '0.5rem 2rem',

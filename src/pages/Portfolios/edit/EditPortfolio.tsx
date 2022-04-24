@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-import { PrimaryButton, SubmitButton } from '../../../constants/components';
+import { SecondaryButton, PrimaryButton } from '../../../constants/components';
 import { portfolioDetailFormSchema } from '../../../constants/validations';
 import { useLinkPortfolio, usePortfolio, useUnlinkPortfolio, useUpdatePortfolio } from '../../../hooks/portfolios';
 import { Dispatch, RootState } from '../../../store/store';
@@ -190,13 +190,13 @@ const EditPortfolio: React.FC<EditPortfolioProps> = (props) => {
               />
             </div>
           )}
-          <PrimaryButton
+          <SecondaryButton
             disabled={ownershipManagement[ownership].submitDisabled}
             size="large"
             onClick={ownershipManagement[ownership].onClick}
           >
             {ownershipManagement[ownership].loading ? (<CircularProgress size={24} />) : ownershipManagement[ownership].submitText}
-          </PrimaryButton>
+          </SecondaryButton>
 
           {ownershipManagement[ownership].error?.message && <span className="error">{ownershipManagement[ownership].error?.message}</span>}
         </div>
@@ -262,12 +262,12 @@ const EditPortfolio: React.FC<EditPortfolioProps> = (props) => {
             onChange={handleChange}
           />
           <div className="portfolio-form--buttons">
-            <SubmitButton
+            <PrimaryButton
               type="submit"
               disabled={isDisabled}
             >
               {isUpdateLoading ? (<CircularProgress size={24} />) : "Update portfolio"}
-            </SubmitButton>
+            </PrimaryButton>
           </div>
           {updateError && <span>{updateError.message}</span>}
         </form>
