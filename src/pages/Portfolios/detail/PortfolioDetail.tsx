@@ -20,7 +20,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
   const { id } = useParams();
   // TODO: use Portfolio with transactions
   const { data, isLoading } = usePortfolio(Number(id));
-  const [transactionOpen, setTransactionOpen] = useState<boolean>(true);
+  const [transactionOpen, setTransactionOpen] = useState<boolean>(false);
 
   const { currentUser } = props;
 
