@@ -11,20 +11,6 @@ export const StyledPortfolioDetail = styled('div')`
   }
 `;
 
-export const StyledPortfolioDetailHeader = styled('div')`
-  height: 10rem;
-  padding: 3rem 6rem 0 6rem;
-  display: flex;
-  justify-content: space-between;
-  background-color: var(--color-header);
-
-  .header-info {
-    p {
-      color: var(--color-header-subtitle);
-    }
-  }
-`;
-
 export const StyledPortfolioDetailContent = styled('div')`
   padding: 3rem 6rem;
   display: flex;

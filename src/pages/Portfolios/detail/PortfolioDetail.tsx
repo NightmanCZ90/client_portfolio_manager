@@ -9,7 +9,7 @@ import { usePortfolio } from '../../../hooks/portfolios';
 import { Dispatch, RootState } from '../../../store/store';
 import { PortfolioOwnership } from '../../../types/portfolio';
 import { generatePortfolioOwnership, generateUserName } from '../../../utils/helpers';
-import { StyledPortfolioDetail, StyledPortfolioDetailHeader, StyledPortfolioDetailContent } from './PortfolioDetail.styles';
+import { StyledPortfolioDetail, StyledPortfolioDetailContent } from './PortfolioDetail.styles';
 import CreateTransaction from '../../../components/CreateTransaction';
 
 interface PortfolioDetailProps extends PortfolioDetailConnect {
@@ -45,12 +45,6 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
         </IconButton>
       </Link>
 
-      <StyledPortfolioDetailHeader>
-        <div className="header-info">
-          <h2>{data.name}</h2>
-          <p>See your portfolio detail and add transactions</p>
-        </div>
-      </StyledPortfolioDetailHeader>
       <StyledPortfolioDetailContent>
 
         <section className="portfolio">
