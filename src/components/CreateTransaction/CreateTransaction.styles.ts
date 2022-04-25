@@ -13,5 +13,9 @@ export const StyledCreateTransaction = styled('div')`
       display: flex;
       gap: 1rem;
     }
+
+    & > span {
+      color: var(--text-error);
+    }
   }
 `;

@@ -1,8 +1,9 @@
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, ToggleButtonGroup } from '@mui/material';
-import { useState } from 'react';
+import { CircularProgress, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, ToggleButtonGroup } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 import { CustomToggleButton, PrimaryButton } from '../../constants/components';
 import { createTransactionFormSchema } from '../../constants/validations';
+import { useCreateTransaction } from '../../hooks/transactions';
 import { ExecutionType, TransactionType } from '../../types/transaction';
 import { StyledCreateTransaction } from './CreateTransaction.styles'
 
@@ -11,25 +12,25 @@ const initialFormData = {
   sector: '',
   time: new Date().toISOString().slice(0, 10),
   type: TransactionType.Buy,
-  numShares: 1, // 0.01
-  price: 1, // 0.0001
+  numShares: '', // 0.01
+  price: '', // 0.0001
   currency: 'USD',
   execution: ExecutionType.FIFO,
-  commissions: 0,
+  commissions: '', // 0.01
   notes: '',
 }
 
 type FormData = {
   symbol: string;
-  sector: string | null;
+  sector: string;
   time: string;
   type: TransactionType;
-  numShares: number;
-  price: number;
+  numShares: string;
+  price: string;
   currency: string;
   execution: ExecutionType;
-  commissions: number | null;
-  notes: string | null;
+  commissions: string;
+  notes: string;
 }
 
 const initialFormDataErrors = {
@@ -59,8 +60,15 @@ interface CreateTransactionProps {
 }
 
 const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
+  const { mutate: createTransaction, isLoading, error, isSuccess } = useCreateTransaction();
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [formDataErrors, setFormDataErrors] = useState<typeof initialFormDataErrors>(initialFormDataErrors);
+
+  const { portfolioId } = props;
+
+  useEffect(() => {
+    if (isSuccess) setFormData(initialFormData);
+  }, [isSuccess]);
 
   const handleTransactionTypeSelection = (event: React.MouseEvent<HTMLElement, MouseEvent>, value: TransactionType) => {
 
@@ -79,7 +87,6 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
 
-    // TODO: Implement validation
     createTransactionFormSchema(event.target.name).validate({ [event.target.name]: event.target.value })
     .then((value) => {
       setFormDataErrors({ ...formDataErrors, [event.target.name]: '' });
@@ -97,8 +104,20 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
     });
   }
 
-  const handleSubmit = () => {
+  const { symbol, sector, time, numShares, price, currency, commissions, notes } = formDataErrors;
+  const isFormDataInvalid = Boolean(symbol) || Boolean(sector) || Boolean(time) || Boolean(numShares) || Boolean(price) || Boolean(currency) || Boolean(commissions) || Boolean(notes);
 
+  const isDisabled = !formData.symbol || !formData.numShares || !formData.price || !formData.currency || isFormDataInvalid || isLoading;
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (isDisabled || !portfolioId) {
+      return;
+    }
+
+    createTransaction({ ...formData, portfolioId: Number(portfolioId) });
   }
 
   return (
@@ -182,6 +201,15 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
 
         <div className="defaulted">
           <TextField
+            id="stock-sector-input"
+            label="Sector"
+            name="sector"
+            value={formData.sector}
+            error={Boolean(formDataErrors.sector)}
+            helperText={formDataErrors.sector}
+            onChange={handleChange}
+          />
+          <TextField
             id="transaction-commissions-input"
             label="Commissions"
             type="number"
@@ -235,9 +263,14 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
           onChange={handleChange}
         />
 
-        <PrimaryButton type="submit">
-          Create Transaction
+        <PrimaryButton
+          type="submit"
+          disabled={isDisabled}
+        >
+          {isLoading ? (<CircularProgress size={24} />) : "Create Transaction"}
         </PrimaryButton>
+
+        {error && <span>{error.message}</span>}
       </form>
 
     </StyledCreateTransaction>
