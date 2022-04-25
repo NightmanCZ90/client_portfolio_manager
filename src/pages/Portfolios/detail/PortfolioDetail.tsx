@@ -1,15 +1,16 @@
 import { IconButton } from '@mui/material';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-import { PrimaryButton } from '../../../constants/components';
+import { PrimaryButton, SecondaryButton } from '../../../constants/components';
 import { usePortfolio } from '../../../hooks/portfolios';
 import { Dispatch, RootState } from '../../../store/store';
 import { PortfolioOwnership } from '../../../types/portfolio';
 import { generatePortfolioOwnership, generateUserName } from '../../../utils/helpers';
 import { StyledPortfolioDetail, StyledPortfolioDetailHeader, StyledPortfolioDetailContent } from './PortfolioDetail.styles';
+import CreateTransaction from '../../../components/CreateTransaction';
 
 interface PortfolioDetailProps extends PortfolioDetailConnect {
 
@@ -19,6 +20,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
   const { id } = useParams();
   // TODO: use Portfolio with transactions
   const { data, isLoading } = usePortfolio(Number(id));
+  const [transactionOpen, setTransactionOpen] = useState<boolean>(true);
 
   const { currentUser } = props;
 
@@ -58,15 +60,35 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
           </div>
         </section>
 
+        <section className="transactions">
+          <div className="new-transaction-button">
+            <PrimaryButton onClick={() => setTransactionOpen(!transactionOpen)}>
+              {transactionOpen ? 'Cancel' : 'New transaction'}
+            </PrimaryButton>
+          </div>
+
+          <div className={`new-transaction-wrapper ${transactionOpen ? 'open' : ''}`}>
+            {transactionOpen ? (
+              <CreateTransaction
+                portfolioId={Number(id)}
+              />
+            ) : null}
+          </div>
+
+          <div className="transactions-list">
+            {/* TODO: Implement list of transactions */}
+          </div>
+        </section>
+
         <section className="ownership-edit-button">
           <div className="owner">
             <h3>Portfolio ownership: <span>{renderOwnershipTitle}</span></h3>
           </div>
 
           <Link to={`/portfolios/${id}/edit`}>
-            <PrimaryButton>
+            <SecondaryButton>
               Edit Portfolio
-            </PrimaryButton>
+            </SecondaryButton>
           </Link>
         </section>
 

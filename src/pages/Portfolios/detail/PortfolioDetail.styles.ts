@@ -37,13 +37,34 @@ export const StyledPortfolioDetailContent = styled('div')`
     background-color: var(--color-paper);
 
     .portfolio-layout {
-      padding: 1rem;
       // TODO: Remove after portfolio layout graph implementation
       .circle {
         height: 20rem;
         width: 20rem;
         border: 2rem solid violet;
         border-radius: 50%;
+      }
+    }
+  }
+
+  section.transactions {
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: var(--color-paper);
+
+    .new-transaction-button {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .new-transaction-wrapper {
+      max-height: 0;
+      visibility: hidden;
+      transition: max-height 0.2s ease-in, visibility 0.2s 0.2s;
+
+      &.open {
+        max-height: 700px;
+        visibility: visible;
       }
     }
   }
