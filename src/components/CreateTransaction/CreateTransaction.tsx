@@ -5,6 +5,7 @@ import { CustomToggleButton, PrimaryButton } from '../../constants/components';
 import { createTransactionFormSchema } from '../../constants/validations';
 import { useCreateTransaction } from '../../hooks/transactions';
 import { ExecutionType, TransactionType } from '../../types/transaction';
+import { Currency } from '../../types/utility';
 import { StyledCreateTransaction } from './CreateTransaction.styles'
 
 const initialFormData = {
@@ -14,7 +15,7 @@ const initialFormData = {
   type: TransactionType.Buy,
   numShares: '', // 0.01
   price: '', // 0.0001
-  currency: 'USD',
+  currency: Currency.USD,
   execution: ExecutionType.FIFO,
   commissions: '', // 0.01
   notes: '',
@@ -27,7 +28,7 @@ type FormData = {
   type: TransactionType;
   numShares: string;
   price: string;
-  currency: string;
+  currency: Currency;
   execution: ExecutionType;
   commissions: string;
   notes: string;
@@ -75,6 +76,13 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
     setFormData({
       ...formData,
       type: value,
+    });
+  }
+
+  const handleCurrencySelection = (event: SelectChangeEvent<Currency>) => {
+    setFormData({
+      ...formData,
+      currency: event.target.value as Currency,
     });
   }
 
@@ -187,16 +195,20 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
             helperText={formDataErrors.price}
             onChange={handleChange}
           />
-          <TextField
-            required
-            id="stock-currency-input"
-            label="Currency"
-            name="currency"
-            value={formData.currency}
-            error={Boolean(formDataErrors.currency)}
-            helperText={formDataErrors.currency}
-            onChange={handleChange}
-          />
+          <FormControl>
+            <InputLabel id="stock-currency">Currency</InputLabel>
+            <Select
+              labelId="currency"
+              id="stock-currency-input"
+              value={formData.currency}
+              label="Currency"
+              onChange={handleCurrencySelection}
+            >
+              <MenuItem value={Currency.USD}>
+                {Currency.USD}
+              </MenuItem>
+            </Select>
+          </FormControl>
         </div>
 
         <div className="defaulted">

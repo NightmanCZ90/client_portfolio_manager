@@ -166,13 +166,6 @@ export const createTransactionFormSchema = (inputType: string) => {
         .positive()
         .min(0.0001, 'Stock price can not be lower than 0.0001.')
     });
-  } else if (inputType === 'currency') {
-    return yup.object().shape({
-      currency: yup
-        .string()
-        .max(4, 'Maximal length of currency is 4 characters.')
-        .required('Please enter currency for this stock.'),
-    });
   } else if (inputType === 'commissions') {
     return yup.object().shape({
       commissions: yup
