@@ -1,5 +1,5 @@
-import { CircularProgress, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, ToggleButtonGroup } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { CircularProgress, debounce, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, ToggleButtonGroup } from '@mui/material';
+import { useEffect, useMemo, useState } from 'react';
 
 import { CustomToggleButton, PrimaryButton } from '../../constants/components';
 import { fixedDecimals } from '../../constants/configurations';
@@ -62,12 +62,26 @@ interface CreateTransactionProps {
   portfolioId: number;
 }
 
+const validation = (value: any, name: CurrencyProps, currency: Currency, setErrors: any, isNumericInput: boolean, ) => createTransactionFormSchema(name, fixedDecimals[currency][name])
+  .validate({ [name]: value })
+    .then((value) => {
+      setErrors('')
+    })
+    .catch((err) => {
+      setErrors(err.message);
+      if (isNumericInput && value === '') {
+        setErrors('');
+      }
+    });
+
 const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
   const { mutate: createTransaction, isLoading, error, isSuccess } = useCreateTransaction();
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [formDataErrors, setFormDataErrors] = useState<typeof initialFormDataErrors>(initialFormDataErrors);
 
   const { portfolioId } = props;
+
+  const debouncedValidation = useMemo(() => debounce(validation, 250), []);
 
   useEffect(() => {
     if (isSuccess) setFormData(initialFormData);
@@ -98,16 +112,11 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const isNumericInput = event.target.name === 'numShares' || event.target.name === 'price' || event.target.name === 'commissions';
 
-    createTransactionFormSchema(event.target.name, fixedDecimals[formData.currency][event.target.name as CurrencyProps]).validate({ [event.target.name]: event.target.value })
-    .then((value) => {
-      setFormDataErrors({ ...formDataErrors, [event.target.name]: '' });
-    })
-    .catch((err) => {
-      setFormDataErrors({ ...formDataErrors, [event.target.name]: err.message });
-      if (isNumericInput && event.target.value === '') {
-        setFormDataErrors({ ...formDataErrors, [event.target.name]: '' });
-      }
-    });
+    const setErrors = (value: any) => {
+      setFormDataErrors({ ...formDataErrors, [event.target.name]: value });
+    }
+
+    debouncedValidation(event.target.value, event.target.name as CurrencyProps, formData.currency, setErrors, isNumericInput);
 
     setFormData({
       ...formData,
