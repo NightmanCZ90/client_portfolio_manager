@@ -1,3 +1,4 @@
+import { Transaction } from './transaction';
 import { User } from './user';
 
 export enum PortfolioOwnership {
@@ -30,4 +31,5 @@ export interface Portfolio {
   confirmed: boolean;
   user?: User;
   portfolioManager?: User;
+  transactions?: Transaction[];
 }
