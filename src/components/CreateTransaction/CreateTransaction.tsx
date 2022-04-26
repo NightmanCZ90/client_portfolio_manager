@@ -5,7 +5,8 @@ import { CustomToggleButton, PrimaryButton } from '../../constants/components';
 import { createTransactionFormSchema } from '../../constants/validations';
 import { useCreateTransaction } from '../../hooks/transactions';
 import { ExecutionType, TransactionType } from '../../types/transaction';
-import { Currency } from '../../types/utility';
+import { Currency, CurrencyProps } from '../../types/utility';
+import { remainDecimals } from '../../utils/helpers';
 import { StyledCreateTransaction } from './CreateTransaction.styles'
 
 const initialFormData = {
@@ -13,11 +14,11 @@ const initialFormData = {
   sector: '',
   time: new Date().toISOString().slice(0, 10),
   type: TransactionType.Buy,
-  numShares: '', // 0.01
-  price: '', // 0.0001
+  numShares: '',
+  price: '',
   currency: Currency.USD,
   execution: ExecutionType.FIFO,
-  commissions: '', // 0.01
+  commissions: '',
   notes: '',
 }
 
@@ -94,6 +95,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const isNumericInput = event.target.name === 'numShares' || event.target.name === 'price' || event.target.name === 'commissions';
 
     createTransactionFormSchema(event.target.name).validate({ [event.target.name]: event.target.value })
     .then((value) => {
@@ -101,21 +103,21 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
     })
     .catch((err) => {
       setFormDataErrors({ ...formDataErrors, [event.target.name]: err.message });
-      if ((event.target.name === 'numShares' || event.target.name === 'price' || event.target.name === 'commissions') && event.target.value === '') {
+      if (isNumericInput && event.target.value === '') {
         setFormDataErrors({ ...formDataErrors, [event.target.name]: '' });
       }
     });
 
     setFormData({
       ...formData,
-      [event.target.name]: event.target.value,
+      [event.target.name]: isNumericInput ? remainDecimals(event.target.value, event.target.name as CurrencyProps, formData.currency) : event.target.value,
     });
   }
 
-  const { symbol, sector, time, numShares, price, currency, commissions, notes } = formDataErrors;
-  const isFormDataInvalid = Boolean(symbol) || Boolean(sector) || Boolean(time) || Boolean(numShares) || Boolean(price) || Boolean(currency) || Boolean(commissions) || Boolean(notes);
+  const { symbol, sector, time, numShares, price, commissions, notes } = formDataErrors;
+  const isFormDataInvalid = Boolean(symbol) || Boolean(sector) || Boolean(time) || Boolean(numShares) || Boolean(price) || Boolean(commissions) || Boolean(notes);
 
-  const isDisabled = !formData.symbol || !formData.numShares || !formData.price || !formData.currency || isFormDataInvalid || isLoading;
+  const isDisabled = !formData.symbol || !formData.numShares || !formData.price || isFormDataInvalid || isLoading;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -226,6 +228,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
             label="Commissions"
             type="number"
             name="commissions"
+            inputProps={{ min: 0 }}
             value={formData.commissions}
             error={Boolean(formDataErrors.commissions)}
             helperText={formDataErrors.commissions}
