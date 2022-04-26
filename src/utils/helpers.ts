@@ -37,6 +37,10 @@ export const convertCurrencyDecimals = (value: number, property: CurrencyProps, 
   }
 }
 
+export const returnPrecision = (property: CurrencyProps, currency: Currency) => {
+  return 1 / 10**fixedDecimals[currency][property];
+}
+
 export const remainDecimals = (value: string, property: CurrencyProps, currency: Currency) => {
   const splitNumber = value.split('.');
   if (splitNumber.length === 1) return value;

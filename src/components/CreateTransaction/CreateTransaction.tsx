@@ -2,6 +2,7 @@ import { CircularProgress, FormControl, InputLabel, MenuItem, Select, SelectChan
 import { useEffect, useState } from 'react';
 
 import { CustomToggleButton, PrimaryButton } from '../../constants/components';
+import { fixedDecimals } from '../../constants/configurations';
 import { createTransactionFormSchema } from '../../constants/validations';
 import { useCreateTransaction } from '../../hooks/transactions';
 import { ExecutionType, TransactionType } from '../../types/transaction';
@@ -97,7 +98,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const isNumericInput = event.target.name === 'numShares' || event.target.name === 'price' || event.target.name === 'commissions';
 
-    createTransactionFormSchema(event.target.name).validate({ [event.target.name]: event.target.value })
+    createTransactionFormSchema(event.target.name, fixedDecimals[formData.currency][event.target.name as CurrencyProps]).validate({ [event.target.name]: event.target.value })
     .then((value) => {
       setFormDataErrors({ ...formDataErrors, [event.target.name]: '' });
     })
