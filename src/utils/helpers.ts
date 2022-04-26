@@ -36,3 +36,10 @@ export const convertCurrencyDecimals = (value: number, property: CurrencyProps, 
     return value * (10**fixedDecimals[currency][property]);
   }
 }
+
+export const remainDecimals = (value: string, property: CurrencyProps, currency: Currency) => {
+  const splitNumber = value.split('.');
+  if (splitNumber.length === 1) return value;
+
+  return (splitNumber?.[0] || '0') + '.' + (splitNumber?.[1]?.slice(0, fixedDecimals[currency][property]) || '');
+}
