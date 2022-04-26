@@ -1,5 +1,7 @@
+import { fixedDecimals } from '../constants/configurations';
 import { Portfolio, PortfolioOwnership } from '../types/portfolio';
 import { User } from '../types/user';
+import { Currency, CurrencyProps } from '../types/utility';
 
 export const capitalizeFirst = (str: string) => {
   if (str.length === 0) return '';
@@ -25,4 +27,12 @@ export const generatePortfolioOwnership = (data: {userId?: number | null, portfo
   if (portfolio.pmId && portfolio.pmId === userId) return PortfolioOwnership.Managing;
   if (portfolio.pmId && portfolio.pmId !== userId) return PortfolioOwnership.Managed;
   return PortfolioOwnership.Personal;
+}
+
+export const convertCurrencyDecimals = (value: number, property: CurrencyProps, currency: Currency, receivedFromAPI: boolean) => {
+  if (receivedFromAPI) {
+    return value / (10**fixedDecimals[currency][property]);
+  } else {
+    return value * (10**fixedDecimals[currency][property]);
+  }
 }
