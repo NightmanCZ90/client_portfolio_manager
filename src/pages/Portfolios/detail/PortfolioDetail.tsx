@@ -58,6 +58,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
 
         <section className="new-transaction">
           <div className="new-transaction-button">
+            <h3>Create Transaction</h3>
             <PrimaryButton onClick={() => setCreateTransactionOpen(!createTransactionOpen)}>
               {createTransactionOpen ? 'Cancel' : 'New transaction'}
             </PrimaryButton>
@@ -74,6 +75,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
 
         <section className="transactions">
           <div className="transactions-button">
+          <h3>Transactions</h3>
             <PrimaryButton onClick={() => setTransactionsOpen(!transactionsOpen)}>
               {transactionsOpen ? 'Hide Transactions' : 'Show transactions'}
             </PrimaryButton>

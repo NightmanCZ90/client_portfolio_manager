@@ -40,7 +40,8 @@ export const StyledPortfolioDetailContent = styled('div')`
 
     .new-transaction-button {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .new-transaction-wrapper {
@@ -62,7 +63,8 @@ export const StyledPortfolioDetailContent = styled('div')`
 
     .transactions-button {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .transactions-wrapper {
