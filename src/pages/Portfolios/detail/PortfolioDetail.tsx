@@ -11,6 +11,7 @@ import { PortfolioOwnership } from '../../../types/portfolio';
 import { generatePortfolioOwnership, generateUserName } from '../../../utils/helpers';
 import { StyledPortfolioDetail, StyledPortfolioDetailContent } from './PortfolioDetail.styles';
 import CreateTransaction from '../../../components/CreateTransaction';
+import TransactionList from '../../../components/TransactionList';
 
 interface PortfolioDetailProps extends PortfolioDetailConnect {
 
@@ -20,7 +21,8 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
   const { id } = useParams();
   // TODO: use Portfolio with transactions
   const { data, isLoading } = usePortfolio(Number(id));
-  const [transactionOpen, setTransactionOpen] = useState<boolean>(false);
+  const [createTransactionOpen, setCreateTransactionOpen] = useState<boolean>(false);
+  const [transactionsOpen, setTransactionsOpen] = useState<boolean>(false);
 
   const { currentUser } = props;
 
@@ -54,23 +56,35 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
           </div>
         </section>
 
-        <section className="transactions">
+        <section className="new-transaction">
           <div className="new-transaction-button">
-            <PrimaryButton onClick={() => setTransactionOpen(!transactionOpen)}>
-              {transactionOpen ? 'Cancel' : 'New transaction'}
+            <PrimaryButton onClick={() => setCreateTransactionOpen(!createTransactionOpen)}>
+              {createTransactionOpen ? 'Cancel' : 'New transaction'}
             </PrimaryButton>
           </div>
 
-          <div className={`new-transaction-wrapper ${transactionOpen ? 'open' : ''}`}>
-            {transactionOpen ? (
+          <div className={`new-transaction-wrapper ${createTransactionOpen ? 'open' : ''}`}>
+            {createTransactionOpen ? (
               <CreateTransaction
                 portfolioId={Number(id)}
               />
             ) : null}
           </div>
+        </section>
 
-          <div className="transactions-list">
-            {/* TODO: Implement list of transactions */}
+        <section className="transactions">
+          <div className="transactions-button">
+            <PrimaryButton onClick={() => setTransactionsOpen(!transactionsOpen)}>
+              {transactionsOpen ? 'Hide Transactions' : 'Show transactions'}
+            </PrimaryButton>
+          </div>
+
+          <div className={`transactions-wrapper ${transactionsOpen ? 'open' : ''}`}>
+            {transactionsOpen ? (
+              <TransactionList
+                transactions={data.transactions || []}
+              />
+            ) : null}
           </div>
         </section>
 
