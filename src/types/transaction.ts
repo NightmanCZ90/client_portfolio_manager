@@ -1,3 +1,5 @@
+import { Currency } from './utility';
+
 export enum TransactionType {
   Buy = 'buy',
   Sell = 'sell',
@@ -27,7 +29,7 @@ export interface Transaction {
   transactionType: TransactionType;
   numShares: number; // in 100 - 0.01 is minimal num of shares
   price: number; // in 10 000 - 0.0001 is minimal price of share
-  currency: string;
+  currency: Currency;
   execution: ExecutionType;
   commissions: number | null;
   notes: string | null;
