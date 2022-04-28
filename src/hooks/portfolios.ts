@@ -7,13 +7,17 @@ import { RestApiError } from '../services/ApiClient'
 import RestApiClient from '../services/RestApiClient'
 import { Dispatch, RootState } from '../store/store'
 import { Portfolio, PortfolioOwnership, PortfolioPageTypes, PortfolioTypes } from '../types/portfolio'
+import { convertDecimalsForTransaction } from './transactions'
 
 export const usePortfolios = () => {
   const currentUser = useSelector((state: RootState) => state.currentUser);
 
   return useQuery<PortfolioTypes, RestApiError, PortfolioPageTypes>(QueryKeys.Portfolios, () => RestApiClient.getUsersPortfolios(), {
     onError: (err) => { console.dir(err) },
-    select: (data) => splitPortfolios(data),
+    select: (data) => {
+      const portfolios = splitPortfolios(data)
+      return convertCurrencyDecimalsInAllPortfoliosTransactions(portfolios);
+    },
     enabled: !!currentUser.token,
   })
 }
@@ -27,7 +31,10 @@ export const usePortfolio = (portfolioId: number) => {
       if (!portfolios) return undefined;
 
       return findPortfolio(portfolioId, portfolios)?.portfolio;
-    }
+    },
+    select: (data) => {
+      return convertDecimalsInPortfolio(data);
+    },
   });
 }
 
@@ -118,14 +125,13 @@ export const useUpdatePortfolio = () => {
     return RestApiClient.updatePortfolio(portfolioData.portfolioId, { ...portfolioData });
   }, {
     onSuccess: (data) => {
-      queryClient.setQueryData([QueryKeys.PortfolioDetail, data.id], data);
+      queryClient.setQueryData([QueryKeys.PortfolioDetail, data.id], convertDecimalsInPortfolio(data));
     },
   })
 }
 
 /**
  * Helper functions
- *
  */
 
 const splitPortfolios = (data: PortfolioTypes) => ({
@@ -164,4 +170,20 @@ const removePortfolioFromPortfolios = (portfolioId: number, portfolios: Portfoli
   }
 
   return portfolios;
+}
+
+const convertDecimalsInPortfolio = (portfolio: Portfolio): Portfolio => {
+  return ({
+    ...portfolio,
+    transactions: portfolio.transactions?.map(transaction => convertDecimalsForTransaction(transaction))
+  })
+}
+
+const convertCurrencyDecimalsInAllPortfoliosTransactions = (portfolios: PortfolioPageTypes): PortfolioPageTypes => {
+  return ({
+    managed: portfolios.managed?.map(portfolio => convertDecimalsInPortfolio(portfolio)),
+    managing: portfolios.managing?.map(portfolio => convertDecimalsInPortfolio(portfolio)),
+    personal: portfolios.personal?.map(portfolio => convertDecimalsInPortfolio(portfolio)),
+    unconfirmed: portfolios.unconfirmed?.map(portfolio => convertDecimalsInPortfolio(portfolio)),
+  });
 }
