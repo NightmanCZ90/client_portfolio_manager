@@ -36,3 +36,16 @@ export const useCreateTransaction = () => {
     });
   })
 }
+
+/**
+ * Helper functions
+ */
+
+export const convertDecimalsForTransaction = (transaction: Transaction): Transaction => {
+  return ({
+    ...transaction,
+    numShares: convertCurrencyDecimals(Number(transaction.numShares), CurrencyProps.NumShares, transaction.currency, true),
+    price: convertCurrencyDecimals(Number(transaction.price), CurrencyProps.Price, transaction.currency, true),
+    commissions: transaction.commissions ? convertCurrencyDecimals(Number(transaction.commissions), CurrencyProps.Commissions, transaction.currency, true) : 0,
+  });
+}
