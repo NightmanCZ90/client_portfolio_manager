@@ -5,16 +5,16 @@ import { CustomToggleButton, PrimaryButton } from '../../constants/components';
 import { fixedDecimals } from '../../constants/configurations';
 import { createTransactionFormSchema } from '../../constants/validations';
 import { useCreateTransaction } from '../../hooks/transactions';
-import { ExecutionType, TransactionType } from '../../types/transaction';
+import { ExecutionType, Transaction, TransactionType } from '../../types/transaction';
 import { Currency, CurrencyProps } from '../../types/utility';
 import { remainDecimals } from '../../utils/helpers';
 import { StyledCreateTransaction } from './CreateTransaction.styles'
 
 const initialFormData = {
-  symbol: '',
-  sector: '',
-  time: new Date().toISOString().slice(0, 10),
-  type: TransactionType.Buy,
+  stockName: '',
+  stockSector: '',
+  transactionTime: new Date().toISOString().slice(0, 10),
+  transactionType: TransactionType.Buy,
   numShares: '',
   price: '',
   currency: Currency.USD,
@@ -24,23 +24,37 @@ const initialFormData = {
 }
 
 type FormData = {
-  symbol: string;
-  sector: string;
-  time: string;
-  type: TransactionType;
+  // stockName: string;
+  // stockSector: string;
+  // transactionTime: string;
+  // transactionType: TransactionType;
+  // numShares: string;
+  // price: string;
+  // currency: Currency;
+  // execution: ExecutionType;
+  // commissions: string;
+  // notes: string;
+
+  // createdAt: Date;
+  // updatedAt: Date | null;
+  stockName: string;
+  stockSector: string;
+  transactionTime: string;
+  transactionType: TransactionType;
   numShares: string;
   price: string;
   currency: Currency;
   execution: ExecutionType;
   commissions: string;
   notes: string;
+  // portfolioId: number;
 }
 
 const initialFormDataErrors = {
-  symbol: '',
-  sector: '',
-  time: '',
-  type: '',
+  stockName: '',
+  stockSector: '',
+  transactionTime: '',
+  transactionType: '',
   numShares: '',
   price: '',
   currency: '',
@@ -60,6 +74,7 @@ const executionTypes = {
 
 interface CreateTransactionProps {
   portfolioId: number;
+  transaction?: Transaction;
 }
 
 const validation = (value: any, name: CurrencyProps, currency: Currency, setErrors: any, isNumericInput: boolean, ) => createTransactionFormSchema(name, fixedDecimals[currency][name])
@@ -79,9 +94,25 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [formDataErrors, setFormDataErrors] = useState<typeof initialFormDataErrors>(initialFormDataErrors);
 
-  const { portfolioId } = props;
+  const { portfolioId, transaction } = props;
+
+  const isEdit = Boolean(transaction);
 
   const debouncedValidation = useMemo(() => debounce(validation, 250), []);
+
+  useEffect(() => {
+    if (transaction) {
+      setFormData({
+        ...transaction,
+        stockSector: transaction.stockSector || '',
+        transactionTime: new Date(transaction.transactionTime).toISOString().slice(0, 10),
+        numShares: transaction.numShares.toString(),
+        price: transaction.price.toString(),
+        commissions: transaction.commissions?.toString() || '',
+        notes: transaction.notes || '',
+      });
+    }
+  }, [transaction]);
 
   useEffect(() => {
     if (isSuccess) setFormData(initialFormData);
@@ -91,7 +122,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
 
     setFormData({
       ...formData,
-      type: value,
+      transactionType: value,
     });
   }
 
@@ -124,10 +155,10 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
     });
   }
 
-  const { symbol, sector, time, numShares, price, commissions, notes } = formDataErrors;
-  const isFormDataInvalid = Boolean(symbol) || Boolean(sector) || Boolean(time) || Boolean(numShares) || Boolean(price) || Boolean(commissions) || Boolean(notes);
+  const { stockName, stockSector, transactionTime, numShares, price, commissions, notes } = formDataErrors;
+  const isFormDataInvalid = Boolean(stockName) || Boolean(stockSector) || Boolean(transactionTime) || Boolean(numShares) || Boolean(price) || Boolean(commissions) || Boolean(notes);
 
-  const isDisabled = !formData.symbol || !formData.numShares || !formData.price || isFormDataInvalid || isLoading;
+  const isDisabled = !formData.stockName || !formData.numShares || !formData.price || isFormDataInvalid || isLoading;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -147,7 +178,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
         <div className="transaction-type">
           <ToggleButtonGroup
             color="primary"
-            value={formData.type}
+            value={formData.transactionType}
             exclusive
             onChange={handleTransactionTypeSelection}
           >
@@ -164,12 +195,12 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
           {/* TODO: Implement search to find stock symbol after API service implementation */}
           <TextField
             required
-            id="stock-symbol-input"
+            id="stock-name-input"
             label="Stock symbol"
-            name="symbol"
-            value={formData.symbol}
-            error={Boolean(formDataErrors.symbol)}
-            helperText={formDataErrors.symbol}
+            name="stockName"
+            value={formData.stockName}
+            error={Boolean(formDataErrors.stockName)}
+            helperText={formDataErrors.stockName}
             onChange={handleChange}
           />
           <TextField
@@ -177,10 +208,10 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
             id="transaction-time-input"
             label="Transaction time"
             type="date"
-            name="time"
-            value={formData.time}
-            error={Boolean(formDataErrors.time)}
-            helperText={formDataErrors.time}
+            name="transactionTime"
+            value={formData.transactionTime}
+            error={Boolean(formDataErrors.transactionTime)}
+            helperText={formDataErrors.transactionTime}
             onChange={handleChange}
           />
           <TextField
@@ -227,10 +258,10 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
           <TextField
             id="stock-sector-input"
             label="Sector"
-            name="sector"
-            value={formData.sector}
-            error={Boolean(formDataErrors.sector)}
-            helperText={formDataErrors.sector}
+            name="stockSector"
+            value={formData.stockSector}
+            error={Boolean(formDataErrors.stockSector)}
+            helperText={formDataErrors.stockSector}
             onChange={handleChange}
           />
           <TextField
@@ -244,8 +275,8 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
             helperText={formDataErrors.commissions}
             onChange={handleChange}
           />
-          {formData.type === TransactionType.Sell ? (
-            <FormControl required={formData.type === TransactionType.Sell}>
+          {formData.transactionType === TransactionType.Sell ? (
+            <FormControl required={formData.transactionType === TransactionType.Sell}>
               <InputLabel id="execution-type">Execution</InputLabel>
               <Select
                 labelId="execution-type"

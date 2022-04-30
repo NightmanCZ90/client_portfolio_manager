@@ -11,10 +11,10 @@ export const useCreateTransaction = (portfolioId: number) => {
   const { refetch } = usePortfolio(portfolioId);
 
   return useMutation<Transaction, RestApiError, {
-    symbol: string,
-    sector: string,
-    time: string,
-    type: TransactionType,
+    stockName: string,
+    stockSector: string,
+    transactionTime: string,
+    transactionType: TransactionType,
     numShares: string,
     price: string,
     currency: Currency,
@@ -24,17 +24,18 @@ export const useCreateTransaction = (portfolioId: number) => {
     portfolioId: number,
   }>((formData) => {
     return RestApiClient.createTransaction({
-      stockName: formData.symbol,
-      stockSector: formData.sector,
-      transactionTime: formData.time,
-      transactionType: formData.type,
+      ...formData,
+      // stockName: formData.stockName,
+      // stockSector: formData.stockSector,
+      // transactionTime: formData.transactionTime,
+      // transactionType: formData.transactionType,
       numShares: convertCurrencyDecimals(Number(formData.numShares), CurrencyProps.NumShares, formData.currency, false),
       price: convertCurrencyDecimals(Number(formData.price), CurrencyProps.Price, formData.currency, false),
-      currency: formData.currency,
-      execution: formData.execution,
+      // currency: formData.currency,
+      // execution: formData.execution,
       commissions: formData.commissions ? convertCurrencyDecimals(Number(formData.commissions), CurrencyProps.Commissions, formData.currency, false) : 0,
-      notes: formData.notes,
-      portfolioId: formData.portfolioId,
+      // notes: formData.notes,
+      // portfolioId: formData.portfolioId,
     });
   }, {
     onSuccess: () => { refetch() }
