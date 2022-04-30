@@ -5,8 +5,10 @@ import RestApiClient from '../services/RestApiClient'
 import { ExecutionType, Transaction, TransactionType } from '../types/transaction'
 import { Currency, CurrencyProps } from '../types/utility'
 import { convertCurrencyDecimals } from '../utils/helpers'
+import { usePortfolio } from './portfolios'
 
-export const useCreateTransaction = () => {
+export const useCreateTransaction = (portfolioId: number) => {
+  const { refetch } = usePortfolio(portfolioId);
 
   return useMutation<Transaction, RestApiError, {
     symbol: string,
@@ -34,6 +36,8 @@ export const useCreateTransaction = () => {
       notes: formData.notes,
       portfolioId: formData.portfolioId,
     });
+  }, {
+    onSuccess: () => { refetch() }
   })
 }
 
