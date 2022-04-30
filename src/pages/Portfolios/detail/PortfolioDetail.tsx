@@ -1,8 +1,9 @@
-import { IconButton } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, IconButton } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { PrimaryButton, SecondaryButton } from '../../../constants/components';
 import { usePortfolio } from '../../../hooks/portfolios';
@@ -56,22 +57,21 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
           </div>
         </section>
 
-        <section className="new-transaction">
-          <div className="new-transaction-button">
+        <Accordion expanded={createTransactionOpen} onChange={() => setCreateTransactionOpen(!createTransactionOpen)}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="create-transaction-content"
+            id="create-transaction-header"
+          >
             <h3>Create Transaction</h3>
-            <PrimaryButton onClick={() => setCreateTransactionOpen(!createTransactionOpen)}>
-              {createTransactionOpen ? 'Cancel' : 'New transaction'}
-            </PrimaryButton>
-          </div>
+          </AccordionSummary>
 
-          <div className={`new-transaction-wrapper ${createTransactionOpen ? 'open' : ''}`}>
-            {createTransactionOpen ? (
-              <CreateTransaction
-                portfolioId={Number(id)}
-              />
-            ) : null}
-          </div>
-        </section>
+          <AccordionDetails>
+            <CreateTransaction
+              portfolioId={Number(id)}
+            />
+          </AccordionDetails>
+        </Accordion>
 
         <section className="transactions">
           <div className="transactions-button">

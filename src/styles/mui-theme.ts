@@ -17,6 +17,13 @@ export const darkTheme = createTheme({
     borderRadius: 12,
   },
   components: {
+    MuiAccordionSummary: {
+      styleOverrides: {
+        content: {
+          margin: '1rem 0'
+        },
+      }
+    },
     MuiTooltip: {
       styleOverrides: {
         tooltip: {

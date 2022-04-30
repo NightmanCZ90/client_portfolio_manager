@@ -33,29 +33,6 @@ export const StyledPortfolioDetailContent = styled('div')`
     }
   }
 
-  section.new-transaction {
-    padding: 1rem;
-    border-radius: 1rem;
-    background-color: var(--color-paper);
-
-    .new-transaction-button {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .new-transaction-wrapper {
-      max-height: 0;
-      visibility: hidden;
-      transition: max-height 0.2s ease-in, visibility 0.2s 0.2s;
-
-      &.open {
-        max-height: 700px;
-        visibility: visible;
-      }
-    }
-  }
-
   section.transactions {
     padding: 1rem;
     border-radius: 1rem;
