@@ -1,4 +1,5 @@
 import { Transaction } from '../../types/transaction';
+import TransactionCard from '../TransactionCard';
 import { StyledTransactionList } from './TransactionList.styles';
 
 interface TransactionListProps {
@@ -9,9 +10,18 @@ const TransactionList: React.FC<TransactionListProps> = (props) => {
 
   const { transactions } = props;
 
+  const renderTransactionCard = () => transactions?.map(transaction => (
+    <TransactionCard
+      key={transaction.id}
+      transaction={transaction}
+    />
+  ));
+
   return (
     <StyledTransactionList>
-      {transactions.map(transaction => (<div>{transaction.stockName}</div>))}
+      {transactions.length > 0 ?
+        renderTransactionCard()
+        : 'No transactions'}
     </StyledTransactionList>
   )
 }

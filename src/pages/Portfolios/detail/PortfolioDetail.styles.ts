@@ -60,6 +60,7 @@ export const StyledPortfolioDetailContent = styled('div')`
     padding: 1rem;
     border-radius: 1rem;
     background-color: var(--color-paper);
+    z-index: 2;
 
     .transactions-button {
       display: flex;
