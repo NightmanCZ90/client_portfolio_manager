@@ -75,7 +75,7 @@ const validation = (value: any, name: CurrencyProps, currency: Currency, setErro
     });
 
 const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
-  const { mutate: createTransaction, isLoading, error, isSuccess } = useCreateTransaction();
+  const { mutate: createTransaction, isLoading, error, isSuccess } = useCreateTransaction(props.portfolioId);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [formDataErrors, setFormDataErrors] = useState<typeof initialFormDataErrors>(initialFormDataErrors);
 
