@@ -81,7 +81,7 @@ const UserProfile: React.FC<UserProfileProps> = () => {
             id="first-name-input"
             label="First name"
             name="firstName"
-            value={userData.firstName}
+            value={userData.firstName || ''}
             error={Boolean(userDataErrors.firstName)}
             helperText={userDataErrors.firstName}
             onChange={handleChange}
@@ -91,7 +91,7 @@ const UserProfile: React.FC<UserProfileProps> = () => {
             id="last-name-input"
             label="Last name"
             name="lastName"
-            value={userData.lastName}
+            value={userData.lastName || ''}
             error={Boolean(userDataErrors.lastName)}
             helperText={userDataErrors.lastName}
             onChange={handleChange}
