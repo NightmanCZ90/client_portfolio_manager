@@ -131,7 +131,7 @@ export const portfolioDetailFormSchema = (inputType: string) => {
   }
 }
 
-export const createTransactionFormSchema = (inputType: string, decimals: number) => {
+export const createTransactionFormSchema = (inputType: string) => {
   if (inputType === 'symbol') {
     return yup.object().shape({
       symbol: yup
@@ -155,21 +155,21 @@ export const createTransactionFormSchema = (inputType: string, decimals: number)
       numShares: yup
         .number()
         .required()
-        .min(0, `Number of shares can not be lower than ${1 / 10**decimals}.`)
+        .min(0)
     });
   } else if (inputType === 'price') {
     return yup.object().shape({
       price: yup
         .number()
         .required()
-        .min(0, `Stock price can not be lower than ${1 / 10**decimals}.`)
+        .min(0)
     });
   } else if (inputType === 'commissions') {
     return yup.object().shape({
       commissions: yup
         .number()
         .optional()
-        .min(0, `Transaction commission can not be lower ${1 / 10**decimals}.`)
+        .min(0)
     });
   } else {
     return yup.object().shape({

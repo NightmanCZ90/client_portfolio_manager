@@ -2,12 +2,10 @@ import { CircularProgress, debounce, FormControl, InputLabel, MenuItem, Select, 
 import { useEffect, useMemo, useState } from 'react';
 
 import { CustomToggleButton, PrimaryButton } from '../../constants/components';
-import { fixedDecimals } from '../../constants/configurations';
 import { createTransactionFormSchema } from '../../constants/validations';
 import { useCreateTransaction } from '../../hooks/transactions';
 import { ExecutionType, Transaction, TransactionType } from '../../types/transaction';
 import { Currency, CurrencyProps } from '../../types/utility';
-import { remainDecimals } from '../../utils/helpers';
 import { StyledCreateTransaction } from './CreateTransaction.styles'
 
 const initialFormData = {
@@ -24,19 +22,6 @@ const initialFormData = {
 }
 
 type FormData = {
-  // stockName: string;
-  // stockSector: string;
-  // transactionTime: string;
-  // transactionType: TransactionType;
-  // numShares: string;
-  // price: string;
-  // currency: Currency;
-  // execution: ExecutionType;
-  // commissions: string;
-  // notes: string;
-
-  // createdAt: Date;
-  // updatedAt: Date | null;
   stockName: string;
   stockSector: string;
   transactionTime: string;
@@ -47,7 +32,6 @@ type FormData = {
   execution: ExecutionType;
   commissions: string;
   notes: string;
-  // portfolioId: number;
 }
 
 const initialFormDataErrors = {
@@ -77,7 +61,7 @@ interface CreateTransactionProps {
   transaction?: Transaction;
 }
 
-const validation = (value: any, name: CurrencyProps, currency: Currency, setErrors: any, isNumericInput: boolean, ) => createTransactionFormSchema(name, fixedDecimals[currency][name])
+const validation = (value: any, name: CurrencyProps, setErrors: any, isNumericInput: boolean, ) => createTransactionFormSchema(name)
   .validate({ [name]: value })
     .then((value) => {
       setErrors('')
@@ -147,11 +131,11 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
       setFormDataErrors({ ...formDataErrors, [event.target.name]: value });
     }
 
-    debouncedValidation(event.target.value, event.target.name as CurrencyProps, formData.currency, setErrors, isNumericInput);
+    debouncedValidation(event.target.value, event.target.name as CurrencyProps, setErrors, isNumericInput);
 
     setFormData({
       ...formData,
-      [event.target.name]: isNumericInput ? remainDecimals(event.target.value, event.target.name as CurrencyProps, formData.currency) : event.target.value,
+      [event.target.name]: event.target.value,
     });
   }
 
@@ -220,7 +204,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
             label="Share amount"
             type="number"
             name="numShares"
-            inputProps={{ min: 0 }}
+            inputProps={{ min: 0, step: 0.0001 }}
             value={formData.numShares}
             error={Boolean(formDataErrors.numShares)}
             helperText={formDataErrors.numShares}
@@ -232,7 +216,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
             label="Stock price"
             type="number"
             name="price"
-            inputProps={{ min: 0 }}
+            inputProps={{ min: 0, step: 0.0001 }}
             value={formData.price}
             error={Boolean(formDataErrors.price)}
             helperText={formDataErrors.price}
@@ -269,7 +253,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
             label="Commissions"
             type="number"
             name="commissions"
-            inputProps={{ min: 0 }}
+            inputProps={{ min: 0, step: 0.01 }}
             value={formData.commissions}
             error={Boolean(formDataErrors.commissions)}
             helperText={formDataErrors.commissions}
