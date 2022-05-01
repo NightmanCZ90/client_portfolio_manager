@@ -33,6 +33,34 @@ export const useCreateTransaction = (portfolioId: number) => {
   })
 }
 
+export const useUpdateTransaction = (portfolioId: number) => {
+  const { refetch } = usePortfolio(portfolioId);
+
+  return useMutation<Transaction, RestApiError, {
+    stockName: string,
+    stockSector: string,
+    transactionTime: string,
+    transactionType: TransactionType,
+    numShares: string,
+    price: string,
+    currency: Currency,
+    execution: ExecutionType,
+    commissions: string,
+    notes: string,
+    portfolioId: number,
+    transactionId: number,
+  }>((formData) => {
+    return RestApiClient.updateTransaction(formData.transactionId, {
+      ...formData,
+      numShares: Number(formData.numShares),
+      price: Number(formData.price),
+      commissions: Number(formData.commissions),
+    });
+  }, {
+    onSuccess: () => { refetch() }
+  })
+}
+
 export const useDeleteTransaction = (portfolioId: number) => {
   const { refetch } = usePortfolio(portfolioId);
 

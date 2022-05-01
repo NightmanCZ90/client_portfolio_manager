@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { CustomToggleButton, PrimaryButton, SecondaryButton } from '../../constants/components';
 import { createTransactionFormSchema } from '../../constants/validations';
-import { useCreateTransaction, useDeleteTransaction } from '../../hooks/transactions';
+import { useCreateTransaction, useDeleteTransaction, useUpdateTransaction } from '../../hooks/transactions';
 import { ExecutionType, Transaction, TransactionType } from '../../types/transaction';
 import { Currency } from '../../types/utility';
 import { StyledCreateTransaction } from './CreateTransaction.styles'
@@ -75,6 +75,7 @@ const validation = (value: any, name: string, setErrors: any, isNumericInput: bo
 
 const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
   const { mutate: createTransaction, isLoading: createLoading, error: createError, isSuccess: createSuccess } = useCreateTransaction(props.portfolioId);
+  const { mutate: updateTransaction, isLoading: updateLoading, error: updateError } = useUpdateTransaction(props.portfolioId);
   const { mutate: deleteTransaction, isLoading: deleteLoading, error: deleteError } = useDeleteTransaction(props.portfolioId);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [formDataErrors, setFormDataErrors] = useState<typeof initialFormDataErrors>(initialFormDataErrors);
@@ -144,7 +145,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
   const { stockName, stockSector, transactionTime, numShares, price, commissions, notes } = formDataErrors;
   const isFormDataInvalid = Boolean(stockName) || Boolean(stockSector) || Boolean(transactionTime) || Boolean(numShares) || Boolean(price) || Boolean(commissions) || Boolean(notes);
 
-  const isDisabled = !formData.stockName || !formData.numShares || !formData.price || isFormDataInvalid || createLoading || deleteLoading;
+  const isDisabled = !formData.stockName || !formData.numShares || !formData.price || isFormDataInvalid || createLoading || updateLoading || deleteLoading;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -154,7 +155,8 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
       return;
     }
 
-    createTransaction({ ...formData, portfolioId: Number(portfolioId) });
+    isEdit && transaction && updateTransaction({ ...formData, portfolioId: Number(portfolioId), transactionId: transaction.id });
+    !isEdit && createTransaction({ ...formData, portfolioId: Number(portfolioId) });
   }
 
   return (
@@ -326,7 +328,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
             disabled={isDisabled}
           >
             {isEdit ? (
-              'Update Transaction'
+              updateLoading ? (<CircularProgress size={24} />) : "Update Transaction"
               ) : (
               createLoading ? (<CircularProgress size={24} />) : "Create Transaction"
             )}
@@ -334,6 +336,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
         </div>
 
         {createError && <span>{createError.message}</span>}
+        {updateError && <span>{updateError.message}</span>}
         {deleteError && <span>{deleteError.message}</span>}
       </form>
 

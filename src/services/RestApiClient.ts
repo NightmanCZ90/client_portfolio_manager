@@ -172,6 +172,26 @@ class RestApiClient extends ApiClient {
     })
   }
 
+   async updateTransaction(transactionId: number, body: {
+    stockName: string;
+    stockSector: string | null;
+    transactionTime: string;
+    transactionType: TransactionType;
+    numShares: number;
+    price: number;
+    currency: string;
+    execution: ExecutionType;
+    commissions: number | null;
+    notes: string | null;
+    portfolioId: number;
+  }) {
+    return this.axiosRequest<Transaction>({
+      url: `/transactions/${transactionId}`,
+      method: 'PUT',
+      body,
+    })
+  }
+
   async deleteTransaction(transactionId: number) {
     return this.axiosRequest<Transaction>({
       url: `/transactions/${transactionId}`,
