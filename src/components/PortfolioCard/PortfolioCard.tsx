@@ -1,7 +1,7 @@
 import { Tooltip } from '@mui/material';
 import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { formatter } from '../../App';
+import { formatterWithCurrency } from '../../App';
 import { Portfolio } from '../../types/portfolio';
 import { generateGreenRedClass, generateUserName } from '../../utils/helpers';
 import { StyledPortfolioCard, StyledPortfolioCardContent, StyledPortfolioCardHeader } from './PortfolioCard.styles';
@@ -61,12 +61,12 @@ const PortfolioCard: React.FC<PortfolioCardProps> = (props) => {
             <div>
               <span>Unrealized gains</span>
               <span className={generateGreenRedClass(unrealizedGains)}>
-                {formatter.format(unrealizedGains)}
+                {formatterWithCurrency.format(unrealizedGains)}
               </span>
             </div>
             <div>
               <span>Realized gains</span>
-              <span className={generateGreenRedClass(realizedGains)}>{formatter.format(realizedGains)}</span>
+              <span className={generateGreenRedClass(realizedGains)}>{formatterWithCurrency.format(realizedGains)}</span>
             </div>
           </div>
         </StyledPortfolioCardContent>
