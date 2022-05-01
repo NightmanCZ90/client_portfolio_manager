@@ -5,7 +5,7 @@ import { CustomToggleButton, PrimaryButton } from '../../constants/components';
 import { createTransactionFormSchema } from '../../constants/validations';
 import { useCreateTransaction } from '../../hooks/transactions';
 import { ExecutionType, Transaction, TransactionType } from '../../types/transaction';
-import { Currency, CurrencyProps } from '../../types/utility';
+import { Currency } from '../../types/utility';
 import { StyledCreateTransaction } from './CreateTransaction.styles'
 
 const initialFormData = {
@@ -61,7 +61,7 @@ interface CreateTransactionProps {
   transaction?: Transaction;
 }
 
-const validation = (value: any, name: CurrencyProps, setErrors: any, isNumericInput: boolean, ) => createTransactionFormSchema(name)
+const validation = (value: any, name: string, setErrors: any, isNumericInput: boolean, ) => createTransactionFormSchema(name)
   .validate({ [name]: value })
     .then((value) => {
       setErrors('')
@@ -131,7 +131,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
       setFormDataErrors({ ...formDataErrors, [event.target.name]: value });
     }
 
-    debouncedValidation(event.target.value, event.target.name as CurrencyProps, setErrors, isNumericInput);
+    debouncedValidation(event.target.value, event.target.name, setErrors, isNumericInput);
 
     setFormData({
       ...formData,
