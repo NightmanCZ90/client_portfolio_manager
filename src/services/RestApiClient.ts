@@ -149,7 +149,7 @@ class RestApiClient extends ApiClient {
   }
 
   /**
-   * Portfolios
+   * Transactions
    */
 
    async createTransaction(body: {
@@ -169,6 +169,13 @@ class RestApiClient extends ApiClient {
       url: '/transactions',
       method: 'POST',
       body,
+    })
+  }
+
+  async deleteTransaction(transactionId: number) {
+    return this.axiosRequest<Transaction>({
+      url: `/transactions/${transactionId}`,
+      method: 'DELETE',
     })
   }
 }

@@ -33,6 +33,16 @@ export const useCreateTransaction = (portfolioId: number) => {
   })
 }
 
+export const useDeleteTransaction = (portfolioId: number) => {
+  const { refetch } = usePortfolio(portfolioId);
+
+  return useMutation<Transaction, RestApiError, number>((transactionId) => {
+    return RestApiClient.deleteTransaction(transactionId);
+  }, {
+    onSuccess: () => { refetch() }
+  })
+}
+
 /**
  * Helper functions
  */

@@ -1,9 +1,9 @@
-import { CircularProgress, debounce, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, ToggleButtonGroup } from '@mui/material';
+import { Button, CircularProgress, debounce, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, ToggleButtonGroup } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 
-import { CustomToggleButton, PrimaryButton } from '../../constants/components';
+import { CustomToggleButton, PrimaryButton, SecondaryButton } from '../../constants/components';
 import { createTransactionFormSchema } from '../../constants/validations';
-import { useCreateTransaction } from '../../hooks/transactions';
+import { useCreateTransaction, useDeleteTransaction } from '../../hooks/transactions';
 import { ExecutionType, Transaction, TransactionType } from '../../types/transaction';
 import { Currency } from '../../types/utility';
 import { StyledCreateTransaction } from './CreateTransaction.styles'
@@ -74,9 +74,11 @@ const validation = (value: any, name: string, setErrors: any, isNumericInput: bo
     });
 
 const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
-  const { mutate: createTransaction, isLoading, error, isSuccess } = useCreateTransaction(props.portfolioId);
+  const { mutate: createTransaction, isLoading: createLoading, error: createError, isSuccess: createSuccess } = useCreateTransaction(props.portfolioId);
+  const { mutate: deleteTransaction, isLoading: deleteLoading, error: deleteError } = useDeleteTransaction(props.portfolioId);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [formDataErrors, setFormDataErrors] = useState<typeof initialFormDataErrors>(initialFormDataErrors);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const { portfolioId, transaction } = props;
 
@@ -99,8 +101,8 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
   }, [transaction]);
 
   useEffect(() => {
-    if (isSuccess) setFormData(initialFormData);
-  }, [isSuccess]);
+    if (createSuccess) setFormData(initialFormData);
+  }, [createSuccess]);
 
   const handleTransactionTypeSelection = (event: React.MouseEvent<HTMLElement, MouseEvent>, value: TransactionType) => {
 
@@ -142,7 +144,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
   const { stockName, stockSector, transactionTime, numShares, price, commissions, notes } = formDataErrors;
   const isFormDataInvalid = Boolean(stockName) || Boolean(stockSector) || Boolean(transactionTime) || Boolean(numShares) || Boolean(price) || Boolean(commissions) || Boolean(notes);
 
-  const isDisabled = !formData.stockName || !formData.numShares || !formData.price || isFormDataInvalid || isLoading;
+  const isDisabled = !formData.stockName || !formData.numShares || !formData.price || isFormDataInvalid || createLoading || deleteLoading;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -156,7 +158,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
   }
 
   return (
-    <StyledCreateTransaction>
+    <StyledCreateTransaction edit={isEdit ? 1 : 0}>
 
       <form onSubmit={handleSubmit}>
         <div className="transaction-type">
@@ -200,18 +202,6 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
           />
           <TextField
             required
-            id="shares-number-input"
-            label="Share amount"
-            type="number"
-            name="numShares"
-            inputProps={{ min: 0, step: 0.0001 }}
-            value={formData.numShares}
-            error={Boolean(formDataErrors.numShares)}
-            helperText={formDataErrors.numShares}
-            onChange={handleChange}
-          />
-          <TextField
-            required
             id="stock-price-input"
             label="Stock price"
             type="number"
@@ -220,6 +210,18 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
             value={formData.price}
             error={Boolean(formDataErrors.price)}
             helperText={formDataErrors.price}
+            onChange={handleChange}
+          />
+          <TextField
+            required
+            id="shares-number-input"
+            label="Share amount"
+            type="number"
+            name="numShares"
+            inputProps={{ min: 0, step: 0.0001 }}
+            value={formData.numShares}
+            error={Boolean(formDataErrors.numShares)}
+            helperText={formDataErrors.numShares}
             onChange={handleChange}
           />
           <FormControl>
@@ -302,15 +304,37 @@ const CreateTransaction: React.FC<CreateTransactionProps> = (props) => {
           helperText={formDataErrors.notes}
           onChange={handleChange}
         />
+        <div className="buttons">
+          {isEdit && transaction ? (
+            isDeleting ? (
+              <div className="buttons-delete">
+                <SecondaryButton onClick={() => setIsDeleting(false)}>
+                  Cancel
+                </SecondaryButton>
+                <Button variant='outlined' color='error' onClick={() => deleteTransaction(transaction.id)}>
+                  {deleteLoading ? (<CircularProgress size={24} />) : "Confirm"}
+                </Button>
+              </div>
+            ) : (
+              <Button variant='outlined' color='error' onClick={() => setIsDeleting(true)}>
+                Delete
+              </Button>
+            )
+          ) : null}
+          <PrimaryButton
+            type="submit"
+            disabled={isDisabled}
+          >
+            {isEdit ? (
+              'Update Transaction'
+              ) : (
+              createLoading ? (<CircularProgress size={24} />) : "Create Transaction"
+            )}
+          </PrimaryButton>
+        </div>
 
-        <PrimaryButton
-          type="submit"
-          disabled={isDisabled}
-        >
-          {isLoading ? (<CircularProgress size={24} />) : "Create Transaction"}
-        </PrimaryButton>
-
-        {error && <span>{error.message}</span>}
+        {createError && <span>{createError.message}</span>}
+        {deleteError && <span>{deleteError.message}</span>}
       </form>
 
     </StyledCreateTransaction>

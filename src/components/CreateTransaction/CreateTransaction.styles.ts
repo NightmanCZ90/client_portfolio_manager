@@ -1,6 +1,10 @@
 import { styled } from '@mui/system';
 
-export const StyledCreateTransaction = styled('div')`
+interface StyledCreateTransactionProps {
+  readonly edit: number;
+}
+
+export const StyledCreateTransaction = styled('div')<StyledCreateTransactionProps>`
 
   form {
     padding: 1rem 0;
@@ -12,6 +16,16 @@ export const StyledCreateTransaction = styled('div')`
     .defaulted {
       display: flex;
       gap: 1rem;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: ${props => props.edit ? 'space-between' : 'flex-end'};
+
+      .buttons-delete {
+        display: flex;
+        gap: 1rem;
+      }
     }
 
     & > span {
