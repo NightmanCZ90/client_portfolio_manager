@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { sortTransactionsByDateAndId } from '../../hooks/transactions';
 import { Transaction } from '../../types/transaction';
 import TransactionCard from '../TransactionCard';
@@ -8,6 +9,7 @@ interface TransactionListProps {
 }
 
 const TransactionList: React.FC<TransactionListProps> = (props) => {
+  const [openId, setOpenId] = useState<number | null>(null);
 
   const { transactions } = props;
 
@@ -17,6 +19,8 @@ const TransactionList: React.FC<TransactionListProps> = (props) => {
     <TransactionCard
       key={transaction.id}
       transaction={transaction}
+      openId={openId}
+      setOpenId={setOpenId}
     />
   ));
 

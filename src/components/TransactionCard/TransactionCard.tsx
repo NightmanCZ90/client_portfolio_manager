@@ -9,12 +9,13 @@ import { useState } from 'react';
 import { formatterWithCurrency } from '../../App';
 
 interface TransactionCardProps {
-  transaction: Transaction
+  transaction: Transaction;
+  openId: number | null;
+  setOpenId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 const TransactionCard: React.FC<TransactionCardProps> = (props) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { transaction } = props;
+  const { openId, setOpenId, transaction } = props;
 
   const getClass = () => {
     if (transaction.transactionType === TransactionType.Buy) return 'buy';
@@ -33,8 +34,13 @@ const TransactionCard: React.FC<TransactionCardProps> = (props) => {
     return formatterWithCurrency.format(transaction.numShares * price);
   }
 
+  const handleAccordionOpen = () => {
+    if (openId === transaction.id) setOpenId(null);
+    if (openId !== transaction.id) setOpenId(transaction.id);
+  }
+
   return (
-    <StyledTransactionCard expanded={isOpen} onChange={() => setIsOpen(!isOpen)}>
+    <StyledTransactionCard expanded={openId === transaction.id} onChange={handleAccordionOpen}>
       <AccordionSummary
         aria-controls="update-transaction-content"
         id="update-transaction-header"
