@@ -1,6 +1,6 @@
 import UploadIcon from '@mui/icons-material/Upload';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { AccordionDetails, AccordionSummary } from '@mui/material';
 
 import { Transaction, TransactionType } from '../../types/transaction';
 import { StyledTransactionCard } from './TransactionCard.styles';
