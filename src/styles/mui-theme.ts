@@ -17,10 +17,35 @@ export const darkTheme = createTheme({
     borderRadius: 12,
   },
   components: {
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+          ":before": {
+            content: 'none',
+          }
+        },
+      }
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        content: {
+          margin: '1rem 0'
+        },
+      }
+    },
     MuiTooltip: {
       styleOverrides: {
         tooltip: {
           borderRadius: 2,
+        }
+      }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          color: '#fff',
+          colorScheme: 'dark',
         }
       }
     }

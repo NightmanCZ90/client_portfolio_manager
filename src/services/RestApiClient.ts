@@ -1,4 +1,5 @@
 import { Portfolio, PortfolioTypes } from '../types/portfolio';
+import { ExecutionType, Transaction, TransactionType } from '../types/transaction';
 import { User, Role, Token } from '../types/user';
 import ApiClient from './ApiClient';
 
@@ -13,7 +14,6 @@ class RestApiClient extends ApiClient {
 
   /**
    * Authentication
-   *
    */
 
   async signUp(body: {
@@ -41,7 +41,6 @@ class RestApiClient extends ApiClient {
 
   /**
    * Current User
-   *
    */
 
   async getUser(userId: number) {
@@ -72,7 +71,6 @@ class RestApiClient extends ApiClient {
 
   /**
    * Portfolios
-   *
    */
 
   async confirmInvestor(investorEmail: string) {
@@ -147,6 +145,57 @@ class RestApiClient extends ApiClient {
     return this.axiosRequest<Portfolio>({
       url: `/portfolios/${portfolioId}/confirm`,
       method: 'PUT',
+    })
+  }
+
+  /**
+   * Transactions
+   */
+
+   async createTransaction(body: {
+    stockName: string;
+    stockSector: string | null;
+    transactionTime: string;
+    transactionType: TransactionType;
+    numShares: number;
+    price: number;
+    currency: string;
+    execution: ExecutionType;
+    commissions: number | null;
+    notes: string | null;
+    portfolioId: number;
+  }) {
+    return this.axiosRequest<Transaction>({
+      url: '/transactions',
+      method: 'POST',
+      body,
+    })
+  }
+
+   async updateTransaction(transactionId: number, body: {
+    stockName: string;
+    stockSector: string | null;
+    transactionTime: string;
+    transactionType: TransactionType;
+    numShares: number;
+    price: number;
+    currency: string;
+    execution: ExecutionType;
+    commissions: number | null;
+    notes: string | null;
+    portfolioId: number;
+  }) {
+    return this.axiosRequest<Transaction>({
+      url: `/transactions/${transactionId}`,
+      method: 'PUT',
+      body,
+    })
+  }
+
+  async deleteTransaction(transactionId: number) {
+    return this.axiosRequest<Transaction>({
+      url: `/transactions/${transactionId}`,
+      method: 'DELETE',
     })
   }
 }

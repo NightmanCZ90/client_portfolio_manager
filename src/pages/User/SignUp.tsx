@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { userRegistrationFormSchema } from '../../constants/validations';
-import { SmallLinkButton, SubmitButton } from '../../constants/components';
+import { SmallLinkButton, PrimaryButton } from '../../constants/components';
 import { Dispatch, RootState } from '../../store/store';
 import { StyledSignUp, StyledSignUpForm } from './SignUp.styles';
 import { useSignUp } from '../../hooks/auth';
@@ -104,12 +104,12 @@ const SignUp: React.FC<SignUpProps> = (props) => {
             <SmallLinkButton onClick={() => setShowLogin(true)}>
               Already have an account?
             </SmallLinkButton>
-            <SubmitButton
+            <PrimaryButton
               type="submit"
               disabled={isFormDataInvalid || isLoading}
             >
               {isLoading ? (<CircularProgress size={24} />) : "Sign up"}
-            </SubmitButton>
+            </PrimaryButton>
           </div>
           {isError && <span>{error.message}</span>}
         </form>

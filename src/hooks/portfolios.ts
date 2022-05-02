@@ -13,7 +13,9 @@ export const usePortfolios = () => {
 
   return useQuery<PortfolioTypes, RestApiError, PortfolioPageTypes>(QueryKeys.Portfolios, () => RestApiClient.getUsersPortfolios(), {
     onError: (err) => { console.dir(err) },
-    select: (data) => splitPortfolios(data),
+    select: (data) => {
+      return splitPortfolios(data);
+    },
     enabled: !!currentUser.token,
   })
 }
@@ -27,7 +29,7 @@ export const usePortfolio = (portfolioId: number) => {
       if (!portfolios) return undefined;
 
       return findPortfolio(portfolioId, portfolios)?.portfolio;
-    }
+    },
   });
 }
 
@@ -125,7 +127,6 @@ export const useUpdatePortfolio = () => {
 
 /**
  * Helper functions
- *
  */
 
 const splitPortfolios = (data: PortfolioTypes) => ({

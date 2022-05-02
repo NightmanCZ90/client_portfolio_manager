@@ -1,7 +1,7 @@
 import { CircularProgress, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { SubmitButton } from '../../constants/components';
+import { PrimaryButton } from '../../constants/components';
 import { userFormSchema } from '../../constants/validations';
 import { useCurrentUser, useUpdateCurrentUser } from '../../hooks/currentUser';
 import { Dispatch, RootState } from '../../store/store';
@@ -81,7 +81,7 @@ const UserProfile: React.FC<UserProfileProps> = () => {
             id="first-name-input"
             label="First name"
             name="firstName"
-            value={userData.firstName}
+            value={userData.firstName || ''}
             error={Boolean(userDataErrors.firstName)}
             helperText={userDataErrors.firstName}
             onChange={handleChange}
@@ -91,18 +91,18 @@ const UserProfile: React.FC<UserProfileProps> = () => {
             id="last-name-input"
             label="Last name"
             name="lastName"
-            value={userData.lastName}
+            value={userData.lastName || ''}
             error={Boolean(userDataErrors.lastName)}
             helperText={userDataErrors.lastName}
             onChange={handleChange}
           />
           <div className="signup-form--buttons">
-            <SubmitButton
+            <PrimaryButton
               type="submit"
               disabled={isFormDataInvalid}
             >
               {(isLoading || loading) ? (<CircularProgress size={24} />) : "Save"}
-            </SubmitButton>
+            </PrimaryButton>
           </div>
           {isError && <span>{error.message}</span>}
         </form>

@@ -130,3 +130,52 @@ export const portfolioDetailFormSchema = (inputType: string) => {
     });
   }
 }
+
+export const createTransactionFormSchema = (inputType: string) => {
+  if (inputType === 'symbol') {
+    return yup.object().shape({
+      symbol: yup
+        .string()
+        .max(20, 'Maximal length of stock symbol is 20 characters.')
+        .required('Stock symbol must not be empty.'),
+    });
+  } else if (inputType === 'sector') {
+    return yup.object().shape({
+      sector: yup
+        .string()
+        .max(20, 'Maximal length of stock sector is 20 characters.'),
+    });
+  } else if (inputType === 'time') {
+    return yup.object().shape({
+      time: yup
+        .date()
+    });
+  } else if (inputType === 'numShares') {
+    return yup.object().shape({
+      numShares: yup
+        .number()
+        .required()
+        .min(0)
+    });
+  } else if (inputType === 'price') {
+    return yup.object().shape({
+      price: yup
+        .number()
+        .required()
+        .min(0)
+    });
+  } else if (inputType === 'commissions') {
+    return yup.object().shape({
+      commissions: yup
+        .number()
+        .optional()
+        .min(0)
+    });
+  } else {
+    return yup.object().shape({
+      notes: yup
+        .string()
+        .optional(),
+    });
+  }
+}

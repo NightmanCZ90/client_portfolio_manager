@@ -11,6 +11,7 @@ import Home from './pages/Home';
 import Portfolios from './pages/Portfolios';
 import CreatePortfolio from './pages/Portfolios/create';
 import PortfolioDetail from './pages/Portfolios/detail';
+import EditPortfolio from './pages/Portfolios/edit';
 import SignIn from './pages/User/SignIn';
 import SignUp from './pages/User/SignUp';
 import UserProfile from './pages/User/UserProfile';
@@ -18,7 +19,8 @@ import { Dispatch, RootState } from './store/store';
 import { Token } from './types/user';
 
 // TODO: Add Internationalization and Localization
-export const formatter = new Intl.NumberFormat('en-US', {
+export const formatter = new Intl.NumberFormat('en-US');
+export const formatterWithCurrency = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD'
 })
@@ -73,6 +75,7 @@ const App: React.FC<AppProps> = (props) => {
         <Route path="/portfolios" element={<Portfolios />} />
         <Route path="/portfolios/create" element={<CreatePortfolio />} />
         <Route path="/portfolios/:id" element={<PortfolioDetail />} />
+        <Route path="/portfolios/:id/edit" element={<EditPortfolio />} />
 
         <Route path="/user" element={<UserProfile />} />
       </Routes>

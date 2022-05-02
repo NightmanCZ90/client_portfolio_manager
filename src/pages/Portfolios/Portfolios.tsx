@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import PortfolioCard from '../../components/PortfolioCard';
-import { PrimaryButton } from '../../constants/components';
+import { SecondaryButton } from '../../constants/components';
 import { Dispatch, RootState } from '../../store/store';
 import { Portfolio } from '../../types/portfolio';
 import { generateUserName } from '../../utils/helpers';
@@ -73,7 +73,7 @@ const Portfolios: React.FC<PortfoliosProps> = (props) => {
       </StyledPortfoliosHeader>
       <StyledPortfoliosContent>
         <div className="buttons-wrapper">
-          <PrimaryButton onClick={() => navigate('/portfolios/create')} startIcon={<AddIcon />}>Add Portfolio</PrimaryButton>
+          <SecondaryButton onClick={() => navigate('/portfolios/create')} startIcon={<AddIcon />}>Add Portfolio</SecondaryButton>
         </div>
         {data?.unconfirmed && data?.unconfirmed?.length > 0 ? (
           <div className="portfolio-unconfirmed">

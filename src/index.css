@@ -36,9 +36,12 @@ code {
   --color-header-subinfo: #F9BA48;
 
   --card-hover: #f08f18;
+  --card-hover-verylight: #f08f1815;
+  --card-hover-light: #f08f1830;
 
   --card-investor: #f08f18;
   --card-investor-hover: #fff;
+  --card-list: #232325;
 
   --color-profit: #26FF26;
   --color-loss: #FF2626;
