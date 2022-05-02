@@ -1,3 +1,4 @@
+import { sortTransactionsByDateAndId } from '../../hooks/transactions';
 import { Transaction } from '../../types/transaction';
 import TransactionCard from '../TransactionCard';
 import { StyledTransactionList } from './TransactionList.styles';
@@ -10,7 +11,9 @@ const TransactionList: React.FC<TransactionListProps> = (props) => {
 
   const { transactions } = props;
 
-  const renderTransactionCard = () => transactions?.map(transaction => (
+  const sortedTransactions = sortTransactionsByDateAndId(transactions);
+
+  const renderTransactionCard = () => sortedTransactions?.map(transaction => (
     <TransactionCard
       key={transaction.id}
       transaction={transaction}
@@ -19,7 +22,7 @@ const TransactionList: React.FC<TransactionListProps> = (props) => {
 
   return (
     <StyledTransactionList>
-      {transactions.length > 0 ?
+      {sortedTransactions.length > 0 ?
         renderTransactionCard()
         : 'No transactions'}
     </StyledTransactionList>
