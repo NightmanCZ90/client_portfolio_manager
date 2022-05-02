@@ -38,23 +38,6 @@ export const StyledPortfolioDetailContent = styled('div')`
     border-radius: 1rem;
     background-color: var(--color-paper);
     z-index: 2;
-
-    .transactions-button {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .transactions-wrapper {
-      max-height: 0;
-      visibility: hidden;
-      transition: max-height 0.2s ease-in, visibility 0.2s 0.2s;
-
-      &.open {
-        max-height: 700px;
-        visibility: visible;
-      }
-    }
   }
 
   section.ownership-edit-button {

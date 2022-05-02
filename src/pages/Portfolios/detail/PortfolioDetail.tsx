@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import { PrimaryButton, SecondaryButton } from '../../../constants/components';
+import { SecondaryButton } from '../../../constants/components';
 import { usePortfolio } from '../../../hooks/portfolios';
 import { Dispatch, RootState } from '../../../store/store';
 import { PortfolioOwnership } from '../../../types/portfolio';
@@ -20,10 +20,8 @@ interface PortfolioDetailProps extends PortfolioDetailConnect {
 
 const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
   const { id } = useParams();
-  // TODO: use Portfolio with transactions
   const { data, isLoading } = usePortfolio(Number(id));
   const [createTransactionOpen, setCreateTransactionOpen] = useState<boolean>(false);
-  const [transactionsOpen, setTransactionsOpen] = useState<boolean>(false);
 
   const { currentUser } = props;
 
@@ -74,20 +72,10 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = (props) => {
         </Accordion>
 
         <section className="transactions">
-          <div className="transactions-button">
           <h3>Transactions</h3>
-            <PrimaryButton onClick={() => setTransactionsOpen(!transactionsOpen)}>
-              {transactionsOpen ? 'Hide Transactions' : 'Show transactions'}
-            </PrimaryButton>
-          </div>
-
-          <div className={`transactions-wrapper ${transactionsOpen ? 'open' : ''}`}>
-            {transactionsOpen ? (
-              <TransactionList
-                transactions={data.transactions || []}
-              />
-            ) : null}
-          </div>
+          <TransactionList
+            transactions={data.transactions || []}
+          />
         </section>
 
         <section className="ownership-edit-button">
