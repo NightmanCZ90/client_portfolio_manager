@@ -1,11 +1,13 @@
+import { Accordion } from '@mui/material';
 import { styled } from '@mui/system';
 
-export const StyledTransactionCard = styled('div')`
-  width: 100%;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  display: flex;
+export const StyledTransactionCard = styled(Accordion)`
+  border-radius: 12px;
   background-color: var(--card-hover-verylight);
+
+  &.Mui-expanded {
+    background-color: var(--card-hover-verylight);
+  }
 
   .icon {
     display: flex;
@@ -55,10 +57,12 @@ export const StyledTransactionCard = styled('div')`
     }
   }
 
-
   &:hover {
     background-color: var(--card-hover-light);
-    /* opacity: 0.3; */
+  }
+
+  &.Mui-expanded:hover {
+    background-color: var(--card-hover-verylight);
   }
 `;
 

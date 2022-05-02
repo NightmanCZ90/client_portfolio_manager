@@ -17,6 +17,16 @@ export const darkTheme = createTheme({
     borderRadius: 12,
   },
   components: {
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+          ":before": {
+            content: 'none',
+          }
+        },
+      }
+    },
     MuiAccordionSummary: {
       styleOverrides: {
         content: {

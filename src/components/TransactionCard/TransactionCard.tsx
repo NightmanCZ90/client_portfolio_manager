@@ -1,14 +1,19 @@
 import UploadIcon from '@mui/icons-material/Upload';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 
 import { Transaction, TransactionType } from '../../types/transaction';
 import { StyledTransactionCard } from './TransactionCard.styles';
+import CreateTransaction from '../CreateTransaction';
+import { useState } from 'react';
+import { formatterWithCurrency } from '../../App';
 
 interface TransactionCardProps {
   transaction: Transaction
 }
 
 const TransactionCard: React.FC<TransactionCardProps> = (props) => {
+  const [isOpen, setIsOpen] = useState(false);
   const { transaction } = props;
 
   const getClass = () => {
@@ -22,44 +27,55 @@ const TransactionCard: React.FC<TransactionCardProps> = (props) => {
   }
 
   const calculateTransactionCharge = () => {
-    const result = transaction.numShares * transaction.price;
-    if (transaction.transactionType === TransactionType.Buy) return -1 * result;
-    if (transaction.transactionType === TransactionType.Sell) return 1 * result;
+    let price = 0;
+    if (transaction.transactionType === TransactionType.Buy) price = -1 * transaction.price;
+    if (transaction.transactionType === TransactionType.Sell) price = 1 * transaction.price;
+    return formatterWithCurrency.format(transaction.numShares * price);
   }
 
   return (
-    <StyledTransactionCard>
-      <div className={`icon ${getClass()}`}>
-        {renderIcon()}
-      </div>
-      <div className="content">
-        <div className="top">
-          <div className="type-name">
-            {transaction.transactionType.toUpperCase()}
-            <h3>{transaction.stockName}</h3>
-          </div>
-          {calculateTransactionCharge()}
-          &nbsp;
-          {transaction.currency}
+    <StyledTransactionCard expanded={isOpen} onChange={() => setIsOpen(!isOpen)}>
+      <AccordionSummary
+        aria-controls="update-transaction-content"
+        id="update-transaction-header"
+      >
+        <div className={`icon ${getClass()}`}>
+          {renderIcon()}
         </div>
-        <div className="middle">
-          <div className="info">
-            <div className="num-shares">
-              {transaction.numShares}
-              &nbsp;
-              shares
+        <div className="content">
+          <div className="top">
+            <div className="type-name">
+              {transaction.transactionType.toUpperCase()}
+              <h3>{transaction.stockName}</h3>
             </div>
-            <div className="price">
-              {transaction.price}
-              &nbsp;
-              {transaction.currency}
-            </div>
+            {calculateTransactionCharge()}
           </div>
-          <div className="date">
-            {new Date(transaction.transactionTime).toLocaleDateString()}
+          <div className="middle">
+            <div className="info">
+              <div className="num-shares">
+                {transaction.numShares}
+                &nbsp;
+                shares
+              </div>
+              <div className="price">
+                {transaction.price}
+                &nbsp;
+                {transaction.currency}
+              </div>
+            </div>
+            <div className="date">
+              {new Date(transaction.transactionTime).toLocaleDateString()}
+            </div>
           </div>
         </div>
-      </div>
+      </AccordionSummary>
+
+      <AccordionDetails>
+        <CreateTransaction
+          portfolioId={transaction.portfolioId}
+          transaction={transaction}
+        />
+      </AccordionDetails>
     </StyledTransactionCard>
   )
 }
